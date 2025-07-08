@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Günaydın Canım ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Hidden YouTube player */
+        .youtube-player {
+            position: fixed;
+            top: -200px;
+            left: -200px;
+            width: 100px;
+            height: 100px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Animated background elements */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6b8a;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .heart:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .heart:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .heart:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .heart:nth-child(6) { left: 60%; animation-delay: 0.5s; }
+        .heart:nth-child(7) { left: 70%; animation-delay: 1.5s; }
+        .heart:nth-child(8) { left: 80%; animation-delay: 2.5s; }
+        .heart:nth-child(9) { left: 90%; animation-delay: 3.5s; }
+
+        .flower {
+            position: absolute;
+            font-size: 25px;
+            color: #ff8fab;
+            animation: sway 8s ease-in-out infinite;
+        }
+
+        .flower:nth-child(1) { left: 15%; animation-delay: 1s; }
+        .flower:nth-child(2) { left: 35%; animation-delay: 3s; }
+        .flower:nth-child(3) { left: 55%; animation-delay: 5s; }
+        .flower:nth-child(4) { left: 75%; animation-delay: 2s; }
+        .flower:nth-child(5) { left: 85%; animation-delay: 4s; }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        .sparkle:nth-child(1) { left: 5%; top: 20%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { left: 25%; top: 40%; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { left: 45%; top: 60%; animation-delay: 1s; }
+        .sparkle:nth-child(4) { left: 65%; top: 30%; animation-delay: 1.5s; }
+        .sparkle:nth-child(5) { left: 85%; top: 50%; animation-delay: 2s; }
+        .sparkle:nth-child(6) { left: 15%; top: 70%; animation-delay: 0.3s; }
+        .sparkle:nth-child(7) { left: 35%; top: 80%; animation-delay: 0.8s; }
+        .sparkle:nth-child(8) { left: 55%; top: 10%; animation-delay: 1.3s; }
+        .sparkle:nth-child(9) { left: 75%; top: 70%; animation-delay: 1.8s; }
+        .sparkle:nth-child(10) { left: 95%; top: 90%; animation-delay: 0.2s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0px) rotate(0deg); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Main content */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Letter Cover */
+        .letter-cover {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255, 182, 193, 0.5);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 2s ease-out 0.5s forwards;
+        }
+
+        .letter-cover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #ff6b8a;
+        }
+
+        .cover-title {
+            font-size: 2.8em;
+            color: #d63384;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .cover-subtitle {
+            font-size: 1.4em;
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .open-button {
+            background: linear-gradient(45deg, #ff6b8a, #ff8fab);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 138, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .open-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 138, 0.6);
+        }
+
+        /* Love Letter Content */
+        .love-letter {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            display: none;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .love-letter.show {
+            display: block;
+            animation: fadeInUp 2s ease-out forwards;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ff6b8a;
+            padding-bottom: 20px;
+        }
+
+        .letter-title {
+            font-size: 2.5em;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .letter-subtitle {
+            font-size: 1.2em;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .letter-content {
+            line-height: 1.8;
+            color: #2c3e50;
+            font-size: 1.1em;
+            text-align: justify;
+        }
+
+        .letter-content p {
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .letter-content p:nth-child(1) { animation-delay: 1s; }
+        .letter-content p:nth-child(2) { animation-delay: 1.5s; }
+        .letter-content p:nth-child(3) { animation-delay: 2s; }
+        .letter-content p:nth-child(4) { animation-delay: 2.5s; }
+        .letter-content p:nth-child(5) { animation-delay: 3s; }
+        .letter-content p:nth-child(6) { animation-delay: 3.5s; }
+        .letter-content p:nth-child(7) { animation-delay: 4s; }
+
+        .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-size: 1.3em;
+            color: #d63384;
+            font-style: italic;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 4.5s forwards;
+        }
+
+        .music-note {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: #ff6b8a;
+            z-index: 10;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .youtube-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #ff6b8a;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9em;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .youtube-link:hover {
+            background: #d63384;
+            transform: translateY(-2px);
+        }
+
+        .auto-play-notice {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 107, 138, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            z-index: 10;
+            animation: fadeIn 1s ease-out 3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); }
+            100% { text-shadow: 2px 2px 20px rgba(214, 51, 132, 0.6); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .letter-cover, .love-letter {
+                padding: 25px;
+                border-radius: 15px;
+            }
+            
+            .cover-title, .letter-title {
+                font-size: 2em;
+            }
+            
+            .letter-content {
+                font-size: 1em;
+            }
+            
+            .heart, .flower {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .letter-cover, .love-letter {
+                padding: 20px;
+                border-radius: 10px;
+            }
+            
+            .cover-title, .letter-title {
+                font-size: 1.8em;
+            }
+            
+            .cover-subtitle, .letter-subtitle {
+                font-size: 1em;
+            }
+            
+            .letter-content {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden YouTube Player -->
+    <iframe 
+        id="youtube-player"
+        class="youtube-player"
+        src="https://www.youtube.com/embed/CWHqdcBE1Ls?autoplay=1&controls=0&showinfo=0&rel=0&mute=0&loop=1&playlist=CWHqdcBE1Ls"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+    </iframe>
+
+    <!-- Auto-play notice -->
+    <div class="auto-play-notice">
+        🎵 Müzik çalıyor...
+    </div>
+
+    <!-- Background Animations -->
+    <div class="background-animation">
+        <!-- Hearts -->
+        <div class="heart">💖</div>
+        <div class="heart">💝</div>
+        <div class="heart">💗</div>
+        <div class="heart">💕</div>
+        <div class="heart">💖</div>
+        <div class="heart">💗</div>
+        <div class="heart">💝</div>
+        <div class="heart">💕</div>
+        <div class="heart">💖</div>
+        
+        <!-- Flowers -->
+        <div class="flower">🌸</div>
+        <div class="flower">🌺</div>
+        <div class="flower">🌻</div>
+        <div class="flower">🌹</div>
+        <div class="flower">🌷</div>
+        
+        <!-- Sparkles -->
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+    </div>
+
+    <!-- Music Note -->
+    <div class="music-note">🎵</div>
+
+    <!-- YouTube Link -->
+    <a href="https://www.youtube.com/watch?v=CWHqdcBE1Ls&list=PLiF7nO4rHMbNjki0RH0FIlDHsZ3-iCzmD&ab_channel=G%C3%BCncelPayla%C5%9F%C4%B1mlarTV" target="_blank" class="youtube-link">
+        🎵 YouTube'da Aç
+    </a>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Letter Cover -->
+        <div class="letter-cover" id="letterCover">
+            <h1 class="cover-title">💕 Mehmedinden Sana Bir Mektup Var 💕</h1>
+            <p class="cover-subtitle">Sevgiyle hazırlanmış özel bir mesaj...</p>
+            <button class="open-button" onclick="openLetter()">
+                📜 Mektubu Aç
+            </button>
+        </div>
+
+        <!-- Love Letter Content -->
+        <div class="love-letter" id="loveLetter">
+            <div class="letter-header">
+                <h1 class="letter-title">Günaydın Canım 💕</h1>
+                <p class="letter-subtitle">Sabahın ilk ışıklarıyla sana yazdığım mektup</p>
+            </div>
+            
+            <div class="letter-content">
+                <p>
+                    Güneş doğmuş, yeni bir gün başlamış... Ama benim için günün en güzel anı, 
+                    gözlerimi açtığımda seni düşünmeye başladığım an. Sabahın ilk nefesinde 
+                    senin kokun var, ilk düşüncemde senin gülümsemen...
+                </p>
+                
+                <p>
+                    Biliyorsun, her sabah uyandığımda kalbimde bir sıcaklık hissediyorum. 
+                    Bu sıcaklık senin varlığından geliyor, senin benimle olduğunu bilmekten. 
+                    Hayatıma kattığın renklerin, getirdiğin mutluluğun farkında mısın?
+                </p>
+                
+                <p>
+                    Sabahın sessizliğinde seni düşünüyorum... Nasıl bir melek olabilirsin ki 
+                    böyle? Gülüşün baharı getiriyor kalbime, sesinin melodisi kulaklarımda. 
+                    Sen sadece sevgilim değilsin, sen benim nefesimsin, kalbimin atışısın.
+                </p>
+                
+                <p>
+                    Bugün de seninle geçireceğim her an bir hediye benim için. Senin varlığın 
+                    beni daha iyi bir insan yapıyor, seni sevmek beni daha güçlü kılıyor. 
+                    Bu sabah sana söylemek istiyorum ki, sen benim hayatımın en güzel şiirisin.
+                </p>
+                
+                <p>
+                    Gözlerinin derinliğinde kayboluyorum her baktığımda... Orada gördüğüm 
+                    sevgi, sıcaklık ve sonsuzluk beni mest ediyor. Sen benim sonsuzluğumsun, 
+                    benim ebediyetimsun, benim her şeyimsin.
+                </p>
+                
+                <p>
+                    Bu güzel sabahta sana söylemek istiyorum: Seni seviyorum, çok seviyorum. 
+                    Bu aşk sözcüklerle anlatılamayacak kadar büyük, kalbimde hissettiğim 
+                    bu sevgi tarif edilemeyecek kadar derin. Sen benim mucizem, benim 
+                    hayatımın anlamısın.
+                </p>
+                
+                <p>
+                    Günaydın canım, ruhumun diğer yarısı... Bugün de seni sevecek, 
+                    seni düşünecek, seninle mutlu olacağım. Bu sabah sana olan aşkımla 
+                    uyanıyorum ve bu gece sana olan sevgimle uyuyacağım.
+                </p>
+            </div>
+            
+            <div class="signature">
+                Seni sonsuz sevgiyle,<br>
+                Mehmet 💕
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sayfa yüklendiğinde otomatik müzik başlatma
+        window.addEventListener('load', function() {
+            // Müzik başlatma için kullanıcı etkileşimi gereken durumlarda
+            // Sayfanın herhangi bir yerine tıklanmasını bekle
+            document.addEventListener('click', function() {
+                const player = document.getElementById('youtube-player');
+                // YouTube iframe'i yeniden yükle (autoplay ile)
+                player.src = player.src;
+            }, { once: true });
+        });
+
+        function openLetter() {
+            const cover = document.getElementById('letterCover');
+            const letter = document.getElementById('loveLetter');
+            
+            // Hide cover and show letter
+            cover.style.display = 'none';
+            letter.classList.add('show');
+            
+            // Auto-scroll to reveal content gradually
+            setTimeout(() => {
+                const letterContent = document.querySelector('.letter-content');
+                const paragraphs = letterContent.querySelectorAll('p');
+                
+                paragraphs.forEach((p, index) => {
+                    setTimeout(() => {
+                        p.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, (index + 1) * 1000);
+                });
+            }, 500);
+        }
+
+        // Arka plan animasyonlarının rastgele konumlandırılması
+        document.addEventListener('DOMContentLoaded', function() {
+            const hearts = document.querySelectorAll('.heart');
+            const flowers = document.querySelectorAll('.flower');
+            
+            hearts.forEach(heart => {
+                heart.style.top = Math.random() * 80 + 10 + '%';
+            });
+            
+            flowers.forEach(flower => {
+                flower.style.top = Math.random() * 80 + 10 + '%';
+            });
+        });
+    </script>
+</body>
+</html>
