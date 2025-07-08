@@ -8,6 +8,11 @@
 </head>
 <body>
 
+    <audio id="background-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        Tarayıcınız ses etiketini desteklemiyor.
+    </audio>
+
     <div class="particle-background" id="particle-background"></div>
     <div class="heart-container" id="heart-container"></div>
 
@@ -75,8 +80,7 @@
             const loveLetter = document.getElementById('loveLetter');
             const particleBg = document.getElementById('particle-background');
             const heartContainer = document.getElementById('heart-container');
-            let audioContext;
-            let isMusicPlaying = false;
+            const music = document.getElementById('background-music');
 
             // --- Particle Background ---
             const particleCount = 100;
@@ -99,7 +103,11 @@
                 loveLetter.classList.add('show');
                 
                 triggerHeartBurst();
-                playMusic();
+                
+                // Play Music
+                music.play().catch(error => {
+                    console.log("Tarayıcı otomatik oynatmayı engelledi. Kullanıcı etkileşimi gerekiyor.");
+                });
 
                 setTimeout(() => {
                     letterCover.style.display = 'none';
@@ -132,49 +140,6 @@
                         heart.remove();
                     }, 4000);
                 }
-            }
-            
-            // --- Background Music ---
-            function playMusic() {
-                if (isMusicPlaying) return;
-
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                isMusicPlaying = true;
-                
-                const melody = [
-                    { note: 'E5', duration: 0.5 }, { note: 'D5', duration: 0.5 }, { note: 'C5', duration: 1 },
-                    { note: 'E5', duration: 0.5 }, { note: 'D5', duration: 0.5 }, { note: 'C5', duration: 1 },
-                    { note: 'G5', duration: 0.5 }, { note: 'G5', duration: 0.5 }, { note: 'A5', duration: 0.5 }, { note: 'A5', duration: 0.5 },
-                    { note: 'G5', duration: 1 }, { note: 'F5', duration: 0.5 }, { note: 'E5', duration: 1 },
-                ];
-
-                const noteFrequencies = {
-                    'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.00,
-                };
-                
-                let currentTime = audioContext.currentTime;
-                
-                melody.forEach(item => {
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.type = 'sine';
-                    oscillator.frequency.value = noteFrequencies[item.note];
-                    
-                    gainNode.gain.setValueAtTime(0, currentTime);
-                    gainNode.gain.linearRampToValueAtTime(0.1, currentTime + 0.1);
-                    gainNode.gain.linearRampToValueAtTime(0, currentTime + item.duration - 0.1);
-                    
-                    oscillator.start(currentTime);
-                    oscillator.stop(currentTime + item.duration);
-                    
-                    currentTime += item.duration;
-                });
-
-                setTimeout(playMusic, currentTime * 1000);
             }
         });
     </script>
