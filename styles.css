@@ -1,329 +1,265 @@
-@import url(' https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:wght@400;600&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-color: #fdefee;
+    --envelope-color: #f7d9d9;
+    --flap-color: #f2c4c4;
+    --text-color: #5c4747;
+    --accent-color: #c78888;
+    --heart-color: #e2a5a5;
+    --font-heading: 'Parisienne', cursive;
+    --font-body: 'Cormorant Garamond', serif;
 }
 
 body {
-  font-family: 'Playfair Display', serif;
-  background: linear-gradient(135deg, #ff99cc 0%, #ffccff 50%, #ffe6f0 100%);
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
+    background-color: var(--bg-color);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(circle at 30% 20%, rgba(255, 182, 193, 0.4) 0%, transparent 50%),
-    radial-gradient(circle at 70% 80%, rgba(255, 105, 180, 0.3) 0%, transparent 50%);
-  z-index: 0;
+/* --- Particle Background --- */
+.particle-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.youtube-player {
-  position: fixed;
-  top: -200px;
-  left: -200px;
-  width: 100px;
-  height: 100px;
-  opacity: 0;
-  pointer-events: none;
-  z-index: -1;
+.particle {
+    position: absolute;
+    background-color: var(--heart-color);
+    border-radius: 50%;
+    opacity: 0;
+    animation: rise 15s infinite linear;
 }
 
-.container {
-  position: relative;
-  z-index: 2;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 40px 20px;
+@keyframes rise {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+    }
 }
 
-.background-effects {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
 
-.heart-burst {
-  position: absolute;
-  font-size: 24px;
-  color: #ff69b4;
-  animation: float 10s ease-in-out infinite;
-  text-shadow: 0 0 12px rgba(255, 105, 180, 0.6);
-}
-
-.flower {
-  position: absolute;
-  font-size: 26px;
-  animation: sway 12s ease-in-out infinite;
-  filter: drop-shadow(0 0 10px rgba(255, 182, 193, 0.8));
-}
-
-.firework.heart {
-  opacity: 0;
-  animation: heartFirework 2.5s ease-out forwards;
+/* --- Envelope --- */
+.envelope-wrapper {
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
 }
 
 .envelope {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  height: 400px;
-  margin: 0 auto;
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  transition: transform 0.5s;
+    position: relative;
+    width: 320px;
+    height: 220px;
+    background-color: var(--envelope-color);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transition: transform 1s 1s ease-in-out, box-shadow 1s 1s ease-in-out;
+    transform-style: preserve-3d;
 }
 
-.envelope-front {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #ffe4e1, #fff);
-  z-index: 2;
+.envelope-wrapper.open .envelope {
+    transform: translateY(120px) rotateX(180deg) scale(1.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    z-index: 5;
 }
 
 .envelope-flap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50%;
-  background: #ffe4e1;
-  clip-path: polygon(0 0, 50% 50%, 100% 0);
-  transform-origin: top;
-  transition: transform 1s ease;
-  z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 110px;
+    background-color: var(--flap-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transform-origin: top;
+    transition: transform 1s ease-in-out;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
 }
 
-.envelope.open .envelope-flap {
-  transform: rotateX(-180deg);
+.envelope-wrapper.open .envelope-flap {
+    transform: rotateX(180deg);
+    transition-delay: 1s;
 }
 
-.envelope-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 1;
-  opacity: 0;
-  animation: fadeInUp 1s ease-out 0.5s forwards;
+.envelope-front {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--envelope-color);
+    border-radius: 10px;
+    clip-path: polygon(0 100%, 0% 48%, 50% 70%, 100% 48%, 100% 100%);
+    z-index: 3;
 }
 
-.cover-title {
-  font-family: 'Dancing Script', cursive;
-  font-size: 2.8em;
-  color: #c71585;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 10px rgba(199, 21, 133, 0.3);
+.heart-seal {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: var(--heart-color);
+    transition: opacity 0.5s 1s ease;
 }
 
-.cover-subtitle {
-  font-size: 1.4em;
-  color: #555;
-  margin-bottom: 30px;
-  font-style: italic;
+.envelope-wrapper.open .heart-seal {
+    opacity: 0;
 }
 
-.open-button {
-  background: linear-gradient(135deg, #ff69b4, #ff99cc);
-  color: white;
-  border: none;
-  padding: 15px 35px;
-  font-size: 1.2em;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
-}
-
-.open-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 105, 180, 0.6);
-}
-
+/* --- Love Letter --- */
 .love-letter {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 240, 245, 0.98));
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  display: none;
-  opacity: 0;
-  transform: translateY(50px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(100%);
+    transition: transform 1s 1s ease-in-out, opacity 1s 1s ease-in-out;
+    opacity: 0;
+    z-index: 1;
+    overflow-y: auto;
+    color: var(--text-color);
 }
 
-.love-letter.show {
-  display: block;
-  animation: letterAppear 1.5s ease-out forwards;
-}
-
-.letter-header {
-  text-align: center;
-  margin-bottom: 30px;
-  border-bottom: 2px solid #ff99cc;
-  padding-bottom: 20px;
+.envelope-wrapper.open .love-letter {
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 2s; /* Wait for envelope to open */
 }
 
 .letter-title {
-  font-family: 'Dancing Script', cursive;
-  font-size: 2.5em;
-  color: #c71585;
-  text-shadow: 2px 2px 8px rgba(199, 21, 133, 0.2);
-}
-
-.letter-subtitle {
-  font-size: 1.2em;
-  color: #666;
-  font-style: italic;
-}
-
-.letter-content {
-  line-height: 1.8;
-  color: #333;
-  font-size: 1.1em;
-  text-align: justify;
+    font-family: var(--font-heading);
+    font-size: 3em;
+    color: var(--accent-color);
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .letter-content p {
-  margin-bottom: 20px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.8s ease-out;
+    font-size: 1.1em;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: fadeInText 1s ease-out forwards;
 }
 
-.letter-content p.reveal {
-  opacity: 1;
-  transform: translateY(0);
-}
+.letter-content p:nth-child(1) { animation-delay: 3s; }
+.letter-content p:nth-child(2) { animation-delay: 4.5s; }
+.letter-content p:nth-child(3) { animation-delay: 6s; }
+.letter-content p:nth-child(4) { animation-delay: 7.5s; }
+.letter-content p:nth-child(5) { animation-delay: 9s; }
+.letter-content p:nth-child(6) { animation-delay: 10.5s; }
+.letter-content p:nth-child(7) { animation-delay: 12s; }
 
-.letter-content p::first-letter {
-  font-size: 1.6em;
-  color: #ff69b4;
-  float: left;
-  margin-right: 5px;
-}
 
 .signature {
-  text-align: right;
-  margin-top: 30px;
-  font-family: 'Dancing Script', cursive;
-  font-size: 1.5em;
-  color: #c71585;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.8s ease-out;
+    text-align: right;
+    font-family: var(--font-heading);
+    font-size: 2em;
+    color: var(--accent-color);
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeInText 1s ease-out 13s forwards;
 }
 
-.signature.reveal {
-  opacity: 1;
-  transform: translateY(0);
+@keyframes fadeInText {
+    to { opacity: 1; }
 }
 
-.music-note {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  font-size: 30px;
-  color: #ff69b4;
-  animation: musicBounce 2s ease-in-out infinite;
+
+/* --- Initial Prompt Text --- */
+.prompt-text {
+    position: absolute;
+    bottom: -60px;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 1.2em;
+    color: var(--accent-color);
+    font-weight: 600;
+    letter-spacing: 1px;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
 }
 
-.youtube-link {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: linear-gradient(135deg, #ff69b4, #ff99cc);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 0.9em;
-  transition: all 0.3s;
+.envelope-wrapper.open .prompt-text {
+    opacity: 0;
 }
 
-.youtube-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 105, 180, 0.5);
+/* --- Confetti --- */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
 }
 
-.music-notification {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  background: rgba(255, 105, 180, 0.9);
-  color: white;
-  padding: 10px 15px;
-  border-radius: 15px;
-  font-size: 0.8em;
-  animation: fadeIn 1s ease-out 2s forwards;
-  opacity: 0;
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    opacity: 0;
+    animation: confetti-fall 3s ease-out forwards;
 }
 
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(180deg); }
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-20vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(120vh) rotate(720deg);
+        opacity: 0;
+    }
 }
 
-@keyframes sway {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  50% { transform: translateX(15px) rotate(5deg); }
-}
 
-@keyframes heartFirework {
-  0% { opacity: 0; transform: scale(0) translateY(0); }
-  50% { opacity: 1; transform: scale(2) translateY(-50px); }
-  100% { opacity: 0; transform: scale(3) translateY(-100px); }
-}
-
-@keyframes fadeInUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes letterAppear {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes musicBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container { padding: 20px 15px; }
-  .envelope { height: 350px; }
-  .cover-title { font-size: 2.2em; }
-  .cover-subtitle { font-size: 1.2em; }
-  .letter-title { font-size: 2em; }
-  .letter-content { font-size: 1em; }
-}
-
+/* Mobile Styles */
 @media (max-width: 480px) {
-  .envelope { height: 300px; }
-  .cover-title { font-size: 1.8em; }
-  .cover-subtitle { font-size: 1em; }
-  .open-button { padding: 12px 25px; font-size: 1em; }
-  .letter-title { font-size: 1.8em; }
-  .letter-content { font-size: 0.95em; }
-  .signature { font-size: 1.3em; }
+    .envelope {
+        width: 280px;
+        height: 190px;
+    }
+    .love-letter {
+        padding: 20px;
+    }
+    .letter-title {
+        font-size: 2.5em;
+    }
+    .letter-content p {
+        font-size: 1em;
+    }
+    .signature {
+        font-size: 1.8em;
+    }
 }

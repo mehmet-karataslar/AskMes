@@ -1,185 +1,159 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Canıma Mektup ❤️</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sana Özel Bir Sürprizim Var ❤️</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Müzik Otomatik Başlat Bildirimi -->
-  <div class="music-notification">🎵 Müzik çalıyor...</div>
+    <div class="particle-background" id="particle-background"></div>
+    <div class="confetti-container" id="confetti-container"></div>
 
-  <!-- YouTube Player (Gizli) -->
-  <iframe 
-    id="youtube-player"
-    class="youtube-player"
-    src="https://www.youtube.com/embed/CWHqdcBE1Ls?autoplay=1&controls=0&showinfo=0&rel=0&mute=0&loop=1&playlist=CWHqdcBE1Ls"
-    frameborder="0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
-  </iframe>
-
-  <!-- Arka Plan Efektleri -->
-  <div class="background-effects">
-    <!-- Rastgele Kalpler -->
-    <div class="heart-burst">💖</div>
-    <div class="heart-burst">💝</div>
-    <div class="heart-burst">💗</div>
-    <div class="heart-burst">💕</div>
-    <div class="heart-burst">💞</div>
-    <div class="heart-burst">❤️</div>
+    <div class="envelope-wrapper" id="envelope-wrapper">
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-front"></div>
+            <div class="heart-seal">❤️</div>
+            
+            <div class="love-letter" id="loveLetter">
+                <div class="letter-title">Canım Aşkım,</div>
+                <div class="letter-content">
+                    <p>
+                        Güneş doğmuş, yeni bir gün başlamış... Ama benim için günün en güzel anı, 
+                        gözlerimi açtığımda seni düşünmeye başladığım an. Sabahın ilk nefesinde 
+                        senin kokun var, ilk düşüncemde senin gülümsemen...
+                    </p>
+                    
+                    <p>
+                        Biliyorsun, her sabah uyandığımda kalbimde bir sıcaklık hissediyorum. 
+                        Bu sıcaklık senin varlığından geliyor, senin benimle olduğunu bilmekten. 
+                        Hayatıma kattığın renklerin, getirdiğin mutluluğun farkında mısın?
+                    </p>
+                    
+                    <p>
+                        Sabahın sessizliğinde seni düşünüyorum... Nasıl bir melek olabilirsin ki 
+                        böyle? Gülüşün baharı getiriyor kalbime, sesinin melodisi kulaklarımda. 
+                        Sen sadece sevgilim değilsin, sen benim nefesimsin, kalbimin atışısın.
+                    </p>
+                    
+                    <p>
+                        Bugün de seninle geçireceğim her an bir hediye benim için. Senin varlığın 
+                        beni daha iyi bir insan yapıyor, seni sevmek beni daha güçlü kılıyor. 
+                        Bu sabah sana söylemek istiyorum ki, sen benim hayatımın en güzel şiirisin.
+                    </p>
+                    
+                    <p>
+                        Gözlerinin derinliğinde kayboluyorum her baktığımda... Orada gördüğüm 
+                        sevgi, sıcaklık ve sonsuzluk beni mest ediyor. Sen benim sonsuzluğumsun, 
+                        benim ebediyetimsun, benim her şeyimsin.
+                    </p>
+                    
+                    <p>
+                        Bu güzel sabahta sana söylemek istiyorum: Seni seviyorum, çok seviyorum. 
+                        Bu aşk sözcüklerle anlatılamayacak kadar büyük, kalbimde hissettiğim 
+                        bu sevgi tarif edilemeyecek kadar derin. Sen benim mucizem, benim 
+                        hayatımın anlamısın.
+                    </p>
+                    
+                    <p>
+                        Günaydın canım, ruhumun diğer yarısı... Bugün de seni sevecek, 
+                        seni düşünecek, seninle mutlu olacağım. Bu sabah sana olan aşkımla 
+                        uyanıyorum ve bu gece sana olan sevgimle uyuyacağım.
+                    </p>
+                </div>
+                <div class="signature">
+                    Mehmet'in...
+                </div>
+            </div>
+        </div>
+        <div class="prompt-text">Açmak için zarfa tıkla</div>
+    </div>
     
-    <!-- Rastgele Çiçekler -->
-    <div class="flower">🌸</div>
-    <div class="flower">🌺</div>
-    <div class="flower">🌻</div>
-    <div class="flower">🌹</div>
-    <div class="flower">🌷</div>
-  </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const envelopeWrapper = document.getElementById('envelope-wrapper');
+            const particleBg = document.getElementById('particle-background');
+            const confettiContainer = document.getElementById('confetti-container');
 
-  <!-- Ana İçerik -->
-  <div class="container">
-    <!-- Zarf -->
-    <div class="envelope" id="envelope">
-      <div class="envelope-front"></div>
-      <div class="envelope-flap"></div>
-      <div class="envelope-content">
-        <h1 class="cover-title">💌 Mehmedinden Sana Bir Mektup 💌</h1>
-        <p class="cover-subtitle">Kalbimin derinliklerinden bir mesaj...</p>
-        <button class="open-button" onclick="openLetter()">📜 Mektubu Aç</button>
-      </div>
-    </div>
+            // --- Particle Background ---
+            const particleCount = 100;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.width = `${Math.random() * 3 + 1}px`;
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                particleBg.appendChild(particle);
+            }
 
-    <!-- Açılan Mektup -->
-    <div class="love-letter" id="loveLetter">
-      <div class="letter-header">
-        <h1 class="letter-title">Günaydın Hayatım 💕</h1>
-        <p class="letter-subtitle">Sana yazılmış bir sevgi mektubu</p>
-      </div>
+            // --- Open Envelope ---
+            envelopeWrapper.addEventListener('click', () => {
+                if (!envelopeWrapper.classList.contains('open')) {
+                    envelopeWrapper.classList.add('open');
+                    triggerConfetti();
+                }
+            });
 
-      <div class="letter-content">
-        <p>
-          Gün ışığı perdelerden süzülürken, kalbimde senin adın yankılanıyor. 
-          Her sabah, gözlerimi açtığımda ilk düşüncem sen oluyorsun; gülüşün, 
-          sıcaklığın, sevgin... Seninle başlayan her an, bir mucize gibi.
-        </p>
+            // --- Confetti ---
+            function triggerConfetti() {
+                const confettiCount = 150;
+                const colors = ['#e2a5a5', '#c78888', '#f7d9d9', '#fdefee', '#ffffff'];
+                for (let i = 0; i < confettiCount; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    const xPos = Math.random() * 100;
+                    const yPos = -20 - (Math.random() * 20);
+                    confetti.style.left = `${xPos}%`;
+                    confetti.style.top = `${yPos}vh`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confetti.style.animationDelay = `${Math.random() * 2}s`;
+                    confetti.style.animationDuration = `${Math.random() * 3 + 3}s`;
+                    confettiContainer.appendChild(confetti);
 
-        <p>
-          Seninle geçirdiğim her an, hayatıma bir bahar getiriyor. Gözlerinle 
-          buluştuğumda, dünya susuyor ve sadece senin kalbinin atışını duyuyorum. 
-          Sen benim en güzel hayalim, en tatlı gerçeğimsin.
-        </p>
-
-        <p>
-          Biliyor musun, seninle konuşurken zamanın nasıl geçtiğini anlamıyorum. 
-          Sesin, ruhuma bir melodi gibi işliyor; her kelimenle biraz daha âşık 
-          oluyorum. Seninle geçireceğim her an, bir ömre bedel.
-        </p>
-
-        <p>
-          Hayat bazen karmaşık, bazen zor olsa da, senin varlığın her şeyi 
-          güzelleştiriyor. Senin sevgin, benim en büyük gücüm, en büyük 
-          mutluluğum. Seninle her şey mümkün, her hayal gerçek.
-        </p>
-
-        <p>
-          Bu mektubu yazarken, kalbimde sana olan sevgimin ne kadar derin olduğunu 
-          bir kez daha hissettim. Sen benim ruh eşim, benim sonsuz aşkımsın. 
-          Her nefeste, her adımda seni sevmeye devam edeceğim.
-        </p>
-
-        <p>
-          Günaydın canım, benim en güzel şiirim... Bugün de seni düşüneceğim, 
-          seni seveceğim ve seninle geçireceğim her anın tadını çıkaracağım. 
-          Seni sevmek, hayatımın en güzel hediyesi.
-        </p>
-      </div>
-
-      <div class="signature">
-        Sonsuz sevgimle,<br>
-        Mehmet 💕
-      </div>
-    </div>
-  </div>
-
-  <!-- Ekstra Butonlar -->
-  <div class="music-note">🎵</div>
-  <a href=" https://www.youtube.com/watch?v=CWHqdcBE1Ls" target="_blank" class="youtube-link">🎵 YouTube'da Aç</a>
-
-  <script>
-    window.addEventListener('load', function () {
-      document.addEventListener('click', function () {
-        const player = document.getElementById('youtube-player');
-        player.src = player.src;
-      }, { once: true });
-    });
-
-    function openLetter() {
-      const envelope = document.getElementById('envelope');
-      const letter = document.getElementById('loveLetter');
-
-      // Zarfın açılma animasyonu
-      envelope.classList.add('open');
-
-      // Kalp fırtınası başlat
-      triggerHeartFireworks();
-
-      setTimeout(() => {
-        envelope.style.display = 'none';
-        letter.classList.add('show');
-
-        const paragraphs = letter.querySelectorAll('.letter-content p');
-        const signature = letter.querySelector('.signature');
-
-        paragraphs.forEach((p, index) => {
-          setTimeout(() => {
-            p.classList.add('reveal');
-            p.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, (index + 1) * 1000);
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }
+            }
         });
-
-        setTimeout(() => {
-          signature.classList.add('reveal');
-        }, (paragraphs.length + 1) * 1000);
-      }, 2000);
-    }
-
-    function triggerHeartFireworks() {
-      const background = document.querySelector('.background-effects');
-
-      for (let i = 0; i < 40; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'firework heart';
-        heart.innerHTML = ['💖', '💝', '💗', '💕', '❤️'][Math.floor(Math.random() * 5)];
-        heart.style.left = Math.random() * 100 + '%';
-        heart.style.top = Math.random() * 100 + '%';
-        heart.style.fontSize = (20 + Math.random() * 10) + 'px';
-        heart.style.animationDelay = (Math.random() * 1.5) + 's';
-
-        background.appendChild(heart);
-
-        setTimeout(() => {
-          heart.remove();
-        }, 3000);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      const hearts = document.querySelectorAll('.heart-burst');
-      const flowers = document.querySelectorAll('.flower');
-
-      hearts.forEach(heart => {
-        heart.style.left = Math.random() * 90 + 5 + '%';
-        heart.style.animationDuration = (6 + Math.random() * 6) + 's';
-      });
-
-      flowers.forEach(flower => {
-        flower.style.left = Math.random() * 90 + 5 + '%';
-        flower.style.animationDuration = (8 + Math.random() * 8) + 's';
-      });
-    });
-  </script>
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player-placeholder', {
+                height: '0',
+                width: '0',
+                videoId: 'CWHqdcBE1Ls',
+                playerVars: {
+                    'autoplay': 0, // Should be 0, will be played on click
+                    'controls': 0,
+                    'showinfo': 0,
+                    'rel': 0,
+                    'loop': 1,
+                    'playlist': 'CWHqdcBE1Ls' 
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+    
+        function onPlayerReady(event) {
+            // Player is ready
+            document.getElementById('envelope-wrapper').addEventListener('click', function() {
+                if(player && typeof player.playVideo === 'function'){
+                    player.playVideo();
+                    player.unMute();
+                }
+            }, { once: true });
+        }
+    </script>
+    <div id="youtube-player-placeholder"></div>
 </body>
 </html>
