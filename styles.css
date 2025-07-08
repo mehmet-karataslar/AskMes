@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap');
 
 * {
     margin: 0;
@@ -13,8 +13,8 @@
     --accent-color: #c78888;
     --accent-glow: rgba(199, 136, 136, 0.5);
     --heart-color: #e2a5a5;
-    --font-heading: 'Parisienne', cursive;
-    --font-body: 'Cormorant Garamond', serif;
+    --font-heading: 'Great Vibes', cursive;
+    --font-body: 'Lora', serif;
 }
 
 body {
@@ -77,7 +77,7 @@ body {
 
 .cover-title {
     font-family: var(--font-heading);
-    font-size: 3em;
+    font-size: 3.5em;
     color: var(--accent-color);
     margin-bottom: 15px;
 }
@@ -152,14 +152,14 @@ body {
 
 .letter-title {
     font-family: var(--font-heading);
-    font-size: 3em;
+    font-size: 3.5em;
     color: var(--accent-color);
     text-align: center;
     margin-bottom: 20px;
 }
 
 .letter-content p {
-    font-size: 1.1em;
+    font-size: 1.2em;
     line-height: 1.8;
     margin-bottom: 15px;
     opacity: 0;
@@ -178,7 +178,7 @@ body {
 .signature {
     text-align: right;
     font-family: var(--font-heading);
-    font-size: 2em;
+    font-size: 2.5em;
     color: var(--accent-color);
     margin-top: 20px;
     opacity: 0;
@@ -190,8 +190,8 @@ body {
 }
 
 
-/* --- Confetti --- */
-.confetti-container {
+/* --- Heart Burst --- */
+.heart-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -201,22 +201,23 @@ body {
     z-index: 100;
 }
 
-.confetti {
+.flying-heart {
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: #f00;
+    left: 50%;
+    top: 50%;
     opacity: 0;
-    animation: confetti-fall 3s ease-out forwards;
+    animation: fly-out 3s ease-out forwards;
+    font-size: 20px;
+    color: var(--heart-color);
 }
 
-@keyframes confetti-fall {
+@keyframes fly-out {
     0% {
-        transform: translateY(-20vh) rotate(0deg);
+        transform: translate(-50%, -50%) scale(0);
         opacity: 1;
     }
     100% {
-        transform: translateY(120vh) rotate(720deg);
+        transform: translate(var(--x-end), var(--y-end)) scale(1.2);
         opacity: 0;
     }
 }
@@ -229,7 +230,7 @@ body {
         max-width: 90vw;
     }
     .cover-title {
-        font-size: 2.5em;
+        font-size: 2.8em;
     }
     .cover-subtitle {
         font-size: 1.1em;
@@ -239,12 +240,12 @@ body {
         width: 95vw;
     }
     .letter-title {
-        font-size: 2.5em;
+        font-size: 2.8em;
     }
     .letter-content p {
-        font-size: 1em;
+        font-size: 1.1em;
     }
     .signature {
-        font-size: 1.8em;
+        font-size: 2em;
     }
 }

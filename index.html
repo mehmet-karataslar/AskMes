@@ -9,7 +9,7 @@
 <body>
 
     <div class="particle-background" id="particle-background"></div>
-    <div class="confetti-container" id="confetti-container"></div>
+    <div class="heart-container" id="heart-container"></div>
 
     <div class="letter-cover" id="letter-cover">
         <h1 class="cover-title">Mehmedinden Sana Bir Mektup Var</h1>
@@ -74,7 +74,9 @@
             const letterCover = document.getElementById('letter-cover');
             const loveLetter = document.getElementById('loveLetter');
             const particleBg = document.getElementById('particle-background');
-            const confettiContainer = document.getElementById('confetti-container');
+            const heartContainer = document.getElementById('heart-container');
+            let audioContext;
+            let isMusicPlaying = false;
 
             // --- Particle Background ---
             const particleCount = 100;
@@ -96,68 +98,85 @@
                 
                 loveLetter.classList.add('show');
                 
-                triggerConfetti();
+                triggerHeartBurst();
+                playMusic();
 
                 setTimeout(() => {
                     letterCover.style.display = 'none';
                 }, 1000);
-            });
+            }, { once: true });
 
-            // --- Confetti ---
-            function triggerConfetti() {
-                const confettiCount = 150;
-                const colors = ['#e2a5a5', '#c78888', '#f7d9d9', '#fdefee', '#ffffff'];
-                for (let i = 0; i < confettiCount; i++) {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    const xPos = Math.random() * 100;
-                    const yPos = -20 - (Math.random() * 20);
-                    confetti.style.left = `${xPos}%`;
-                    confetti.style.top = `${yPos}vh`;
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                    confetti.style.animationDelay = `${Math.random() * 2}s`;
-                    confetti.style.animationDuration = `${Math.random() * 3 + 3}s`;
-                    confettiContainer.appendChild(confetti);
+            // --- Heart Burst ---
+            function triggerHeartBurst() {
+                const heartCount = 50;
+                const EMOJIS = ['❤️', '💖', '💕', '💗', '💓', '💞'];
+                for (let i = 0; i < heartCount; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'flying-heart';
+                    heart.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+                    heart.style.fontSize = `${Math.random() * 20 + 15}px`;
+                    
+                    const angle = Math.random() * 360;
+                    const radius = Math.random() * window.innerWidth / 2;
+                    const xEnd = Math.cos(angle) * radius + 'px';
+                    const yEnd = Math.sin(angle) * radius + 'px';
+
+                    heart.style.setProperty('--x-end', xEnd);
+                    heart.style.setProperty('--y-end', yEnd);
+                    
+                    heart.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                    
+                    heartContainer.appendChild(heart);
 
                     setTimeout(() => {
-                        confetti.remove();
-                    }, 5000);
+                        heart.remove();
+                    }, 4000);
                 }
+            }
+            
+            // --- Background Music ---
+            function playMusic() {
+                if (isMusicPlaying) return;
+
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                isMusicPlaying = true;
+                
+                const melody = [
+                    { note: 'E5', duration: 0.5 }, { note: 'D5', duration: 0.5 }, { note: 'C5', duration: 1 },
+                    { note: 'E5', duration: 0.5 }, { note: 'D5', duration: 0.5 }, { note: 'C5', duration: 1 },
+                    { note: 'G5', duration: 0.5 }, { note: 'G5', duration: 0.5 }, { note: 'A5', duration: 0.5 }, { note: 'A5', duration: 0.5 },
+                    { note: 'G5', duration: 1 }, { note: 'F5', duration: 0.5 }, { note: 'E5', duration: 1 },
+                ];
+
+                const noteFrequencies = {
+                    'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.00,
+                };
+                
+                let currentTime = audioContext.currentTime;
+                
+                melody.forEach(item => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = noteFrequencies[item.note];
+                    
+                    gainNode.gain.setValueAtTime(0, currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.1, currentTime + 0.1);
+                    gainNode.gain.linearRampToValueAtTime(0, currentTime + item.duration - 0.1);
+                    
+                    oscillator.start(currentTime);
+                    oscillator.stop(currentTime + item.duration);
+                    
+                    currentTime += item.duration;
+                });
+
+                setTimeout(playMusic, currentTime * 1000);
             }
         });
     </script>
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script>
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player-placeholder', {
-                height: '0',
-                width: '0',
-                videoId: 'CWHqdcBE1Ls',
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'showinfo': 0,
-                    'rel': 0,
-                    'loop': 1,
-                    'playlist': 'CWHqdcBE1Ls' 
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-    
-        function onPlayerReady(event) {
-            document.getElementById('open-button').addEventListener('click', function() {
-                if(player && typeof player.playVideo === 'function'){
-                    player.playVideo();
-                    player.unMute();
-                }
-            }, { once: true });
-        }
-    </script>
-    <div id="youtube-player-placeholder"></div>
 </body>
 </html>
