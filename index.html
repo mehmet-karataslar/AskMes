@@ -34,6 +34,7 @@
         <div class="heart">💝</div>
         <div class="heart">💕</div>
         <div class="heart">💖</div>
+        <div class="heart">💗</div>
         
         <!-- Flowers -->
         <div class="flower">🌸</div>
@@ -53,13 +54,6 @@
         <div class="sparkle"></div>
         <div class="sparkle"></div>
         <div class="sparkle"></div>
-        
-        <!-- Fireworks -->
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
     </div>
 
     <!-- Music Note -->
@@ -144,10 +138,8 @@
         // Sayfa yüklendiğinde otomatik müzik başlatma
         window.addEventListener('load', function() {
             // Müzik başlatma için kullanıcı etkileşimi gereken durumlarda
-            // Sayfanın herhangi bir yerine tıklanmasını bekle
             document.addEventListener('click', function() {
                 const player = document.getElementById('youtube-player');
-                // YouTube iframe'i yeniden yükle (autoplay ile)
                 player.src = player.src;
             }, { once: true });
         });
@@ -156,12 +148,14 @@
             const cover = document.getElementById('letterCover');
             const letter = document.getElementById('loveLetter');
             
-            // Hide cover and show letter
-            cover.style.display = 'none';
-            letter.classList.add('show');
+            // Trigger massive heart fireworks first
+            triggerHeartFireworks();
             
-            // Trigger fireworks
-            triggerFireworks();
+            // Hide cover after fireworks start
+            setTimeout(() => {
+                cover.style.display = 'none';
+                letter.classList.add('show');
+            }, 1000);
             
             // Slow scroll to reveal content gradually
             setTimeout(() => {
@@ -175,48 +169,128 @@
                             block: 'center',
                             inline: 'nearest'
                         });
-                    }, (index + 8) * 2000); // Much slower: 2 seconds between each paragraph
+                    }, (index + 3) * 1500);
                 });
-            }, 1000);
+            }, 2000);
         }
         
-        function triggerFireworks() {
-            const fireworks = document.querySelectorAll('.firework');
+        function triggerHeartFireworks() {
+            const backgroundAnimation = document.querySelector('.background-animation');
             
-            // Create additional fireworks dynamically
-            for (let i = 0; i < 15; i++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.style.left = Math.random() * 100 + '%';
-                firework.style.top = Math.random() * 100 + '%';
-                firework.style.animationDelay = (Math.random() * 3) + 's';
+            // Create massive heart fireworks explosion
+            for (let i = 0; i < 30; i++) {
+                const heartFirework = document.createElement('div');
+                heartFirework.className = 'firework';
+                heartFirework.innerHTML = ['💖', '💝', '💗', '💕', '❤️', '💘', '💞'][Math.floor(Math.random() * 7)];
+                heartFirework.style.left = Math.random() * 100 + '%';
+                heartFirework.style.top = Math.random() * 100 + '%';
+                heartFirework.style.animationDelay = (Math.random() * 2) + 's';
+                heartFirework.style.fontSize = (15 + Math.random() * 15) + 'px';
                 
-                // Random colors
-                const colors = ['#ff6b8a', '#ffeb3b', '#ff8fab', '#fecfef', '#d63384'];
-                firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                backgroundAnimation.appendChild(heartFirework);
                 
-                document.querySelector('.background-animation').appendChild(firework);
-                
-                // Remove firework after animation
+                // Remove after animation
                 setTimeout(() => {
-                    firework.remove();
-                }, 5000);
+                    heartFirework.remove();
+                }, 4000);
+            }
+            
+            // Create additional sparkle explosion
+            for (let i = 0; i < 20; i++) {
+                const sparkleFirework = document.createElement('div');
+                sparkleFirework.className = 'sparkle';
+                sparkleFirework.style.left = Math.random() * 100 + '%';
+                sparkleFirework.style.top = Math.random() * 100 + '%';
+                sparkleFirework.style.animationDelay = (Math.random() * 1) + 's';
+                sparkleFirework.style.animationDuration = '2s';
+                sparkleFirework.style.width = (4 + Math.random() * 6) + 'px';
+                sparkleFirework.style.height = (4 + Math.random() * 6) + 'px';
+                
+                const colors = ['#ffeb3b', '#ffd700', '#ff69b4', '#ff1493', '#ffc0cb'];
+                sparkleFirework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                backgroundAnimation.appendChild(sparkleFirework);
+                
+                setTimeout(() => {
+                    sparkleFirework.remove();
+                }, 3000);
             }
         }
         
-        // Arka plan animasyonlarının rastgele konumlandırılması
+        // Enhanced background animations with random positioning
         document.addEventListener('DOMContentLoaded', function() {
             const hearts = document.querySelectorAll('.heart');
             const flowers = document.querySelectorAll('.flower');
+            const sparkles = document.querySelectorAll('.sparkle');
             
             hearts.forEach(heart => {
-                heart.style.top = Math.random() * 80 + 10 + '%';
+                heart.style.top = Math.random() * 85 + 5 + '%';
+                heart.style.animationDuration = (8 + Math.random() * 8) + 's';
             });
             
             flowers.forEach(flower => {
-                flower.style.top = Math.random() * 80 + 10 + '%';
+                flower.style.top = Math.random() * 85 + 5 + '%';
+                flower.style.animationDuration = (10 + Math.random() * 10) + 's';
             });
+            
+            sparkles.forEach(sparkle => {
+                sparkle.style.animationDuration = (2 + Math.random() * 4) + 's';
+            });
+            
+            // Add floating text effects
+            createFloatingWords();
         });
+        
+        function createFloatingWords() {
+            const words = ['Aşk', 'Sevgi', 'Günaydın', 'Canım', 'Hayatım', '💕', '💖', '💗'];
+            const backgroundAnimation = document.querySelector('.background-animation');
+            
+            setInterval(() => {
+                if (document.querySelectorAll('.floating-word').length < 3) {
+                    const word = document.createElement('div');
+                    word.className = 'floating-word';
+                    word.textContent = words[Math.floor(Math.random() * words.length)];
+                    word.style.position = 'absolute';
+                    word.style.left = Math.random() * 90 + 5 + '%';
+                    word.style.top = '100%';
+                    word.style.color = '#ff6b8a';
+                    word.style.fontSize = '16px';
+                    word.style.fontFamily = 'Dancing Script, cursive';
+                    word.style.fontWeight = '700';
+                    word.style.opacity = '0.7';
+                    word.style.textShadow = '0 0 10px rgba(255, 107, 138, 0.5)';
+                    word.style.animation = 'floatUp 8s linear forwards';
+                    word.style.pointerEvents = 'none';
+                    word.style.zIndex = '1';
+                    
+                    backgroundAnimation.appendChild(word);
+                    
+                    setTimeout(() => {
+                        word.remove();
+                    }, 8000);
+                }
+            }, 3000);
+        }
+        
+        // Add floating word animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUp {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 0.7;
+                }
+                50% {
+                    opacity: 1;
+                    transform: translateY(-50vh) rotate(180deg);
+                }
+                100% {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
