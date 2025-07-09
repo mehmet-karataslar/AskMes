@@ -1,0 +1,52 @@
+{
+  "memories": [
+    {
+      "id": 1,
+      "title": "İlk Buluşmamız",
+      "description": "O güzel günü hiç unutmayacağım...",
+      "content": "İlk kez gözlerinin içine baktığım o an, kalbimin nasıl hızlandığını hissettim. O gün hayatımın en güzel günlerinden biriydi.\n\nSenin gülümsemen, konuşman, her şeyin o kadar güzeldi ki... O andan itibaren seni hiç unutamadım.",
+      "date": "2023-06-15T14:30:00Z",
+      "image": null,
+      "category": "Özel Anlar",
+      "tags": ["ilk", "buluşma", "özel", "unutulmaz"],
+      "createdBy": "mehmet",
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "title": "İlk \"Seni Seviyorum\"",
+      "description": "Kalbimin en derin yerinden...",
+      "content": "O gece, yıldızların altında, ilk kez 'Seni seviyorum' dediğim an... Kalbimin derinliklerinden gelen o sözler, hayatımın en anlamlı anıydı.\n\nSenin de aynı şeyi hissettiğini öğrendiğimde, mutluluktan uçacak gibi oldum.",
+      "date": "2023-07-20T21:45:00Z",
+      "image": null,
+      "category": "Romantik",
+      "tags": ["sevgi", "itiraf", "romantik", "yıldızlar"],
+      "createdBy": "mehmet",
+      "createdAt": "2024-01-15T10:05:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Birlikte Geçirdiğimiz İlk Hafta Sonu",
+      "description": "Sadece ikimiz, sonsuz mutluluk...",
+      "content": "O hafta sonu, sadece ikimiz vardık. Konuştuk, güldük, birbirimizi daha iyi tanıdık. Her an çok değerliydi.\n\nO günleri düşündükçe gülümsüyorum. Seninle geçirdiğim her an çok kıymetli.",
+      "date": "2023-08-12T09:00:00Z",
+      "image": null,
+      "category": "Birlikte",
+      "tags": ["hafta sonu", "birlikte", "mutluluk", "konuşma"],
+      "createdBy": "sevgilim",
+      "createdAt": "2024-01-15T10:10:00Z"
+    },
+    {
+      "id": 4,
+      "title": "İlk Hediyem",
+      "description": "Sana verdiğim ilk hediye...",
+      "content": "Sana verdiğim o küçük hediyeyi hatırlıyor musun? Çok basit bir şeydi ama kalbimden geliyordu.\n\nO hediyeyi verirken ne kadar heyecanlı olduğumu, senin mutlu olup olmayacağını merak ettiğimi hatırlıyorum.",
+      "date": "2023-09-05T16:20:00Z",
+      "image": null,
+      "category": "Hediyeler",
+      "tags": ["hediye", "ilk", "heyecan", "mutluluk"],
+      "createdBy": "mehmet",
+      "createdAt": "2024-01-15T10:15:00Z"
+    }
+  ]
+} 

@@ -1,0 +1,28 @@
+{
+  "messages": [
+    {
+      "id": 1,
+      "sender": "mehmet",
+      "recipient": "sevgilim",
+      "title": "Günaydın Canım Aşkım",
+      "content": "Günaydın canım aşkım ❤️\n\nBugün de gözlerimi açtığımda aklıma ilk gelen sen oldun. Umarım güzel rüyalar görmüşsündür ve bugün senin için harika bir gün olur.\n\nSeni çok seviyorum ve her geçen gün daha da çok seviyorum. Sen benim hayatımın en güzel hediyesisin.\n\nÖpücüklerle,\nMehmet 💕",
+      "type": "Aşk Mektubu",
+      "date": "2024-01-15T08:00:00Z",
+      "read": false,
+      "featured": true,
+      "likes": 5
+    },
+    {
+      "id": 2,
+      "sender": "sevgilim",
+      "recipient": "mehmet",
+      "title": "Sana Teşekkür",
+      "content": "Bu güzel sürpriz için çok teşekkür ederim canım... Beni çok mutlu ettin ❤️\n\nBu kadar düşünceli olduğun için kendimi çok şanslı hissediyorum. Sen gerçekten harika bir insansın.\n\nSeni çok seviyorum! 💕",
+      "type": "Teşekkür",
+      "date": "2024-01-14T20:30:00Z",
+      "read": true,
+      "featured": false,
+      "likes": 3
+    }
+  ]
+} 

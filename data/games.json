@@ -1,0 +1,69 @@
+{
+  "games": [
+    {
+      "id": 1,
+      "name": "Kalp Yakalama",
+      "description": "Düşen kalpleri yakala ve puan kazan!",
+      "icon": "💖",
+      "difficulty": "Kolay",
+      "category": "Arcade",
+      "filePath": "pages/games/heart-catcher.html",
+      "isActive": true,
+      "highScore": 320,
+      "timesPlayed": 15,
+      "lastPlayed": "2024-01-14T15:30:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Anı Hafızası",
+      "description": "Anılarımızdan kartları eşleştir",
+      "icon": "🧠",
+      "difficulty": "Orta",
+      "category": "Puzzle",
+      "filePath": "pages/games/memory-game.html",
+      "isActive": true,
+      "highScore": 450,
+      "timesPlayed": 8,
+      "lastPlayed": "2024-01-13T19:20:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Kelime Avcısı",
+      "description": "Birbirimizle ilgili kelimeleri bul",
+      "icon": "🔍",
+      "difficulty": "Zor",
+      "category": "Kelime",
+      "filePath": "pages/games/word-hunter.html",
+      "isActive": false,
+      "highScore": 0,
+      "timesPlayed": 0,
+      "lastPlayed": null
+    },
+    {
+      "id": 4,
+      "name": "Aşk Testi",
+      "description": "Birbirimizi ne kadar tanıyoruz?",
+      "icon": "❤️",
+      "difficulty": "Orta",
+      "category": "Quiz",
+      "filePath": "pages/games/love-quiz.html",
+      "isActive": false,
+      "highScore": 0,
+      "timesPlayed": 0,
+      "lastPlayed": null
+    },
+    {
+      "id": 5,
+      "name": "Çift Puzzle",
+      "description": "Beraber puzzle çözelim",
+      "icon": "🧩",
+      "difficulty": "Zor",
+      "category": "Puzzle",
+      "filePath": "pages/games/couple-puzzle.html",
+      "isActive": false,
+      "highScore": 0,
+      "timesPlayed": 0,
+      "lastPlayed": null
+    }
+  ]
+} 

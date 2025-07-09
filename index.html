@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bizim Özel Dünyamız ❤️</title>
+    <!-- CSS Dosyaları -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    
+    <!-- Font'lar -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="main-style.css">
 </head>
 <body>
     <!-- Arka Plan Animasyonları -->
@@ -20,14 +25,14 @@
         <!-- Üst Başlık -->
         <header class="main-header">
             <h1 class="site-title">Bizim Özel Dünyamız</h1>
-            <p class="site-subtitle">Mehmet ❤️ Sevgilim</p>
+            <p class="site-subtitle">MEHMET ❤️ BAHAR </p>
             <div class="user-info">
                 <div class="user-selector">
                     <button class="user-btn active" data-user="mehmet">
-                        <i class="fas fa-user"></i> Mehmet
+                        <i class="fas fa-user"></i> MEHMET
                     </button>
                     <button class="user-btn" data-user="sevgili">
-                        <i class="fas fa-heart"></i> Sevgilim
+                        <i class="fas fa-heart"></i> BAHAR
                     </button>
                 </div>
             </div>
@@ -97,7 +102,6 @@
                     <div class="message-card">
                         <div class="message-header">
                             <div class="sender-info">
-                                <div class="sender-avatar">S</div>
                                 <div class="sender-details">
                                     <span class="sender-name">Sevgilim</span>
                                     <span class="message-date">Dün, 20:30</span>
@@ -112,9 +116,7 @@
                             <button class="action-btn primary" onclick="readFullMessage('thank-you')">
                                 <i class="fas fa-book-open"></i> Mesajı Oku
                             </button>
-                            <button class="action-btn" onclick="likeMessage('thank-you')">
-                                <i class="fas fa-heart"></i> <span id="like-count-thank">3</span>
-                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -246,7 +248,7 @@
 
     <!-- Müzik Kontrolü -->
     <audio id="background-music" loop>
-        <source src="music.mp3" type="audio/mpeg">
+        <source src="assets/audio/music.mp3" type="audio/mpeg">
     </audio>
 
     <div class="music-control">
@@ -255,6 +257,10 @@
         </button>
     </div>
 
-    <script src="main-script.js"></script>
+    <!-- JavaScript Dosyaları -->
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/database.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/main.js"></script></script>
 </body>
 </html>

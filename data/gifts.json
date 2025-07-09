@@ -1,0 +1,43 @@
+{
+  "gifts": [
+    {
+      "id": 1,
+      "sender": "mehmet",
+      "recipient": "sevgilim",
+      "title": "Yeni Hediye!",
+      "description": "Sana özel bir sürprizim var...",
+      "content": "Bu hediye kutusunun içinde sana olan sonsuz sevgim var ❤️\n\nHer gün biraz daha çok seviyorum seni. Bu hediye, kalbimin derinliklerinden gelen sevginin küçük bir göstergesi.\n\nSeni çok seviyorum canım! 💕",
+      "icon": "🎁",
+      "type": "Sürpriz",
+      "date": "2024-01-15T10:00:00Z",
+      "opened": false,
+      "openedAt": null
+    },
+    {
+      "id": 2,
+      "sender": "mehmet",
+      "recipient": "sevgilim",
+      "title": "Sevgi Dolu Mektup",
+      "description": "Sabah mektubum senin için...",
+      "content": "Günaydın canım aşkım ❤️\n\nBu mektup, sabah uyandığımda seni düşünürken yazdığım ilk satırlar...\n\nSeni çok seviyorum!",
+      "icon": "💝",
+      "type": "Mektup",
+      "date": "2024-01-15T08:00:00Z",
+      "opened": true,
+      "openedAt": "2024-01-15T08:15:00Z"
+    },
+    {
+      "id": 3,
+      "sender": "sevgilim",
+      "recipient": "mehmet",
+      "title": "Teşekkür Hediyesi",
+      "description": "Beni bu kadar mutlu ettiğin için...",
+      "content": "Canım benim, beni her gün biraz daha mutlu ettiğin için sana bu küçük hediyeyi hazırladım.\n\nSen gerçekten çok özel birisin ve benimle olduğun için çok şanslıyım.\n\nSeni çok seviyorum! 💕",
+      "icon": "🌹",
+      "type": "Teşekkür",
+      "date": "2024-01-14T20:30:00Z",
+      "opened": false,
+      "openedAt": null
+    }
+  ]
+} 
