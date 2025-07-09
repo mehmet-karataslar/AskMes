@@ -70,8 +70,6 @@ async function login() {
         // API ile giriş yap
         const response = await api.login(selectedUser, password);
         
-        console.log('Login response:', response); // Debug log
-        
         if (response.success) {
             // Başarılı giriş
             showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
@@ -79,18 +77,14 @@ async function login() {
             // Kullanıcı bilgilerini kaydet
             localStorage.setItem('currentUser', selectedUser);
             
-            // Token'ın kaydedildiğinden emin ol
+            if (rememberMe) {
+                localStorage.setItem('rememberMe', 'true');
+            }
+            
+            // Ana sayfaya yönlendir
             setTimeout(() => {
-                const savedToken = localStorage.getItem('authToken');
-                console.log('Saved token after delay:', savedToken); // Debug log
-                
-                if (rememberMe) {
-                    localStorage.setItem('rememberMe', 'true');
-                }
-                
-                // Ana sayfaya yönlendir
                 window.location.href = 'index.html';
-            }, 500);
+            }, 1000);
         }
         
     } catch (error) {

@@ -5,11 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Login sayfasında değilsek giriş kontrolü yap
     if (!window.location.pathname.includes('login.html')) {
         checkAuth();
-        
-        // Token doğrulaması için bir API çağrısı yap
-        setTimeout(() => {
-            validateTokenWithAPI();
-        }, 1000);
     }
     
     // Navigasyon event listener'ları
@@ -113,28 +108,13 @@ function checkAuth() {
     const currentUser = getCurrentUser();
     const authToken = localStorage.getItem('authToken');
     
-    console.log('CheckAuth - currentUser:', currentUser); // Debug log
-    console.log('CheckAuth - authToken:', authToken); // Debug log
-    
     // Eğer giriş yapılmamışsa veya token yoksa login sayfasına yönlendir
     if (!currentUser || !authToken) {
-        console.log('Redirecting to login - missing user or token'); // Debug log
         window.location.href = 'login.html';
     }
 }
 
-// Token'ı API ile doğrula
-async function validateTokenWithAPI() {
-    try {
-        console.log('Validating token with API...'); // Debug log
-        // Basit bir API çağrısı yaparak token'ı doğrula
-        await api.getMessages();
-        console.log('Token validation successful'); // Debug log
-    } catch (error) {
-        console.log('Token validation failed:', error); // Debug log
-        // API çağrısı başarısız olursa, zaten api.js'de 401 kontrolü yapılıyor
-    }
-}
+
 
 // Sayfa geçişleri için smooth scroll
 function smoothScrollTo(elementId) {
