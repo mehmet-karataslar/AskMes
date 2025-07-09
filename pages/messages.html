@@ -3,79 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mesajlar - Bizim Özel Dünyamız ❤️</title>
-    
-    <!-- CSS Dosyaları -->
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <title>Mesajlar - Bahar & Mehmet</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/messages.css">
-    
-    <!-- Font'lar -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="page-header">
-        <div class="header-content">
-            <button class="back-btn" onclick="window.location.href='../index.html'">
-                <i class="fas fa-arrow-left"></i>
-                Ana Sayfa
-            </button>
-            
-            <h1 class="page-title">
-                <i class="fas fa-envelope-heart"></i>
-                Mesajlarımız
-            </h1>
-            
-            <div class="user-info">
-                <div class="current-user" id="currentUser">
-                    <i class="fas fa-user"></i>
-                    <span id="userName">Kullanıcı</span>
-                </div>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
+    <div class="page-container">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='../index.html'">
+                    <i class="fas fa-arrow-left"></i>
+                    Ana Sayfaya Dön
                 </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Ana İçerik -->
-    <main class="messages-container">
-        <!-- Mesaj Listesi -->
-        <div class="messages-list" id="messagesList">
-            <div class="messages-header">
-                <h2>Aşk Mektuplarımız</h2>
-                <p>Birbirimize yazdığımız en güzel mesajlar ❤️</p>
-            </div>
-            
-            <!-- Mesaj Öğeleri Buraya Dinamik Olarak Eklenecek -->
-            <div class="message-items" id="messageItems">
-                <!-- Loading -->
-                <div class="loading-messages">
-                    <div class="loading-spinner"></div>
-                    <p>Mesajlar yükleniyor...</p>
+                
+                <h1 class="page-title">
+                    <i class="fas fa-envelope"></i>
+                    Aşk Mesajlarımız
+                </h1>
+                
+                <div class="user-info">
+                    <div class="current-user">
+                        <i class="fas fa-user"></i>
+                        <span id="userName">Mehmet</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <!-- Mesaj Detayı -->
-        <div class="message-detail" id="messageDetail">
-            <div class="detail-header">
-                <button class="close-detail" onclick="closeMessageDetail()">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h3 id="messageTitle">Mesaj Detayı</h3>
+        <!-- Ana İçerik -->
+        <main class="messages-container">
+            <!-- Mesaj Listesi -->
+            <div class="messages-list">
+                <div class="messages-header">
+                    <h2>Mesajlarımız</h2>
+                    <p>Birbirimize yazdığımız özel mesajlar ve aşk mektupları</p>
+                </div>
+                
+                <div class="message-items" id="messageItems">
+                    <div class="loading-messages">
+                        <i class="fas fa-spinner fa-spin loading-spinner"></i>
+                        <p>Mesajlar yükleniyor...</p>
+                    </div>
+                </div>
             </div>
             
-            <div class="detail-content" id="detailContent">
-                <p>Bir mesaj seçin veya yeni mesaj oluşturun</p>
+            <!-- Mesaj Detayı -->
+            <div class="message-detail" id="messageDetail">
+                <div class="detail-header">
+                    <h3 id="messageTitle">Mesaj Detayı</h3>
+                    <button class="close-detail" onclick="closeMessageDetail()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="detail-content" id="detailContent">
+                    <div class="empty-state">
+                        <i class="fas fa-envelope-open"></i>
+                        <h3>Mesaj Seçin</h3>
+                        <p>Okumak için bir mesaj seçin veya yeni mesaj oluşturun</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <!-- Yeni Mesaj Butonu -->
+    <!-- FAB Butonu -->
     <button class="fab-btn" onclick="openNewMessageModal()">
         <i class="fas fa-plus"></i>
     </button>
@@ -84,146 +81,126 @@
     <div class="modal" id="newMessageModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>
-                    <i class="fas fa-heart"></i>
-                    Yeni Mesaj Gönder
-                </h3>
+                <h3>Yeni Mesaj</h3>
                 <button class="modal-close" onclick="closeNewMessageModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <form class="message-form" id="messageForm">
-                <div class="form-group">
-                    <label for="messageTitle">Mesaj Başlığı</label>
-                    <input type="text" id="messageTitle" placeholder="Örn: Sana olan aşkım" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="messageContent">Mesaj İçeriği</label>
-                    <textarea id="messageContent" placeholder="Sevgili aşkım..." rows="10" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="messageImage">Fotoğraf Ekle (İsteğe Bağlı)</label>
-                    <div class="image-upload">
-                        <input type="file" id="messageImage" accept="image/*">
+            <div class="modal-body">
+                <form id="newMessageForm" class="message-form">
+                    <div class="form-group">
+                        <label for="messageTitle">Mesaj Başlığı</label>
+                        <input type="text" id="messageTitle" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="messageContent">Mesaj İçeriği</label>
+                        <textarea id="messageContent" name="content" rows="8" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="messageImage">Resim Ekle (İsteğe Bağlı)</label>
+                        <input type="file" id="messageImage" name="image" accept="image/*">
                         <div class="upload-preview" id="uploadPreview">
                             <i class="fas fa-image"></i>
-                            <p>Fotoğraf seçin veya sürükleyin</p>
+                            <p>Resim yüklemek için buraya tıklayın</p>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="messageDate">Tarih</label>
-                    <input type="date" id="messageDate" required>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" onclick="closeNewMessageModal()">
-                        İptal
-                    </button>
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-paper-plane"></i>
-                        Gönder
-                    </button>
-                </div>
-            </form>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Mesaj Gönder
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="closeNewMessageModal()">
+                            <i class="fas fa-times"></i>
+                            İptal
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Mesaj Düzenleme Modal -->
+    <!-- Mesaj Düzenle Modal -->
     <div class="modal" id="editMessageModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>
-                    <i class="fas fa-edit"></i>
-                    Mesajı Düzenle
-                </h3>
+                <h3>Mesajı Düzenle</h3>
                 <button class="modal-close" onclick="closeEditMessageModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <form class="message-form" id="editMessageForm">
-                <div class="form-group">
-                    <label for="editMessageTitle">Mesaj Başlığı</label>
-                    <input type="text" id="editMessageTitle" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editMessageContent">Mesaj İçeriği</label>
-                    <textarea id="editMessageContent" rows="10" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editMessageImage">Fotoğraf Güncelle</label>
-                    <div class="image-upload">
-                        <input type="file" id="editMessageImage" accept="image/*">
+            <div class="modal-body">
+                <form id="editMessageForm" class="message-form">
+                    <div class="form-group">
+                        <label for="editMessageTitle">Mesaj Başlığı</label>
+                        <input type="text" id="editMessageTitle" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMessageContent">Mesaj İçeriği</label>
+                        <textarea id="editMessageContent" name="content" rows="8" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMessageImage">Resim Değiştir (İsteğe Bağlı)</label>
+                        <input type="file" id="editMessageImage" name="image" accept="image/*">
                         <div class="upload-preview" id="editUploadPreview">
                             <i class="fas fa-image"></i>
-                            <p>Yeni fotoğraf seçin</p>
+                            <p>Resim yüklemek için buraya tıklayın</p>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" onclick="closeEditMessageModal()">
-                        İptal
-                    </button>
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-save"></i>
-                        Güncelle
-                    </button>
-                </div>
-            </form>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Değişiklikleri Kaydet
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="closeEditMessageModal()">
+                            <i class="fas fa-times"></i>
+                            İptal
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Silme Onayı Modal -->
+    <!-- Mesaj Silme Onayı -->
     <div class="modal" id="deleteConfirmModal">
         <div class="modal-content small">
             <div class="modal-header">
-                <h3>
-                    <i class="fas fa-trash"></i>
-                    Mesajı Sil
-                </h3>
+                <h3>Mesajı Sil</h3>
+                <button class="modal-close" onclick="closeDeleteConfirmModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            
             <div class="modal-body">
                 <p>Bu mesajı silmek istediğinizden emin misiniz?</p>
                 <p class="warning">Bu işlem geri alınamaz!</p>
-            </div>
-            
-            <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick="closeDeleteConfirmModal()">
-                    İptal
-                </button>
-                <button type="button" class="btn-danger" onclick="confirmDeleteMessage()">
-                    <i class="fas fa-trash"></i>
-                    Sil
-                </button>
+                
+                <div class="form-actions">
+                    <button class="btn-danger" onclick="confirmDeleteMessage()">
+                        <i class="fas fa-trash"></i>
+                        Evet, Sil
+                    </button>
+                    <button class="btn-secondary" onclick="closeDeleteConfirmModal()">
+                        <i class="fas fa-times"></i>
+                        İptal
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="../assets/js/database.js"></script>
+    <script src="../assets/js/messages.js"></script>
+    
     <!-- Müzik Kontrolü -->
-    <audio id="background-music" loop>
+    <audio id="backgroundMusic" loop>
         <source src="../assets/audio/music.mp3" type="audio/mpeg">
     </audio>
-
-    <div class="music-control">
-        <button id="music-toggle">
-            <i class="fas fa-music"></i>
-        </button>
-    </div>
-
-    <!-- JavaScript Dosyaları -->
-    <script src="../config/settings.js"></script>
-    <script src="../assets/js/utils.js"></script>
-    <script src="../assets/js/database.js"></script>
-    <script src="../assets/js/components.js"></script>
-    <script src="../assets/js/messages.js"></script>
 </body>
 </html> 

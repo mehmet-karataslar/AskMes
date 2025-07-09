@@ -39,6 +39,8 @@ function checkUserSession() {
     if (!sessionData) {
         // Login yönlendirmesi geçici olarak kaldırıldı
         // window.location.href = '../login.html';
+        // Geçici olarak varsayılan kullanıcı set et
+        MessageState.currentUser = 'mehmet';
         return;
     }
     
@@ -59,6 +61,8 @@ function checkUserSession() {
     } catch (error) {
         console.error('Oturum verisi okunamadı:', error);        // Login yönlendirmesi geçici olarak kaldırıldı
         // window.location.href = '../login.html';
+        // Geçici olarak varsayılan kullanıcı set et
+        MessageState.currentUser = 'mehmet';
     }
 }
 
@@ -68,7 +72,7 @@ async function loadMessages() {
     
     try {
         // Veri tabanından mesajları al
-        const messagesData = await Database.getMessages();
+        const messagesData = await window.db.getMessages();
         MessageState.messages = messagesData.sort((a, b) => new Date(b.date) - new Date(a.date));
         
         // Mesajları görüntüle
@@ -300,7 +304,7 @@ async function confirmDeleteMessage() {
     
     try {
         // Veri tabanından sil
-        await Database.deleteMessage(MessageState.deletingMessage.id);
+        await window.db.deleteMessage(MessageState.deletingMessage.id);
         
         // Local state'i güncelle
         MessageState.messages = MessageState.messages.filter(m => m.id !== MessageState.deletingMessage.id);
@@ -360,10 +364,9 @@ async function handleNewMessage(e) {
     
     const title = document.getElementById('messageTitle').value.trim();
     const content = document.getElementById('messageContent').value.trim();
-    const date = document.getElementById('messageDate').value;
     const imageFile = document.getElementById('messageImage').files[0];
     
-    if (!title || !content || !date) {
+    if (!title || !content) {
         showError('Lütfen tüm alanları doldurun');
         return;
     }
@@ -382,14 +385,16 @@ async function handleNewMessage(e) {
             id: generateId(),
             title,
             content,
-            date,
+            date: new Date().toISOString(),
             image: imageData,
+            sender: MessageState.currentUser,
+            recipient: MessageState.currentUser === 'mehmet' ? 'sevgilim' : 'mehmet',
             author: MessageState.currentUser,
             createdAt: new Date().toISOString()
         };
         
         // Veri tabanına kaydet
-        await Database.saveMessage(newMessage);
+        await window.db.saveMessage(newMessage);
         
         // Local state'i güncelle
         MessageState.messages.unshift(newMessage);
@@ -447,7 +452,7 @@ async function handleEditMessage(e) {
         };
         
         // Veri tabanını güncelle
-        await Database.updateMessage(updatedMessage);
+        await window.db.updateMessage(updatedMessage);
         
         // Local state'i güncelle
         const index = MessageState.messages.findIndex(m => m.id === updatedMessage.id);

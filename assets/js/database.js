@@ -457,12 +457,23 @@ Mehmet 💕`,
     
     // Mesaj işlemleri
     getMessages(userId) {
-        return this.db.find('messages', {
-            $or: [
-                { sender: userId },
-                { recipient: userId }
-            ]
-        });
+        if (userId) {
+            const allMessages = this.db.find('messages');
+            return allMessages.filter(msg => msg.sender === userId || msg.recipient === userId);
+        }
+        return this.db.find('messages');
+    }
+    
+    saveMessage(messageData) {
+        return this.db.insert('messages', messageData);
+    }
+    
+    updateMessage(messageData) {
+        return this.db.update('messages', { id: messageData.id }, messageData);
+    }
+    
+    deleteMessage(messageId) {
+        return this.db.delete('messages', { id: messageId });
     }
     
     getUnreadMessages(userId) {
@@ -519,10 +530,11 @@ Mehmet 💕`,
     
     // İstatistikler
     getStats(userId) {
+        const allMessages = this.db.find('messages');
+        const userMessages = allMessages.filter(msg => msg.sender === userId || msg.recipient === userId);
+        
         return {
-            totalMessages: this.db.count('messages', {
-                $or: [{ sender: userId }, { recipient: userId }]
-            }),
+            totalMessages: userMessages.length,
             unreadMessages: this.db.count('messages', {
                 recipient: userId,
                 read: false

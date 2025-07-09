@@ -23,7 +23,7 @@
                     <i class="fas fa-home"></i>
                     <span>Ana Sayfa</span>
                 </a>
-                <a href="#" class="nav-item" data-section="messages">
+                <a href="pages/messages.html" class="nav-item">
                     <i class="fas fa-envelope"></i>
                     <span>Mesajlar</span>
                 </a>
@@ -72,13 +72,13 @@
                         <div class="card-header">
                             <i class="fas fa-envelope"></i>
                             <h3>Son Mesajlar</h3>
-                            <a href="#" class="view-all" onclick="showSection('messages')">Tümünü Gör</a>
+                            <a href="pages/messages.html" class="view-all">Tümünü Gör</a>
                         </div>
                         <div class="card-content">
                             <div class="empty-state">
                                 <i class="fas fa-envelope-open"></i>
                                 <p>Henüz mesaj yok</p>
-                                <button class="btn-primary" onclick="showSection('messages')">İlk Mesajı Gönder</button>
+                                <button class="btn-primary" onclick="window.location.href='pages/messages.html'">İlk Mesajı Gönder</button>
                             </div>
                         </div>
                     </div>
@@ -133,28 +133,7 @@
                 </div>
             </section>
 
-            <!-- Mesajlar Sayfası -->
-            <section id="messages" class="content-section">
-                <div class="page-header">
-                    <h1>Aşk Mesajlarımız</h1>
-                    <button class="btn-primary" onclick="openNewMessageModal()">
-                        <i class="fas fa-plus"></i>
-                        Yeni Mesaj
-                    </button>
-                </div>
-                
-                <div class="messages-container">
-                    <div class="empty-state">
-                        <i class="fas fa-envelope-open"></i>
-                        <h3>Henüz mesaj yok</h3>
-                        <p>İlk aşk mesajınızı gönderin ve özel anılarınızı paylaşmaya başlayın!</p>
-                        <button class="btn-primary" onclick="openNewMessageModal()">
-                            <i class="fas fa-plus"></i>
-                            İlk Mesajı Gönder
-                        </button>
-                    </div>
-                </div>
-            </section>
+
 
             <!-- Oyunlar Sayfası -->
             <section id="games" class="content-section">
@@ -285,7 +264,7 @@
                 <i class="fas fa-home"></i>
                 <span>Ana Sayfa</span>
             </a>
-            <a href="#" class="bottom-nav-item" data-section="messages">
+            <a href="pages/messages.html" class="bottom-nav-item">
                 <i class="fas fa-envelope"></i>
                 <span>Mesajlar</span>
             </a>
@@ -302,6 +281,130 @@
                 <span>Anılar</span>
             </a>
         </nav>
+    </div>
+
+    <!-- Mesaj Modalları -->
+    <!-- Yeni Mesaj Modal -->
+    <div class="modal" id="newMessageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-heart"></i>
+                    Yeni Aşk Mesajı
+                </h3>
+                <button class="modal-close" onclick="closeNewMessageModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="message-form" id="messageForm">
+                <div class="form-group">
+                    <label for="messageTitle">Mesaj Başlığı</label>
+                    <input type="text" id="messageTitle" placeholder="Örn: Sana olan aşkım..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="messageContent">Mesaj İçeriği</label>
+                    <textarea id="messageContent" placeholder="Sevgili aşkım..." rows="8" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="messageImage">Fotoğraf Ekle (İsteğe Bağlı)</label>
+                    <div class="image-upload">
+                        <input type="file" id="messageImage" accept="image/*">
+                        <div class="upload-preview" id="uploadPreview">
+                            <i class="fas fa-image"></i>
+                            <p>Fotoğraf seçin veya sürükleyin</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeNewMessageModal()">
+                        İptal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Mesajı Gönder
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mesaj Düzenleme Modal -->
+    <div class="modal" id="editMessageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-edit"></i>
+                    Mesajı Düzenle
+                </h3>
+                <button class="modal-close" onclick="closeEditMessageModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="message-form" id="editMessageForm">
+                <div class="form-group">
+                    <label for="editMessageTitle">Mesaj Başlığı</label>
+                    <input type="text" id="editMessageTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editMessageContent">Mesaj İçeriği</label>
+                    <textarea id="editMessageContent" rows="8" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editMessageImage">Fotoğraf Değiştir (İsteğe Bağlı)</label>
+                    <div class="image-upload">
+                        <input type="file" id="editMessageImage" accept="image/*">
+                        <div class="upload-preview" id="editUploadPreview">
+                            <i class="fas fa-image"></i>
+                            <p>Yeni fotoğraf seçin</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditMessageModal()">
+                        İptal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Silme Onayı Modal -->
+    <div class="modal" id="deleteConfirmModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-trash"></i>
+                    Mesajı Sil
+                </h3>
+            </div>
+            
+            <div class="modal-body">
+                <p>Bu mesajı silmek istediğinizden emin misiniz?</p>
+                <p class="warning">Bu işlem geri alınamaz!</p>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeDeleteConfirmModal()">
+                    İptal
+                </button>
+                <button type="button" class="btn-danger" onclick="confirmDeleteMessage()">
+                    <i class="fas fa-trash"></i>
+                    Sil
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Müzik Kontrolü -->
