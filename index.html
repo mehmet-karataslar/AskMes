@@ -62,73 +62,124 @@
             <!-- Ana Sayfa -->
             <section id="home" class="content-section active">
                 <div class="page-header">
-                    <h1>Ana Sayfa</h1>
-                    <p>Son aktiviteleriniz ve güncellemeler</p>
+                    <h1>💕 Bahar & Mehmet 💕</h1>
+                    <p>Son aktiviteleriniz ve güzel anlarınız</p>
                 </div>
                 
-                <div class="activity-feed">
+                <div class="dashboard-grid">
                     <!-- Son Mesajlar -->
-                    <div class="activity-card">
+                    <div class="dashboard-card messages-card">
                         <div class="card-header">
-                            <i class="fas fa-envelope"></i>
-                            <h3>Son Mesajlar</h3>
-                            <a href="pages/messages.html" class="view-all">Tümünü Gör</a>
-                        </div>
-                        <div class="card-content">
-                            <div class="empty-state">
-                                <i class="fas fa-envelope-open"></i>
-                                <p>Henüz mesaj yok</p>
-                                <button class="btn-primary" onclick="window.location.href='pages/messages.html'">İlk Mesajı Gönder</button>
+                            <div class="card-icon">
+                                <i class="fas fa-envelope-heart"></i>
                             </div>
+                            <div class="card-info">
+                                <h3>Son Mesajlar</h3>
+                                <p id="messageCount">0 mesaj</p>
+                            </div>
+                        </div>
+                        <div class="card-content" id="recentMessages">
+                            <div class="recent-item" onclick="window.location.href='pages/messages.html'">
+                                <i class="fas fa-heart"></i>
+                                <span>Henüz mesaj yok - İlk mesajı gönder!</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="pages/messages.html" class="card-link">
+                                <span>Tümünü Gör</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Son Oyunlar -->
-                    <div class="activity-card">
+                    <div class="dashboard-card games-card">
                         <div class="card-header">
-                            <i class="fas fa-gamepad"></i>
-                            <h3>Son Oynanan Oyunlar</h3>
-                            <a href="#" class="view-all" onclick="showSection('games')">Tümünü Gör</a>
-                        </div>
-                        <div class="card-content">
-                            <div class="empty-state">
-                                <i class="fas fa-dice"></i>
-                                <p>Henüz oyun oynamamışsınız</p>
-                                <button class="btn-primary" onclick="showSection('games')">Oyun Oyna</button>
+                            <div class="card-icon">
+                                <i class="fas fa-gamepad"></i>
                             </div>
+                            <div class="card-info">
+                                <h3>Son Oyunlar</h3>
+                                <p id="gameCount">6 oyun mevcut</p>
+                            </div>
+                        </div>
+                        <div class="card-content" id="recentGames">
+                            <div class="recent-item" onclick="showSection('games')">
+                                <i class="fas fa-dice"></i>
+                                <span>Aşk Zarı - Henüz oynanmadı</span>
+                            </div>
+                            <div class="recent-item" onclick="showSection('games')">
+                                <i class="fas fa-brain"></i>
+                                <span>Hafıza Oyunu - Henüz oynanmadı</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="#" class="card-link" onclick="showSection('games')">
+                                <span>Oyunları Gör</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Son Hediyeler -->
-                    <div class="activity-card">
+                    <div class="dashboard-card gifts-card">
                         <div class="card-header">
-                            <i class="fas fa-gift"></i>
-                            <h3>Son Hediyeler</h3>
-                            <a href="#" class="view-all" onclick="showSection('gifts')">Tümünü Gör</a>
-                        </div>
-                        <div class="card-content">
-                            <div class="empty-state">
+                            <div class="card-icon">
                                 <i class="fas fa-gift"></i>
-                                <p>Henüz hediye yok</p>
-                                <button class="btn-primary" onclick="showSection('gifts')">Hediye Ekle</button>
                             </div>
+                            <div class="card-info">
+                                <h3>Hediyeler</h3>
+                                <p id="giftCount">0 hediye</p>
+                            </div>
+                        </div>
+                        <div class="card-content" id="recentGifts">
+                            <div class="recent-item" onclick="showSection('gifts')">
+                                <i class="fas fa-heart-circle"></i>
+                                <span>Henüz hediye yok - İlk hediyeyi ekle!</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="#" class="card-link" onclick="showSection('gifts')">
+                                <span>Hediyeleri Gör</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Son Anılar -->
-                    <div class="activity-card">
+                    <div class="dashboard-card memories-card">
                         <div class="card-header">
-                            <i class="fas fa-camera"></i>
-                            <h3>Son Anılar</h3>
-                            <a href="#" class="view-all" onclick="showSection('memories')">Tümünü Gör</a>
-                        </div>
-                        <div class="card-content">
-                            <div class="empty-state">
-                                <i class="fas fa-camera"></i>
-                                <p>Henüz anı yok</p>
-                                <button class="btn-primary" onclick="showSection('memories')">Anı Ekle</button>
+                            <div class="card-icon">
+                                <i class="fas fa-camera-retro"></i>
+                            </div>
+                            <div class="card-info">
+                                <h3>Anılar</h3>
+                                <p id="memoryCount">0 anı</p>
                             </div>
                         </div>
+                        <div class="card-content" id="recentMemories">
+                            <div class="recent-item" onclick="showSection('memories')">
+                                <i class="fas fa-heart"></i>
+                                <span>Henüz anı yok - İlk anıyı ekle!</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="#" class="card-link" onclick="showSection('memories')">
+                                <span>Anıları Gör</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Müzik Kontrolü -->
+                <div class="music-control">
+                    <button id="musicToggle" onclick="toggleMusic()">
+                        <i class="fas fa-music"></i>
+                        <span>Müzik</span>
+                    </button>
+                    <div class="music-info">
+                        <span id="musicStatus">Müzik Çalıyor 🎵</span>
                     </div>
                 </div>
             </section>
@@ -409,11 +460,14 @@
 
     <!-- Müzik Kontrolü -->
     <div class="music-control">
-        <button id="music-toggle">
+        <button id="musicToggle">
             <i class="fas fa-music"></i>
         </button>
-        <audio id="background-music" loop>
-            <source src="assets/audio/romantic-music.mp3" type="audio/mpeg">
+        <div class="music-info">
+            <span id="musicStatus">Müzik Çalıyor 🎵</span>
+        </div>
+        <audio id="backgroundMusic" loop>
+            <source src="assets/audio/music.mp3" type="audio/mpeg">
         </audio>
     </div>
 
@@ -479,16 +533,85 @@
         }
         
         // Müzik kontrolü
-        document.getElementById('music-toggle').addEventListener('click', function() {
-            const music = document.getElementById('background-music');
-            if (music.paused) {
-                music.play().catch(e => console.log('Müzik çalınamadı:', e));
-                this.innerHTML = '<i class="fas fa-pause"></i>';
-            } else {
+        let musicPlaying = false;
+        
+        function toggleMusic() {
+            const music = document.getElementById('backgroundMusic');
+            const musicToggle = document.getElementById('musicToggle');
+            const musicStatus = document.getElementById('musicStatus');
+            
+            if (musicPlaying) {
                 music.pause();
-                this.innerHTML = '<i class="fas fa-music"></i>';
+                musicToggle.innerHTML = '<i class="fas fa-music"></i>';
+                musicToggle.classList.remove('playing');
+                musicToggle.classList.add('paused');
+                musicStatus.textContent = 'Müzik Durdu 🎵';
+                musicPlaying = false;
+            } else {
+                music.play().catch(e => {
+                    console.log('Müzik çalınamadı:', e);
+                    musicStatus.textContent = 'Müzik Hatası ⚠️';
+                });
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+                musicToggle.classList.remove('paused');
+                musicToggle.classList.add('playing');
+                musicStatus.textContent = 'Müzik Çalıyor 🎵';
+                musicPlaying = true;
             }
+        }
+        
+        // Sayfa yüklendiğinde müziği otomatik başlat
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                toggleMusic();
+            }, 1000);
         });
+        
+        // Ana sayfa dashboard verilerini yükle
+        function loadDashboardData() {
+            // Mesaj sayısını yükle
+            const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+            document.getElementById('messageCount').textContent = `${messages.length} mesaj`;
+            
+            // Son mesajları göster
+            const recentMessages = document.getElementById('recentMessages');
+            recentMessages.innerHTML = '';
+            
+            if (messages.length > 0) {
+                messages.slice(-2).reverse().forEach(msg => {
+                    const item = document.createElement('div');
+                    item.className = 'recent-item';
+                    item.onclick = () => window.location.href = 'pages/messages.html';
+                    item.innerHTML = `
+                        <i class="fas fa-envelope"></i>
+                        <span>${msg.title}</span>
+                    `;
+                    recentMessages.appendChild(item);
+                });
+            } else {
+                recentMessages.innerHTML = `
+                    <div class="recent-item" onclick="window.location.href='pages/messages.html'">
+                        <i class="fas fa-heart"></i>
+                        <span>Henüz mesaj yok - İlk mesajı gönder!</span>
+                    </div>
+                `;
+            }
+            
+            // Oyun verilerini yükle
+            const gameStats = JSON.parse(localStorage.getItem('gameStats') || '{}');
+            document.getElementById('gameCount').textContent = '6 oyun mevcut';
+            
+            // Hediye verilerini yükle
+            const gifts = JSON.parse(localStorage.getItem('gifts') || '[]');
+            document.getElementById('giftCount').textContent = `${gifts.length} hediye`;
+            
+            // Anı verilerini yükle
+            const memories = JSON.parse(localStorage.getItem('memories') || '[]');
+            document.getElementById('memoryCount').textContent = `${memories.length} anı`;
+        }
+        
+        // Sayfa yüklendiğinde dashboard verilerini yükle
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
         
         console.log('Bahar & Mehmet Twitter-style sitesi yüklendi! ❤️');
     </script>

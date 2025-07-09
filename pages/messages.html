@@ -45,9 +45,14 @@
                 </div>
                 
                 <div class="message-items" id="messageItems">
-                    <div class="loading-messages">
-                        <i class="fas fa-spinner fa-spin loading-spinner"></i>
-                        <p>Mesajlar yükleniyor...</p>
+                    <div class="empty-state">
+                        <i class="fas fa-heart"></i>
+                        <h3>Henüz mesaj yok</h3>
+                        <p>İlk aşk mesajınızı gönderin ve özel anılarınızı paylaşmaya başlayın!</p>
+                        <button onclick="openNewMessageModal()">
+                            <i class="fas fa-plus"></i>
+                            İlk Mesajı Gönder
+                        </button>
                     </div>
                 </div>
             </div>
@@ -100,10 +105,12 @@
                     
                     <div class="form-group">
                         <label for="messageImage">Resim Ekle (İsteğe Bağlı)</label>
-                        <input type="file" id="messageImage" name="image" accept="image/*">
-                        <div class="upload-preview" id="uploadPreview">
-                            <i class="fas fa-image"></i>
-                            <p>Resim yüklemek için buraya tıklayın</p>
+                        <div class="image-upload">
+                            <input type="file" id="messageImage" name="image" accept="image/*">
+                            <div class="upload-preview" id="uploadPreview">
+                                <i class="fas fa-image"></i>
+                                <p>Resim yüklemek için buraya tıklayın</p>
+                            </div>
                         </div>
                     </div>
                     
@@ -145,10 +152,12 @@
                     
                     <div class="form-group">
                         <label for="editMessageImage">Resim Değiştir (İsteğe Bağlı)</label>
-                        <input type="file" id="editMessageImage" name="image" accept="image/*">
-                        <div class="upload-preview" id="editUploadPreview">
-                            <i class="fas fa-image"></i>
-                            <p>Resim yüklemek için buraya tıklayın</p>
+                        <div class="image-upload">
+                            <input type="file" id="editMessageImage" name="image" accept="image/*">
+                            <div class="upload-preview" id="editUploadPreview">
+                                <i class="fas fa-image"></i>
+                                <p>Resim yüklemek için buraya tıklayın</p>
+                            </div>
                         </div>
                     </div>
                     
@@ -202,5 +211,34 @@
     <audio id="backgroundMusic" loop>
         <source src="../assets/audio/music.mp3" type="audio/mpeg">
     </audio>
+    
+    <!-- Mesaj Sayfasını Başlat -->
+    <script>
+        // Sayfa yüklendiğinde mesajları göster
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Mesaj sayfası yüklendi');
+            
+            // Eğer mesajlar boşsa örnek mesaj ekle
+            setTimeout(function() {
+                if (window.db && MessageState.messages.length === 0) {
+                    // Örnek mesaj ekle
+                    const exampleMessage = {
+                        id: 1,
+                        title: 'Hoş Geldiniz! 💕',
+                        content: 'Merhaba sevgilim! Bu bizim özel mesajlaşma alanımız. Buraya birbirimize güzel mesajlar yazabiliriz. ❤️\n\nİlk mesajını yazmak için + butonuna tıklayabilirsin!',
+                        date: new Date().toISOString(),
+                        sender: 'mehmet',
+                        recipient: 'sevgilim',
+                        author: 'mehmet',
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    window.db.saveMessage(exampleMessage);
+                    MessageState.messages = [exampleMessage];
+                    displayMessages();
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html> 
