@@ -334,129 +334,7 @@
         </nav>
     </div>
 
-    <!-- Mesaj Modalları -->
-    <!-- Yeni Mesaj Modal -->
-    <div class="modal" id="newMessageModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>
-                    <i class="fas fa-heart"></i>
-                    Yeni Aşk Mesajı
-                </h3>
-                <button class="modal-close" onclick="closeNewMessageModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <form class="message-form" id="messageForm">
-                <div class="form-group">
-                    <label for="messageTitle">Mesaj Başlığı</label>
-                    <input type="text" id="messageTitle" placeholder="Örn: Sana olan aşkım..." required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="messageContent">Mesaj İçeriği</label>
-                    <textarea id="messageContent" placeholder="Sevgili aşkım..." rows="8" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="messageImage">Fotoğraf Ekle (İsteğe Bağlı)</label>
-                    <div class="image-upload">
-                        <input type="file" id="messageImage" accept="image/*">
-                        <div class="upload-preview" id="uploadPreview">
-                            <i class="fas fa-image"></i>
-                            <p>Fotoğraf seçin veya sürükleyin</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" onclick="closeNewMessageModal()">
-                        İptal
-                    </button>
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-paper-plane"></i>
-                        Mesajı Gönder
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Mesaj Düzenleme Modal -->
-    <div class="modal" id="editMessageModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>
-                    <i class="fas fa-edit"></i>
-                    Mesajı Düzenle
-                </h3>
-                <button class="modal-close" onclick="closeEditMessageModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <form class="message-form" id="editMessageForm">
-                <div class="form-group">
-                    <label for="editMessageTitle">Mesaj Başlığı</label>
-                    <input type="text" id="editMessageTitle" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editMessageContent">Mesaj İçeriği</label>
-                    <textarea id="editMessageContent" rows="8" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editMessageImage">Fotoğraf Değiştir (İsteğe Bağlı)</label>
-                    <div class="image-upload">
-                        <input type="file" id="editMessageImage" accept="image/*">
-                        <div class="upload-preview" id="editUploadPreview">
-                            <i class="fas fa-image"></i>
-                            <p>Yeni fotoğraf seçin</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" onclick="closeEditMessageModal()">
-                        İptal
-                    </button>
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-save"></i>
-                        Kaydet
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Silme Onayı Modal -->
-    <div class="modal" id="deleteConfirmModal">
-        <div class="modal-content small">
-            <div class="modal-header">
-                <h3>
-                    <i class="fas fa-trash"></i>
-                    Mesajı Sil
-                </h3>
-            </div>
-            
-            <div class="modal-body">
-                <p>Bu mesajı silmek istediğinizden emin misiniz?</p>
-                <p class="warning">Bu işlem geri alınamaz!</p>
-            </div>
-            
-            <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick="closeDeleteConfirmModal()">
-                    İptal
-                </button>
-                <button type="button" class="btn-danger" onclick="confirmDeleteMessage()">
-                    <i class="fas fa-trash"></i>
-                    Sil
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Müzik Kontrolü -->
     <div class="music-control">
@@ -513,7 +391,7 @@
         
         // Modal açma fonksiyonları
         function openNewMessageModal() {
-            alert('Mesaj ekleme modalı yakında aktif olacak!');
+            window.location.href = 'pages/messages.html';
         }
         
         function openNewGiftModal() {
