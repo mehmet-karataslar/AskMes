@@ -3,148 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap - Bizim Özel Dünyamız ❤️</title>
+    <title>Giriş Yap - Bizim Özel Dünyamız</title>
     
-    <!-- CSS Dosyaları -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- CSS -->
     <link rel="stylesheet" href="assets/css/login.css">
     
     <!-- Font'lar -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="login-page">
-    <!-- Arka Plan Animasyonları -->
-    <div class="background-animation">
-        <div class="particle-background" id="particle-background"></div>
-        <div class="heart-container" id="heart-container"></div>
-    </div>
-
-    <!-- Login Container -->
+<body>
     <div class="login-container">
-        <div class="login-card">
-            <!-- Logo ve Başlık -->
-            <div class="login-header">
-                <h1 class="login-title">Bizim Özel Dünyamız</h1>
-                <p class="login-subtitle">Aşkımızın dijital yuvası ❤️</p>
+        <!-- Header -->
+        <div class="login-header">
+            <h1>💕 Bizim Dünyamız</h1>
+            <p>Özel alanımıza hoş geldiniz</p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form">
+            <div class="form-header">
+                <h2>Giriş Yap</h2>
+                <p>Kullanıcı seçin ve şifrenizi girin</p>
             </div>
 
-            <!-- Login Form -->
-            <form class="login-form" id="loginForm">
-                <div class="user-selection">
-                    <h3>Kim olarak giriş yapıyorsun?</h3>
-                    
-                    <div class="user-options">
-                        <div class="user-option" data-user="mehmet">
-                            <div class="user-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="user-info">
-                                <h4>Mehmet</h4>
-                                <p>Aşık erkek</p>
-                            </div>
-                            <div class="user-status offline" id="mehmet-status">
-                                <i class="fas fa-circle"></i>
-                            </div>
-                        </div>
+            <!-- Kullanıcı Seçimi -->
+            <div class="user-selection">
+                <div class="user-option active" data-user="mehmet">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>Mehmet</span>
+                </div>
+                <div class="user-option" data-user="sevgili">
+                    <div class="user-avatar">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <span>Sevgilim</span>
+                </div>
+            </div>
 
-                        <div class="user-option" data-user="sevgilim">
-                            <div class="user-avatar">
-                                <i class="fas fa-heart"></i>
-                            </div>
-                            <div class="user-info">
-                                <h4>Sevgilim</h4>
-                                <p>Aşık kız</p>
-                            </div>
-                            <div class="user-status offline" id="sevgilim-status">
-                                <i class="fas fa-circle"></i>
-                            </div>
-                        </div>
+            <!-- Şifre Girişi -->
+            <div class="password-section">
+                <div class="input-group">
+                    <label for="password">Şifre</label>
+                    <div class="password-input">
+                        <input type="password" id="password" placeholder="Şifrenizi girin">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
-
-                <div class="form-section" id="passwordSection" style="display: none;">
-                    <div class="form-group">
-                        <label for="password" class="form-label">
-                            <i class="fas fa-lock"></i> Parola
-                        </label>
-                        <input type="password" id="password" class="form-input" placeholder="Özel parolanızı girin">
-                        <div class="password-hint" id="passwordHint">
-                            <i class="fas fa-info-circle"></i>
-                            <span>İpucu: İlk tanışma tarihiniz (GGAAYYYY)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="remember-me">
-                            <input type="checkbox" id="rememberMe">
-                            <span class="checkmark"></span>
-                            Beni hatırla
-                        </label>
-                    </div>
-
-                    <button type="submit" class="login-btn" id="loginBtn">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Giriş Yap
-                    </button>
+                
+                <div class="password-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <span>İpucu: İlk tanışma tarihimiz (GGAAYYYY)</span>
                 </div>
-            </form>
+            </div>
 
-            <!-- Güvenlik Bilgisi -->
-            <div class="security-info">
-                <div class="security-item">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Güvenli Bağlantı</span>
-                </div>
-                <div class="security-item">
-                    <i class="fas fa-lock"></i>
-                    <span>Şifrelenmiş Veri</span>
-                </div>
-                <div class="security-item">
-                    <i class="fas fa-heart"></i>
-                    <span>Sadece Sizin İçin</span>
-                </div>
+            <!-- Beni Hatırla -->
+            <div class="remember-me">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="rememberMe">
+                    <span class="checkmark"></span>
+                    Beni hatırla
+                </label>
+            </div>
+
+            <!-- Giriş Butonu -->
+            <button class="login-btn" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i>
+                Giriş Yap
+            </button>
+
+            <!-- Hata Mesajı -->
+            <div class="error-message" id="errorMessage" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="errorText">Hata mesajı</span>
             </div>
         </div>
 
-        <!-- Romantik Mesajlar -->
-        <div class="romantic-messages">
-            <div class="message-item active">
-                <i class="fas fa-quote-left"></i>
-                <p>"Aşk, iki ruhun tek vücut olmasıdır."</p>
-                <span>- Aristoteles</span>
-            </div>
-            <div class="message-item">
-                <i class="fas fa-quote-left"></i>
-                <p>"Sevmek ve sevilmek, güneşi her iki tarafından hissetmektir."</p>
-                <span>- David Viscott</span>
-            </div>
-            <div class="message-item">
-                <i class="fas fa-quote-left"></i>
-                <p>"Aşk, hayatın müziğidir. Seks sadece davuldur."</p>
-                <span>- Isabel Allende</span>
-            </div>
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>❤️ Sadece bizim için özel olarak tasarlandı</p>
         </div>
     </div>
 
-    <!-- Müzik Kontrolü -->
-    <audio id="background-music" loop>
-        <source src="assets/audio/music.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="music-control">
-        <button id="music-toggle">
-            <i class="fas fa-music"></i>
-        </button>
-    </div>
-
-    <!-- JavaScript Dosyaları -->
-    <script src="config/settings.js"></script>
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/database.js"></script>
-    <script src="assets/js/components.js"></script>
+    <!-- JavaScript -->
     <script src="assets/js/login.js"></script>
 </body>
 </html> 
