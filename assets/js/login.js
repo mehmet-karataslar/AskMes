@@ -1,439 +1,139 @@
-// Login Sistemi JavaScript
+// Login JavaScript
 
-// Login State
-const LoginState = {
-    selectedUser: null,
-    isLoading: false,
-    rememberMe: false,
-    passwords: {
-        mehmet: '18032024', // İlk tanışma tarihi
-        sevgilim: '18032024' // Aynı tarih
-    },
-    currentMessageIndex: 0,
-    messageInterval: null
-};
-
-// DOM Elements
-let loginForm, userOptions, passwordSection, passwordInput, loginBtn, rememberMeCheckbox;
-
-// DOM Yüklendikten Sonra
 document.addEventListener('DOMContentLoaded', function() {
-    initializeLogin();
-    setupEventListeners();
-    startBackgroundAnimations();
-    startRomanticMessages();
-    checkRememberedUser();
-});
-
-// Login Sistemi Başlatma
-function initializeLogin() {
-    loginForm = document.getElementById('loginForm');
-    userOptions = document.querySelectorAll('.user-option');
-    passwordSection = document.getElementById('passwordSection');
-    passwordInput = document.getElementById('password');
-    loginBtn = document.getElementById('loginBtn');
-    rememberMeCheckbox = document.getElementById('rememberMe');
+    const userOptions = document.querySelectorAll('.user-option');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.querySelector('.login-btn');
     
-    console.log('Login sistemi başlatıldı');
-}
-
-// Event Listener'ları Ayarla
-function setupEventListeners() {
-    // Kullanıcı seçimi
+    let selectedUser = 'mehmet'; // Varsayılan seçim
+    
+    // Kullanıcı seçimi event listener'ları
     userOptions.forEach(option => {
         option.addEventListener('click', function() {
-            selectUser(this.dataset.user);
+            // Önceki seçimi kaldır
+            userOptions.forEach(opt => opt.classList.remove('active'));
+            
+            // Yeni seçimi işaretle
+            this.classList.add('active');
+            selectedUser = this.dataset.user;
+            
+            // Focus'u password input'a ver
+            passwordInput.focus();
         });
     });
     
-    // Form gönderimi
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-    
-    // Parola input'u
-    if (passwordInput) {
-        passwordInput.addEventListener('input', function() {
-            clearError();
-            if (this.value.length >= 8) {
-                validatePassword();
-            }
-        });
-        
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleLogin(e);
-            }
-        });
-    }
-    
-    // Remember me checkbox
-    if (rememberMeCheckbox) {
-        rememberMeCheckbox.addEventListener('change', function() {
-            LoginState.rememberMe = this.checked;
-        });
-    }
-    
-    // Müzik kontrolü
-    const musicToggle = document.getElementById('music-toggle');
-    if (musicToggle) {
-        musicToggle.addEventListener('click', toggleMusic);
-    }
-}
-
-// Kullanıcı Seçimi
-function selectUser(userId) {
-    LoginState.selectedUser = userId;
-    
-    // Görsel güncelleme
-    userOptions.forEach(option => {
-        option.classList.remove('selected');
-        if (option.dataset.user === userId) {
-            option.classList.add('selected');
+    // Enter tuşu ile login
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            login();
         }
     });
     
-    // Parola bölümünü göster
-    if (passwordSection) {
-        passwordSection.style.display = 'block';
-        
-        // Parola ipucunu güncelle
-        updatePasswordHint(userId);
-        
-        // Focus'u parola input'una ver
-        setTimeout(() => {
-            if (passwordInput) {
-                passwordInput.focus();
-            }
-        }, 300);
-    }
+    // Otomatik giriş kontrolü
+    checkAutoLogin();
     
-    // Kullanıcı durumunu güncelle
-    updateUserStatus(userId, 'online');
-    
-    console.log(`Kullanıcı seçildi: ${userId}`);
-}
+    // Sayfa yüklendiğinde password input'a focus ver
+    setTimeout(() => {
+        passwordInput.focus();
+    }, 500);
+});
 
-// Parola İpucunu Güncelle
-function updatePasswordHint(userId) {
-    const passwordHint = document.getElementById('passwordHint');
-    if (passwordHint) {
-        const hints = {
-            mehmet: 'İpucu: İlk tanışma tarihiniz (GGAAYYYY)',
-            sevgilim: 'İpucu: İlk tanışma tarihiniz (GGAAYYYY)'
-        };
-        
-        const hintSpan = passwordHint.querySelector('span');
-        if (hintSpan) {
-            hintSpan.textContent = hints[userId] || 'İpucu: Özel tarihinizi girin';
-        }
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.querySelector('.toggle-password i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.className = 'fas fa-eye-slash';
+    } else {
+        passwordInput.type = 'password';
+        toggleBtn.className = 'fas fa-eye';
     }
 }
 
-// Kullanıcı Durumunu Güncelle
-function updateUserStatus(userId, status) {
-    const statusElement = document.getElementById(`${userId}-status`);
-    if (statusElement) {
-        statusElement.className = `user-status ${status}`;
-    }
-}
-
-// Login İşlemi
-async function handleLogin(e) {
-    e.preventDefault();
-    
-    if (LoginState.isLoading) return;
-    
-    const password = passwordInput.value.trim();
-    
-    if (!LoginState.selectedUser) {
-        showError('Lütfen bir kullanıcı seçin');
-        return;
-    }
+function login() {
+    const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    const selectedUser = document.querySelector('.user-option.active')?.dataset.user || 'mehmet';
     
     if (!password) {
-        showError('Lütfen parolanızı girin');
-        passwordInput.focus();
+        showError('Lütfen şifrenizi girin!');
         return;
     }
     
-    // Loading state
-    setLoadingState(true);
+    // Şifre kontrolü
+    const correctPassword = '18032024'; // İlk tanışma tarihi
     
-    try {
-        // Parola kontrolü
-        await validateLoginCredentials(LoginState.selectedUser, password);
-        
+    if (password === correctPassword) {
         // Başarılı giriş
-        await handleSuccessfulLogin();
+        showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
         
-    } catch (error) {
-        showError(error.message);
-        passwordInput.classList.add('error');
-        passwordInput.focus();
-        setLoadingState(false);
-    }
-}
-
-// Parola Doğrulama
-function validateLoginCredentials(userId, password) {
-    return new Promise((resolve, reject) => {
+        // Kullanıcı bilgilerini kaydet
+        localStorage.setItem('currentUser', selectedUser);
+        
+        if (rememberMe) {
+            localStorage.setItem('rememberMe', 'true');
+        }
+        
+        // Butonu disable et
+        const loginBtn = document.querySelector('.login-btn');
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Giriş yapılıyor...';
+        
+        // Ana sayfaya yönlendir
         setTimeout(() => {
-            const correctPassword = LoginState.passwords[userId];
-            
-            if (password === correctPassword) {
-                resolve();
-            } else {
-                reject(new Error('Parola yanlış. Lütfen tekrar deneyin.'));
-            }
-        }, 1000); // Gerçekçi loading süresi
-    });
-}
-
-// Başarılı Giriş İşlemi
-async function handleSuccessfulLogin() {
-    // Başarı mesajı göster
-    showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
-    
-    // Kullanıcı bilgilerini kaydet
-    saveUserSession();
-    
-    // Kısa bir bekleme
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Ana sayfaya yönlendir
-    window.location.href = 'index.html';
-}
-
-// Kullanıcı Oturumunu Kaydet
-function saveUserSession() {
-    const sessionData = {
-        userId: LoginState.selectedUser,
-        loginTime: new Date().toISOString(),
-        rememberMe: LoginState.rememberMe
-    };
-    
-    // Session storage'a kaydet
-    sessionStorage.setItem('user_session', JSON.stringify(sessionData));
-    
-    // Remember me seçiliyse localStorage'a da kaydet
-    if (LoginState.rememberMe) {
-        localStorage.setItem('remembered_user', LoginState.selectedUser);
-    }
-    
-    console.log('Kullanıcı oturumu kaydedildi:', sessionData);
-}
-
-// Hatırlanmış Kullanıcıyı Kontrol Et
-function checkRememberedUser() {
-    const rememberedUser = localStorage.getItem('remembered_user');
-    if (rememberedUser) {
-        selectUser(rememberedUser);
-        if (rememberMeCheckbox) {
-            rememberMeCheckbox.checked = true;
-            LoginState.rememberMe = true;
-        }
-    }
-}
-
-// Loading State
-function setLoadingState(isLoading) {
-    LoginState.isLoading = isLoading;
-    
-    if (loginBtn) {
-        loginBtn.disabled = isLoading;
-        loginBtn.classList.toggle('loading', isLoading);
-    }
-    
-    if (passwordInput) {
-        passwordInput.disabled = isLoading;
-    }
-    
-    userOptions.forEach(option => {
-        option.style.pointerEvents = isLoading ? 'none' : 'auto';
-    });
-}
-
-// Parola Validasyonu
-function validatePassword() {
-    const password = passwordInput.value.trim();
-    
-    if (password.length < 8) {
-        return false;
-    }
-    
-    // Tarih formatı kontrolü (GGAAYYYY)
-    const dateRegex = /^\d{8}$/;
-    if (!dateRegex.test(password)) {
-        return false;
-    }
-    
-    return true;
-}
-
-// Hata Mesajı Göster
-function showError(message) {
-    clearMessages();
-    
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.innerHTML = `
-        <i class="fas fa-exclamation-triangle"></i>
-        <span>${message}</span>
-    `;
-    
-    const passwordSection = document.getElementById('passwordSection');
-    if (passwordSection) {
-        passwordSection.appendChild(errorDiv);
-    }
-    
-    // Otomatik temizleme
-    setTimeout(() => {
-        if (errorDiv.parentNode) {
-            errorDiv.parentNode.removeChild(errorDiv);
-        }
-    }, 5000);
-}
-
-// Başarı Mesajı Göster
-function showSuccess(message) {
-    clearMessages();
-    
-    const successDiv = document.createElement('div');
-    successDiv.className = 'success-message';
-    successDiv.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    const passwordSection = document.getElementById('passwordSection');
-    if (passwordSection) {
-        passwordSection.appendChild(successDiv);
-    }
-}
-
-// Mesajları Temizle
-function clearMessages() {
-    const existingMessages = document.querySelectorAll('.error-message, .success-message');
-    existingMessages.forEach(msg => {
-        if (msg.parentNode) {
-            msg.parentNode.removeChild(msg);
-        }
-    });
-}
-
-// Hata Durumunu Temizle
-function clearError() {
-    if (passwordInput) {
-        passwordInput.classList.remove('error');
-    }
-    clearMessages();
-}
-
-// Romantik Mesajları Başlat
-function startRomanticMessages() {
-    const messageItems = document.querySelectorAll('.message-item');
-    
-    if (messageItems.length === 0) return;
-    
-    // İlk mesajı göster
-    showMessage(0);
-    
-    // Otomatik geçiş
-    LoginState.messageInterval = setInterval(() => {
-        LoginState.currentMessageIndex = (LoginState.currentMessageIndex + 1) % messageItems.length;
-        showMessage(LoginState.currentMessageIndex);
-    }, 5000);
-}
-
-// Mesaj Göster
-function showMessage(index) {
-    const messageItems = document.querySelectorAll('.message-item');
-    
-    messageItems.forEach((item, i) => {
-        if (i === index) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
-    });
-}
-
-// Müzik Kontrolü
-function toggleMusic() {
-    const musicToggle = document.getElementById('music-toggle');
-    const musicPlayer = document.getElementById('background-music');
-    
-    if (musicPlayer.paused) {
-        musicPlayer.play().catch(e => {
-            console.log('Müzik çalınamadı:', e);
-        });
-        musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+            window.location.href = 'index.html';
+        }, 1500);
+        
     } else {
-        musicPlayer.pause();
-        musicToggle.innerHTML = '<i class="fas fa-music"></i>';
+        showError('Hatalı şifre! İpucu: İlk tanışma tarihimiz (GGAAYYYY)');
+        
+        // Şifre alanını temizle ve focus yap
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+        
+        // Input'u kırmızı yap
+        document.getElementById('password').style.borderColor = '#dc3545';
+        setTimeout(() => {
+            document.getElementById('password').style.borderColor = '#e9ecef';
+        }, 3000);
     }
 }
 
-// Arka Plan Animasyonları
-function startBackgroundAnimations() {
-    createParticles();
-    createFlyingHearts();
-}
-
-function createParticles() {
-    const container = document.querySelector('.particle-background');
-    if (!container) return;
+function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
     
-    setInterval(() => {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.width = particle.style.height = Math.random() * 10 + 5 + 'px';
-        particle.style.animationDuration = Math.random() * 10 + 10 + 's';
-        
-        container.appendChild(particle);
-        
-        setTimeout(() => {
-            if (container.contains(particle)) {
-                container.removeChild(particle);
-            }
-        }, 20000);
-    }, 3000);
-}
-
-function createFlyingHearts() {
-    const container = document.querySelector('.heart-container');
-    if (!container) return;
+    errorText.textContent = message;
+    errorDiv.style.display = 'flex';
     
-    setInterval(() => {
-        const heart = document.createElement('div');
-        heart.className = 'flying-heart';
-        heart.innerHTML = '💕';
-        heart.style.left = Math.random() * 100 + '%';
-        heart.style.top = Math.random() * 100 + '%';
-        heart.style.animationDuration = Math.random() * 4 + 4 + 's';
-        
-        container.appendChild(heart);
-        
-        setTimeout(() => {
-            if (container.contains(heart)) {
-                container.removeChild(heart);
-            }
-        }, 8000);
-    }, 4000);
+    // 5 saniye sonra gizle
+    setTimeout(() => {
+        errorDiv.style.display = 'none';
+    }, 5000);
 }
 
-// Sayfa Kapatılırken Temizlik
-window.addEventListener('beforeunload', function() {
-    if (LoginState.messageInterval) {
-        clearInterval(LoginState.messageInterval);
+function showSuccess(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    
+    errorText.textContent = message;
+    errorDiv.style.display = 'flex';
+    errorDiv.style.background = '#d4edda';
+    errorDiv.style.color = '#155724';
+    errorDiv.style.borderColor = '#c3e6cb';
+    
+    // İkonu değiştir
+    const icon = errorDiv.querySelector('i');
+    icon.className = 'fas fa-check-circle';
+}
+
+function checkAutoLogin() {
+    const rememberMe = localStorage.getItem('rememberMe');
+    const currentUser = localStorage.getItem('currentUser');
+    
+    if (rememberMe === 'true' && currentUser) {
+        // Otomatik giriş
+        window.location.href = 'index.html';
     }
-});
-
-// Hata Yakalama
-window.addEventListener('error', function(e) {
-    console.error('Login sayfası hatası:', e.error);
-});
-
-console.log('Login sistemi yüklendi! 🔐'); 
+} 
