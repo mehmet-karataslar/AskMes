@@ -101,8 +101,12 @@ function checkAuth() {
     const currentUser = getCurrentUser();
     const authToken = localStorage.getItem('authToken');
     
+    console.log('CheckAuth - currentUser:', currentUser); // Debug log
+    console.log('CheckAuth - authToken:', authToken); // Debug log
+    
     // Eğer giriş yapılmamışsa veya token yoksa login sayfasına yönlendir
     if (!currentUser || !authToken) {
+        console.log('Redirecting to login - missing user or token'); // Debug log
         if (window.location.pathname !== '/login.html' && !window.location.pathname.includes('login.html')) {
             window.location.href = 'login.html';
         }

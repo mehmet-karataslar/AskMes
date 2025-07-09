@@ -70,12 +70,18 @@ async function login() {
         // API ile giriş yap
         const response = await api.login(selectedUser, password);
         
+        console.log('Login response:', response); // Debug log
+        
         if (response.success) {
             // Başarılı giriş
             showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
             
             // Kullanıcı bilgilerini kaydet
             localStorage.setItem('currentUser', selectedUser);
+            
+            // Token'ı kontrol et
+            const savedToken = localStorage.getItem('authToken');
+            console.log('Saved token:', savedToken); // Debug log
             
             if (rememberMe) {
                 localStorage.setItem('rememberMe', 'true');
