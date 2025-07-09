@@ -67,7 +67,7 @@ function updateUserDisplay() {
     userDisplays.forEach(display => {
         if (currentUser === 'mehmet') {
             display.textContent = 'Mehmet';
-        } else         if (currentUser === 'sevgilim') {
+        } else if (currentUser === 'sevgilim') {
             display.textContent = 'Sevgilim';
         } else {
             display.textContent = 'Kullanıcı';
@@ -77,7 +77,7 @@ function updateUserDisplay() {
 
 // Mevcut kullanıcıyı al
 function getCurrentUser() {
-    return localStorage.getItem('currentUser') || 'mehmet';
+    return localStorage.getItem('currentUser');
 }
 
 // Çıkış yap
@@ -94,8 +94,8 @@ function checkAuth() {
     const currentUser = getCurrentUser();
     const rememberMe = localStorage.getItem('rememberMe');
     
-    // Eğer giriş yapılmamışsa ve "beni hatırla" seçili değilse login sayfasına yönlendir
-    if (!currentUser && !rememberMe) {
+    // Eğer giriş yapılmamışsa login sayfasına yönlendir
+    if (!currentUser) {
         if (window.location.pathname !== '/login.html' && !window.location.pathname.includes('login.html')) {
             window.location.href = 'login.html';
         }

@@ -1,17 +1,9 @@
 // Login JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Login JavaScript yüklendi');
-    
     const userOptions = document.querySelectorAll('.user-option');
     const passwordInput = document.getElementById('password');
     const loginBtn = document.querySelector('.login-btn');
-    
-    console.log('Bulunan elementler:', {
-        userOptions: userOptions.length,
-        passwordInput: passwordInput ? 'var' : 'yok',
-        loginBtn: loginBtn ? 'var' : 'yok'
-    });
     
     let selectedUser = 'mehmet'; // Varsayılan seçim
     
