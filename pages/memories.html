@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anılarımız - Bizim Özel Dünyamız ❤️</title>
+    
+    <!-- CSS Dosyaları -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/memories.css">
+    
+    <!-- Font'lar -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <button class="back-btn" onclick="window.location.href='../index.html'">
+                <i class="fas fa-arrow-left"></i>
+                Ana Sayfa
+            </button>
+            
+            <h1 class="page-title">
+                <i class="fas fa-camera-retro"></i>
+                Anılarımız
+            </h1>
+            
+            <div class="user-info">
+                <div class="current-user" id="currentUser">
+                    <i class="fas fa-user"></i>
+                    <span id="userName" data-user-display>Kullanıcı</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filtre ve Arama -->
+    <div class="memories-filters">
+        <div class="filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Anıları ara...">
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-heart"></i>
+                    Tümü
+                </button>
+                <button class="filter-btn" data-filter="photos">
+                    <i class="fas fa-image"></i>
+                    Fotoğraflar
+                </button>
+                <button class="filter-btn" data-filter="videos">
+                    <i class="fas fa-video"></i>
+                    Videolar
+                </button>
+                <button class="filter-btn" data-filter="notes">
+                    <i class="fas fa-sticky-note"></i>
+                    Notlar
+                </button>
+            </div>
+            
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="view-btn" data-view="list">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ana İçerik -->
+    <main class="memories-container">
+        <!-- Anı Galerisi -->
+        <div class="memories-gallery" id="memoriesGallery">
+            <!-- Loading -->
+            <div class="loading-memories" id="loadingMemories">
+                <div class="loading-spinner"></div>
+                <p>Anılar yükleniyor...</p>
+            </div>
+            
+            <!-- Anı Öğeleri Buraya Dinamik Olarak Eklenecek -->
+            <div class="memory-items" id="memoryItems"></div>
+        </div>
+    </main>
+
+    <!-- Yeni Anı Butonu -->
+    <button class="fab-btn" onclick="openNewMemoryModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Yeni Anı Modal -->
+    <div class="modal" id="newMemoryModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-heart"></i>
+                    Yeni Anı Ekle
+                </h3>
+                <button class="modal-close" onclick="closeNewMemoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="memory-form" id="memoryForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="memoryTitle">Anı Başlığı</label>
+                        <input type="text" id="memoryTitle" placeholder="Örn: İlk buluşmamız" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="memoryDate">Tarih</label>
+                        <input type="date" id="memoryDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="memoryDescription">Açıklama</label>
+                    <textarea id="memoryDescription" placeholder="Bu anı hakkında..." rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="memoryLocation">Konum (İsteğe Bağlı)</label>
+                    <input type="text" id="memoryLocation" placeholder="Örn: Beyoğlu, İstanbul">
+                </div>
+                
+                <div class="form-group">
+                    <label>Medya Türü</label>
+                    <div class="media-type-selection">
+                        <label class="radio-option">
+                            <input type="radio" name="mediaType" value="photo" checked>
+                            <span class="radio-custom"></span>
+                            <i class="fas fa-image"></i>
+                            Fotoğraf
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="mediaType" value="video">
+                            <span class="radio-custom"></span>
+                            <i class="fas fa-video"></i>
+                            Video
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="mediaType" value="note">
+                            <span class="radio-custom"></span>
+                            <i class="fas fa-sticky-note"></i>
+                            Sadece Not
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="mediaUploadGroup">
+                    <label for="memoryMedia">Fotoğraf/Video Ekle</label>
+                    <div class="media-upload">
+                        <input type="file" id="memoryMedia" accept="image/*,video/*">
+                        <div class="upload-preview" id="uploadPreview">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Dosya seçin veya sürükleyin</p>
+                            <span class="upload-hint">Maksimum 10MB</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="memoryTags">Etiketler (İsteğe Bağlı)</label>
+                    <input type="text" id="memoryTags" placeholder="Örn: romantik, özel, tatil">
+                    <small>Virgül ile ayırın</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeNewMemoryModal()">
+                        İptal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Anıyı Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Anı Detay Modal -->
+    <div class="modal" id="memoryDetailModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="detailTitle">
+                    <i class="fas fa-heart"></i>
+                    Anı Detayı
+                </h3>
+                <button class="modal-close" onclick="closeMemoryDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="memory-detail-content" id="memoryDetailContent">
+                <!-- Anı detayları buraya yüklenecek -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Anı Düzenleme Modal -->
+    <div class="modal" id="editMemoryModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-edit"></i>
+                    Anıyı Düzenle
+                </h3>
+                <button class="modal-close" onclick="closeEditMemoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="memory-form" id="editMemoryForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMemoryTitle">Anı Başlığı</label>
+                        <input type="text" id="editMemoryTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMemoryDate">Tarih</label>
+                        <input type="date" id="editMemoryDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editMemoryDescription">Açıklama</label>
+                    <textarea id="editMemoryDescription" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editMemoryLocation">Konum</label>
+                    <input type="text" id="editMemoryLocation">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editMemoryMedia">Medya Güncelle</label>
+                    <div class="media-upload">
+                        <input type="file" id="editMemoryMedia" accept="image/*,video/*">
+                        <div class="upload-preview" id="editUploadPreview">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Yeni dosya seçin</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editMemoryTags">Etiketler</label>
+                    <input type="text" id="editMemoryTags">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditMemoryModal()">
+                        İptal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Silme Onayı Modal -->
+    <div class="modal" id="deleteMemoryModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-trash"></i>
+                    Anıyı Sil
+                </h3>
+            </div>
+            
+            <div class="modal-body">
+                <p>Bu anıyı silmek istediğinizden emin misiniz?</p>
+                <p class="warning">Bu işlem geri alınamaz!</p>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeDeleteMemoryModal()">
+                    İptal
+                </button>
+                <button type="button" class="btn-danger" onclick="confirmDeleteMemory()">
+                    <i class="fas fa-trash"></i>
+                    Sil
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Müzik Kontrolü -->
+    <audio id="background-music" loop>
+        <source src="../assets/audio/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-control">
+        <button id="music-toggle">
+            <i class="fas fa-music"></i>
+        </button>
+    </div>
+
+    <!-- JavaScript Dosyaları -->
+    <script src="../config/settings.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/database.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/memories.js"></script>
+</body>
+</html> 
