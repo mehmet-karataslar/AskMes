@@ -1,9 +1,14 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 // Token doğrulama fonksiyonu
 async function verifyToken(token) {
   if (!token) return null;
-  const username = await kv.get(`token:${token}`);
+  const username = await redis.get(`token:${token}`);
   return username;
 }
 

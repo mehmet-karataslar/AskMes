@@ -1,4 +1,9 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 export default async function handler(req, res) {
   // CORS headers
@@ -24,7 +29,7 @@ export default async function handler(req, res) {
     const token = authHeader.substring(7);
     
     // Token'ı sil
-    await kv.del(`token:${token}`);
+    await redis.del(`token:${token}`);
 
     res.status(200).json({
       success: true,

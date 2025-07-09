@@ -1,4 +1,9 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 export default async function handler(req, res) {
   // CORS headers
@@ -31,13 +36,13 @@ export default async function handler(req, res) {
     }
 
     // Son giriş zamanını kaydet
-    await kv.set(`last_login:${username}`, new Date().toISOString());
+    await redis.set(`last_login:${username}`, new Date().toISOString());
     
     // Basit token oluştur (gerçek projede JWT kullanın)
     const token = Buffer.from(`${username}:${Date.now()}`).toString('base64');
     
     // Token'ı kaydet (1 gün geçerli)
-    await kv.set(`token:${token}`, username, { ex: 86400 });
+    await redis.set(`token:${token}`, username, { ex: 86400 });
 
     res.status(200).json({
       success: true,

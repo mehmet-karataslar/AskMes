@@ -1,9 +1,14 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 // Token doğrulama fonksiyonu
 async function verifyToken(token) {
   if (!token) return null;
-  const username = await kv.get(`token:${token}`);
+  const username = await redis.get(`token:${token}`);
   return username;
 }
 
@@ -35,7 +40,7 @@ export default async function handler(req, res) {
     switch (req.method) {
       case 'GET':
         // Tüm mesajları getir
-        const messages = await kv.get('messages') || [];
+        const messages = await redis.get('messages') || [];
         res.status(200).json({ success: true, messages });
         break;
 
