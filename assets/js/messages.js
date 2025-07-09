@@ -37,8 +37,8 @@ function checkUserSession() {
     const sessionData = sessionStorage.getItem('user_session');
     
     if (!sessionData) {
-        // Giriş yapılmamışsa login sayfasına yönlendir
-        window.location.href = '../login.html';
+        // Login yönlendirmesi geçici olarak kaldırıldı
+        // window.location.href = '../login.html';
         return;
     }
     
@@ -58,7 +58,8 @@ function checkUserSession() {
         console.log('Kullanıcı oturumu:', session);
     } catch (error) {
         console.error('Oturum verisi okunamadı:', error);
-        window.location.href = '../login.html';
+        // Login yönlendirmesi geçici olarak kaldırıldı
+        // window.location.href = '../login.html';
     }
 }
 
@@ -581,8 +582,9 @@ function logout() {
     sessionStorage.removeItem('user_session');
     localStorage.removeItem('remembered_user');
     
-    // Login sayfasına yönlendir
-    window.location.href = '../login.html';
+    // Login yönlendirmesi geçici olarak kaldırıldı
+    // window.location.href = '../login.html';
+    window.location.reload();
 }
 
 // Müzik Kontrolü

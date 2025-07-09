@@ -89,7 +89,8 @@ async function logout() {
         localStorage.removeItem('currentUser');
         localStorage.removeItem('authToken');
         localStorage.removeItem('rememberMe');
-        window.location.href = 'login.html';
+        // Login yönlendirmesi geçici olarak kaldırıldı
+        window.location.reload();
     }
 }
 

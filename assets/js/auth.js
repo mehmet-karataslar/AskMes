@@ -8,11 +8,11 @@ const AuthState = {
     checkInterval: null
 };
 
-// Sayfa Yüklendiğinde Auth Kontrolü
-document.addEventListener('DOMContentLoaded', function() {
-    checkAuthentication();
-    startSessionCheck();
-});
+// Auth kontrolü geçici olarak devre dışı bırakıldı
+// document.addEventListener('DOMContentLoaded', function() {
+//     checkAuthentication();
+//     startSessionCheck();
+// });
 
 // Kimlik Doğrulama Kontrolü
 function checkAuthentication() {
