@@ -6,8 +6,8 @@ const LoginState = {
     isLoading: false,
     rememberMe: false,
     passwords: {
-        mehmet: '15062023', // İlk buluşma tarihi
-        sevgilim: '15062023' // Aynı tarih
+        mehmet: '18032024', // İlk tanışma tarihi
+        sevgilim: '18032024' // Aynı tarih
     },
     currentMessageIndex: 0,
     messageInterval: null
@@ -119,8 +119,8 @@ function updatePasswordHint(userId) {
     const passwordHint = document.getElementById('passwordHint');
     if (passwordHint) {
         const hints = {
-            mehmet: 'İpucu: İlk buluşma tarihiniz (GGAAYYYY)',
-            sevgilim: 'İpucu: İlk buluşma tarihiniz (GGAAYYYY)'
+            mehmet: 'İpucu: İlk tanışma tarihiniz (GGAAYYYY)',
+            sevgilim: 'İpucu: İlk tanışma tarihiniz (GGAAYYYY)'
         };
         
         const hintSpan = passwordHint.querySelector('span');

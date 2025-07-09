@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hediyeler - Bizim Özel Dünyamız ❤️</title>
+    
+    <!-- CSS Dosyaları -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/gifts.css">
+    
+    <!-- Font'lar -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <button class="back-btn" onclick="window.location.href='../index.html'">
+                <i class="fas fa-arrow-left"></i>
+                Ana Sayfa
+            </button>
+            
+            <h1 class="page-title">
+                <i class="fas fa-gift"></i>
+                Hediyelerimiz
+            </h1>
+            
+            <div class="user-info">
+                <div class="current-user" id="currentUser">
+                    <i class="fas fa-user"></i>
+                    <span id="userName" data-user-display>Kullanıcı</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hediye Kategorileri -->
+    <div class="gifts-categories">
+        <div class="category-container">
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">
+                    <i class="fas fa-heart"></i>
+                    Tüm Hediyeler
+                </button>
+                <button class="category-tab" data-category="given">
+                    <i class="fas fa-paper-plane"></i>
+                    Verdiğim Hediyeler
+                </button>
+                <button class="category-tab" data-category="received">
+                    <i class="fas fa-inbox"></i>
+                    Aldığım Hediyeler
+                </button>
+                <button class="category-tab" data-category="wishlist">
+                    <i class="fas fa-star"></i>
+                    Dilek Listesi
+                </button>
+            </div>
+            
+            <div class="gift-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalGifts">0</span>
+                    <span class="stat-label">Toplam Hediye</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="givenGifts">0</span>
+                    <span class="stat-label">Verilen</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="receivedGifts">0</span>
+                    <span class="stat-label">Alınan</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ana İçerik -->
+    <main class="gifts-container">
+        <!-- Hediye Listesi -->
+        <div class="gifts-gallery" id="giftsGallery">
+            <!-- Loading -->
+            <div class="loading-gifts" id="loadingGifts">
+                <div class="loading-spinner"></div>
+                <p>Hediyeler yükleniyor...</p>
+            </div>
+            
+            <!-- Hediye Öğeleri Buraya Dinamik Olarak Eklenecek -->
+            <div class="gift-items" id="giftItems"></div>
+        </div>
+    </main>
+
+    <!-- Yeni Hediye Butonu -->
+    <div class="fab-group">
+        <button class="fab-btn main-fab" onclick="toggleFabMenu()">
+            <i class="fas fa-plus"></i>
+        </button>
+        
+        <div class="fab-menu" id="fabMenu">
+            <button class="fab-btn sub-fab" onclick="openNewGiftModal()" title="Hediye Ver">
+                <i class="fas fa-gift"></i>
+            </button>
+            <button class="fab-btn sub-fab" onclick="openWishlistModal()" title="Dilek Listesi">
+                <i class="fas fa-star"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Yeni Hediye Modal -->
+    <div class="modal" id="newGiftModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-gift"></i>
+                    Yeni Hediye Ver
+                </h3>
+                <button class="modal-close" onclick="closeNewGiftModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="gift-form" id="giftForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="giftName">Hediye Adı</label>
+                        <input type="text" id="giftName" placeholder="Örn: Çiçek buketi" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="giftCategory">Kategori</label>
+                        <select id="giftCategory" required>
+                            <option value="">Kategori seçin</option>
+                            <option value="romantic">Romantik</option>
+                            <option value="surprise">Sürpriz</option>
+                            <option value="special-day">Özel Gün</option>
+                            <option value="handmade">El Yapımı</option>
+                            <option value="experience">Deneyim</option>
+                            <option value="jewelry">Mücevher</option>
+                            <option value="clothing">Giyim</option>
+                            <option value="technology">Teknoloji</option>
+                            <option value="books">Kitap</option>
+                            <option value="other">Diğer</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftDescription">Açıklama</label>
+                    <textarea id="giftDescription" placeholder="Hediye hakkında..." rows="4"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="giftDate">Verilme Tarihi</label>
+                        <input type="date" id="giftDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="giftOccasion">Özel Gün</label>
+                        <select id="giftOccasion">
+                            <option value="">Seçin (İsteğe bağlı)</option>
+                            <option value="birthday">Doğum Günü</option>
+                            <option value="anniversary">Yıldönümü</option>
+                            <option value="valentines">Sevgililer Günü</option>
+                            <option value="new-year">Yeni Yıl</option>
+                            <option value="graduation">Mezuniyet</option>
+                            <option value="promotion">Terfi</option>
+                            <option value="apology">Özür</option>
+                            <option value="surprise">Sürpriz</option>
+                            <option value="other">Diğer</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftImage">Hediye Fotoğrafı</label>
+                    <div class="image-upload">
+                        <input type="file" id="giftImage" accept="image/*">
+                        <div class="upload-preview" id="uploadPreview">
+                            <i class="fas fa-camera"></i>
+                            <p>Hediye fotoğrafı ekleyin</p>
+                            <span class="upload-hint">Maksimum 5MB</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftPrice">Fiyat (İsteğe Bağlı)</label>
+                    <div class="price-input">
+                        <input type="number" id="giftPrice" placeholder="0" min="0" step="0.01">
+                        <span class="currency">₺</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftLocation">Nereden Alındı</label>
+                    <input type="text" id="giftLocation" placeholder="Örn: Çiçekçi, Online mağaza">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeNewGiftModal()">
+                        İptal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-gift"></i>
+                        Hediyeyi Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dilek Listesi Modal -->
+    <div class="modal" id="wishlistModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-star"></i>
+                    Dilek Listesi
+                </h3>
+                <button class="modal-close" onclick="closeWishlistModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="wishlist-form" id="wishlistForm">
+                <div class="form-group">
+                    <label for="wishItemName">İstek Adı</label>
+                    <input type="text" id="wishItemName" placeholder="Örn: Kırmızı elbise" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wishItemDescription">Açıklama</label>
+                    <textarea id="wishItemDescription" placeholder="Detaylar..." rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="wishItemPriority">Öncelik</label>
+                        <select id="wishItemPriority" required>
+                            <option value="low">Düşük</option>
+                            <option value="medium" selected>Orta</option>
+                            <option value="high">Yüksek</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wishItemPrice">Tahmini Fiyat</label>
+                        <div class="price-input">
+                            <input type="number" id="wishItemPrice" placeholder="0" min="0" step="0.01">
+                            <span class="currency">₺</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wishItemLink">Link (İsteğe Bağlı)</label>
+                    <input type="url" id="wishItemLink" placeholder="https://...">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeWishlistModal()">
+                        İptal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-star"></i>
+                        Listeye Ekle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hediye Detay Modal -->
+    <div class="modal" id="giftDetailModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="detailTitle">
+                    <i class="fas fa-gift"></i>
+                    Hediye Detayı
+                </h3>
+                <button class="modal-close" onclick="closeGiftDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="gift-detail-content" id="giftDetailContent">
+                <!-- Hediye detayları buraya yüklenecek -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Hediye Düzenleme Modal -->
+    <div class="modal" id="editGiftModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-edit"></i>
+                    Hediyeyi Düzenle
+                </h3>
+                <button class="modal-close" onclick="closeEditGiftModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="gift-form" id="editGiftForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editGiftName">Hediye Adı</label>
+                        <input type="text" id="editGiftName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editGiftCategory">Kategori</label>
+                        <select id="editGiftCategory" required>
+                            <option value="romantic">Romantik</option>
+                            <option value="surprise">Sürpriz</option>
+                            <option value="special-day">Özel Gün</option>
+                            <option value="handmade">El Yapımı</option>
+                            <option value="experience">Deneyim</option>
+                            <option value="jewelry">Mücevher</option>
+                            <option value="clothing">Giyim</option>
+                            <option value="technology">Teknoloji</option>
+                            <option value="books">Kitap</option>
+                            <option value="other">Diğer</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editGiftDescription">Açıklama</label>
+                    <textarea id="editGiftDescription" rows="4"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editGiftDate">Verilme Tarihi</label>
+                        <input type="date" id="editGiftDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editGiftOccasion">Özel Gün</label>
+                        <select id="editGiftOccasion">
+                            <option value="">Seçin (İsteğe bağlı)</option>
+                            <option value="birthday">Doğum Günü</option>
+                            <option value="anniversary">Yıldönümü</option>
+                            <option value="valentines">Sevgililer Günü</option>
+                            <option value="new-year">Yeni Yıl</option>
+                            <option value="graduation">Mezuniyet</option>
+                            <option value="promotion">Terfi</option>
+                            <option value="apology">Özür</option>
+                            <option value="surprise">Sürpriz</option>
+                            <option value="other">Diğer</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editGiftImage">Hediye Fotoğrafı</label>
+                    <div class="image-upload">
+                        <input type="file" id="editGiftImage" accept="image/*">
+                        <div class="upload-preview" id="editUploadPreview">
+                            <i class="fas fa-camera"></i>
+                            <p>Yeni fotoğraf seçin</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditGiftModal()">
+                        İptal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Silme Onayı Modal -->
+    <div class="modal" id="deleteGiftModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-trash"></i>
+                    Hediyeyi Sil
+                </h3>
+            </div>
+            
+            <div class="modal-body">
+                <p>Bu hediyeyi silmek istediğinizden emin misiniz?</p>
+                <p class="warning">Bu işlem geri alınamaz!</p>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeDeleteGiftModal()">
+                    İptal
+                </button>
+                <button type="button" class="btn-danger" onclick="confirmDeleteGift()">
+                    <i class="fas fa-trash"></i>
+                    Sil
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Müzik Kontrolü -->
+    <audio id="background-music" loop>
+        <source src="../assets/audio/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-control">
+        <button id="music-toggle">
+            <i class="fas fa-music"></i>
+        </button>
+    </div>
+
+    <!-- JavaScript Dosyaları -->
+    <script src="../config/settings.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/database.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/gifts.js"></script>
+</body>
+</html> 
