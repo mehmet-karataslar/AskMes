@@ -90,6 +90,7 @@ async function logout() {
         }
         
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('authToken');
         localStorage.removeItem('rememberMe');
         window.location.href = 'login.html';
     }
@@ -98,10 +99,10 @@ async function logout() {
 // Giriş kontrolü
 function checkAuth() {
     const currentUser = getCurrentUser();
-    const rememberMe = localStorage.getItem('rememberMe');
+    const authToken = localStorage.getItem('authToken');
     
-    // Eğer giriş yapılmamışsa login sayfasına yönlendir
-    if (!currentUser) {
+    // Eğer giriş yapılmamışsa veya token yoksa login sayfasına yönlendir
+    if (!currentUser || !authToken) {
         if (window.location.pathname !== '/login.html' && !window.location.pathname.includes('login.html')) {
             window.location.href = 'login.html';
         }

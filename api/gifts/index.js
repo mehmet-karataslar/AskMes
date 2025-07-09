@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     switch (req.method) {
       case 'GET':
         // Tüm hediyeleri getir
-        const gifts = await kv.get('gifts') || [];
+        const gifts = await redis.get('gifts') || [];
         res.status(200).json({ success: true, gifts });
         break;
 
@@ -65,9 +65,9 @@ export default async function handler(req, res) {
           timestamp: new Date().toISOString()
         };
 
-        const existingGifts = await kv.get('gifts') || [];
+        const existingGifts = await redis.get('gifts') || [];
         existingGifts.push(newGift);
-        await kv.set('gifts', existingGifts);
+        await redis.set('gifts', existingGifts);
 
         res.status(201).json({ success: true, gift: newGift });
         break;
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Hediye ID gerekli' });
         }
 
-        const gifts2 = await kv.get('gifts') || [];
+        const gifts2 = await redis.get('gifts') || [];
         const giftIndex = gifts2.findIndex(gift => gift.id === id);
         
         if (giftIndex === -1) {
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
         if (newStatus) gifts2[giftIndex].status = newStatus;
         gifts2[giftIndex].lastModified = new Date().toISOString();
 
-        await kv.set('gifts', gifts2);
+        await redis.set('gifts', gifts2);
         res.status(200).json({ success: true, gift: gifts2[giftIndex] });
         break;
 
@@ -108,14 +108,14 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Hediye ID gerekli' });
         }
 
-        const gifts3 = await kv.get('gifts') || [];
+        const gifts3 = await redis.get('gifts') || [];
         const filteredGifts = gifts3.filter(gift => gift.id !== deleteId);
         
         if (filteredGifts.length === gifts3.length) {
           return res.status(404).json({ error: 'Hediye bulunamadı' });
         }
 
-        await kv.set('gifts', filteredGifts);
+        await redis.set('gifts', filteredGifts);
         res.status(200).json({ success: true, message: 'Hediye silindi' });
         break;
 

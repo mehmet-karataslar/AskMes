@@ -61,9 +61,9 @@ export default async function handler(req, res) {
           read: false
         };
 
-        const existingMessages = await kv.get('messages') || [];
+        const existingMessages = await redis.get('messages') || [];
         existingMessages.push(newMessage);
-        await kv.set('messages', existingMessages);
+        await redis.set('messages', existingMessages);
 
         res.status(201).json({ success: true, message: newMessage });
         break;
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Mesaj ID gerekli' });
         }
 
-        const messages2 = await kv.get('messages') || [];
+        const messages2 = await redis.get('messages') || [];
         const messageIndex = messages2.findIndex(msg => msg.id === messageId);
         
         if (messageIndex === -1) {
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
         }
 
         messages2[messageIndex].read = true;
-        await kv.set('messages', messages2);
+        await redis.set('messages', messages2);
 
         res.status(200).json({ success: true, message: messages2[messageIndex] });
         break;
@@ -97,14 +97,14 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Mesaj ID gerekli' });
         }
 
-        const messages3 = await kv.get('messages') || [];
+        const messages3 = await redis.get('messages') || [];
         const filteredMessages = messages3.filter(msg => msg.id !== id);
         
         if (filteredMessages.length === messages3.length) {
           return res.status(404).json({ error: 'Mesaj bulunamadı' });
         }
 
-        await kv.set('messages', filteredMessages);
+        await redis.set('messages', filteredMessages);
         res.status(200).json({ success: true, message: 'Mesaj silindi' });
         break;
 

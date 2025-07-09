@@ -9,7 +9,6 @@
     "start": "vercel dev"
   },
   "dependencies": {
-    "@vercel/kv": "^1.0.1",
     "@upstash/redis": "^1.28.4"
   },
   "devDependencies": {

@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     switch (req.method) {
       case 'GET':
         // Tüm anıları getir
-        const memories = await kv.get('memories') || [];
+        const memories = await redis.get('memories') || [];
         res.status(200).json({ success: true, memories });
         break;
 
@@ -62,9 +62,9 @@ export default async function handler(req, res) {
           timestamp: new Date().toISOString()
         };
 
-        const existingMemories = await kv.get('memories') || [];
+        const existingMemories = await redis.get('memories') || [];
         existingMemories.push(newMemory);
-        await kv.set('memories', existingMemories);
+        await redis.set('memories', existingMemories);
 
         res.status(201).json({ success: true, memory: newMemory });
         break;
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Anı ID gerekli' });
         }
 
-        const memories2 = await kv.get('memories') || [];
+        const memories2 = await redis.get('memories') || [];
         const memoryIndex = memories2.findIndex(memory => memory.id === id);
         
         if (memoryIndex === -1) {
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
         if (newDate) memories2[memoryIndex].date = newDate;
         memories2[memoryIndex].lastModified = new Date().toISOString();
 
-        await kv.set('memories', memories2);
+        await redis.set('memories', memories2);
         res.status(200).json({ success: true, memory: memories2[memoryIndex] });
         break;
 
@@ -103,14 +103,14 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Anı ID gerekli' });
         }
 
-        const memories3 = await kv.get('memories') || [];
+        const memories3 = await redis.get('memories') || [];
         const filteredMemories = memories3.filter(memory => memory.id !== deleteId);
         
         if (filteredMemories.length === memories3.length) {
           return res.status(404).json({ error: 'Anı bulunamadı' });
         }
 
-        await kv.set('memories', filteredMemories);
+        await redis.set('memories', filteredMemories);
         res.status(200).json({ success: true, message: 'Anı silindi' });
         break;
 

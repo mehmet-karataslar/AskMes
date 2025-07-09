@@ -1,0 +1,5 @@
+KV_URL="rediss://default:AbOwAAIjcDFlM2Q0MjZjYmFhYzc0NjllOTM1YWE4ZmNlZDA0YmUzMXAxMA@touched-ostrich-46000.upstash.io:6379"
+KV_REST_API_URL="https://touched-ostrich-46000.upstash.io"
+KV_REST_API_TOKEN="AbOwAAIjcDFlM2Q0MjZjYmFhYzc0NjllOTM1YWE4ZmNlZDA0YmUzMXAxMA"
+KV_REST_API_READ_ONLY_TOKEN="ArOwAAIgcDHiI4rZ905twRXLQLcf_kgteE5IlZiXtKbv8AZIzqHINg"
+REDIS_URL="rediss://default:AbOwAAIjcDFlM2Q0MjZjYmFhYzc0NjllOTM1YWE4ZmNlZDA0YmUzMXAxMA@touched-ostrich-46000.upstash.io:6379"
