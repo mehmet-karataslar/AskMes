@@ -7,14 +7,10 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
-        // Basit giriş kontrolü - döngü yaratmayacak şekilde
-        const currentUser = localStorage.getItem('currentUser');
-        const authToken = localStorage.getItem('authToken');
-        
-        if (!currentUser || !authToken) {
-            // Eğer giriş yapılmamışsa login sayfasına yönlendir
-            window.location.replace('login.html');
-        }
+        // Giriş kontrolü geçici olarak kaldırıldı
+        // Direkt ana sayfaya erişim sağlanıyor
+        localStorage.setItem('currentUser', 'mehmet');
+        localStorage.setItem('authToken', 'temp-token-' + Date.now());
     </script>
 </head>
 <body>
