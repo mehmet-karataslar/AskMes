@@ -51,50 +51,44 @@ function togglePasswordVisibility() {
     }
 }
 
-function login() {
-    console.log('Login fonksiyonu çağrıldı');
-    
+async function login() {
     const password = document.getElementById('password').value;
     const rememberMe = document.getElementById('rememberMe').checked;
     const selectedUser = document.querySelector('.user-option.active')?.dataset.user || 'mehmet';
-    
-    console.log('Login bilgileri:', {
-        password: password ? '***' : 'boş',
-        rememberMe: rememberMe,
-        selectedUser: selectedUser
-    });
     
     if (!password) {
         showError('Lütfen şifrenizi girin!');
         return;
     }
     
-    // Şifre kontrolü
-    const correctPassword = '18032024'; // İlk tanışma tarihi
-    
-    if (password === correctPassword) {
-        // Başarılı giriş
-        showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
-        
-        // Kullanıcı bilgilerini kaydet
-        localStorage.setItem('currentUser', selectedUser);
-        
-        if (rememberMe) {
-            localStorage.setItem('rememberMe', 'true');
-        }
-        
+    try {
         // Butonu disable et
         const loginBtn = document.querySelector('.login-btn');
         loginBtn.disabled = true;
         loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Giriş yapılıyor...';
         
-        // Ana sayfaya yönlendir
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
+        // API ile giriş yap
+        const response = await api.login(selectedUser, password);
         
-    } else {
-        showError('Hatalı şifre! İpucu: İlk tanışma tarihimiz (GGAAYYYY)');
+        if (response.success) {
+            // Başarılı giriş
+            showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
+            
+            // Kullanıcı bilgilerini kaydet
+            localStorage.setItem('currentUser', selectedUser);
+            
+            if (rememberMe) {
+                localStorage.setItem('rememberMe', 'true');
+            }
+            
+            // Ana sayfaya yönlendir
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+        
+    } catch (error) {
+        showError('Giriş hatası: ' + error.message);
         
         // Şifre alanını temizle ve focus yap
         document.getElementById('password').value = '';
@@ -105,6 +99,11 @@ function login() {
         setTimeout(() => {
             document.getElementById('password').style.borderColor = '#e9ecef';
         }, 3000);
+        
+        // Butonu tekrar aktif et
+        const loginBtn = document.querySelector('.login-btn');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş Yap';
     }
 }
 

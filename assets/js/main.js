@@ -81,8 +81,14 @@ function getCurrentUser() {
 }
 
 // Çıkış yap
-function logout() {
+async function logout() {
     if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+        try {
+            await api.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+        
         localStorage.removeItem('currentUser');
         localStorage.removeItem('rememberMe');
         window.location.href = 'login.html';
