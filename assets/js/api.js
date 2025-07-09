@@ -40,16 +40,11 @@ class APIClient {
 
             if (!response.ok) {
                 // 401 hatası (Unauthorized) gelirse token geçersiz, çıkış yap
-                if (response.status === 401 && !window.location.pathname.includes('login.html')) {
-                    console.log('Token geçersiz, çıkış yapılıyor...');
+                if (response.status === 401) {
                     this.setToken(null);
                     localStorage.removeItem('currentUser');
                     localStorage.removeItem('rememberMe');
-                    // Sonsuz döngüye girmemek için kontrol
-                    if (!window.location.pathname.includes('login.html')) {
-                        window.location.href = 'login.html';
-                    }
-                    return;
+                    throw new Error('Oturum süresi doldu, lütfen tekrar giriş yapın');
                 }
                 throw new Error(data.error || 'API hatası');
             }

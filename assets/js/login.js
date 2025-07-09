@@ -138,8 +138,9 @@ function showSuccess(message) {
 function checkAutoLogin() {
     const rememberMe = localStorage.getItem('rememberMe');
     const currentUser = localStorage.getItem('currentUser');
+    const authToken = localStorage.getItem('authToken');
     
-    if (rememberMe === 'true' && currentUser) {
+    if (rememberMe === 'true' && currentUser && authToken) {
         // Otomatik giriş
         window.location.href = 'index.html';
     }
