@@ -342,12 +342,12 @@
             <i class="fas fa-music"></i>
         </button>
         <div class="music-info">
-            <span id="musicStatus">Müzik Çalıyor 🎵</span>
+            <span id="musicStatus">Müzik 🎵</span>
         </div>
-        <audio id="backgroundMusic" loop>
-            <source src="assets/audio/music.mp3" type="audio/mpeg">
-        </audio>
     </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/music.js"></script>
 
     <script>
         // Basit kullanıcı ayarları
@@ -410,40 +410,7 @@
             }
         }
         
-        // Müzik kontrolü
-        let musicPlaying = false;
-        
-        function toggleMusic() {
-            const music = document.getElementById('backgroundMusic');
-            const musicToggle = document.getElementById('musicToggle');
-            const musicStatus = document.getElementById('musicStatus');
-            
-            if (musicPlaying) {
-                music.pause();
-                musicToggle.innerHTML = '<i class="fas fa-music"></i>';
-                musicToggle.classList.remove('playing');
-                musicToggle.classList.add('paused');
-                musicStatus.textContent = 'Müzik Durdu 🎵';
-                musicPlaying = false;
-            } else {
-                music.play().catch(e => {
-                    console.log('Müzik çalınamadı:', e);
-                    musicStatus.textContent = 'Müzik Hatası ⚠️';
-                });
-                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
-                musicToggle.classList.remove('paused');
-                musicToggle.classList.add('playing');
-                musicStatus.textContent = 'Müzik Çalıyor 🎵';
-                musicPlaying = true;
-            }
-        }
-        
-        // Sayfa yüklendiğinde müziği otomatik başlat
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                toggleMusic();
-            }, 1000);
-        });
+        // Müzik kontrolü artık assets/js/music.js dosyasında global olarak yönetiliyor
         
         // Ana sayfa dashboard verilerini yükle
         function loadDashboardData() {

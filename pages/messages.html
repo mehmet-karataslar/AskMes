@@ -82,6 +82,16 @@
         <i class="fas fa-plus"></i>
     </button>
 
+    <!-- Müzik Kontrolü -->
+    <div class="music-control">
+        <button id="musicToggle">
+            <i class="fas fa-music"></i>
+        </button>
+        <div class="music-info">
+            <span id="musicStatus">Müzik 🎵</span>
+        </div>
+    </div>
+
     <!-- Yeni Mesaj Modal -->
     <div class="modal" id="newMessageModal">
         <div class="modal-content">
@@ -205,12 +215,8 @@
 
     <!-- Scripts -->
     <script src="../assets/js/database.js"></script>
+    <script src="../assets/js/music.js"></script>
     <script src="../assets/js/messages.js"></script>
-    
-    <!-- Müzik Kontrolü -->
-    <audio id="backgroundMusic" loop>
-        <source src="../assets/audio/music.mp3" type="audio/mpeg">
-    </audio>
     
     <!-- Mesaj Sayfasını Başlat -->
     <script>
