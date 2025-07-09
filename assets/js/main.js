@@ -2,8 +2,10 @@
 
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', function() {
-    // Kullanıcı giriş kontrolü
-    checkAuth();
+    // Login sayfasında değilsek giriş kontrolü yap
+    if (!window.location.pathname.includes('login.html')) {
+        checkAuth();
+    }
     
     // Navigasyon event listener'ları
     setupNavigation();
@@ -98,6 +100,11 @@ async function logout() {
 
 // Giriş kontrolü
 function checkAuth() {
+    // Login sayfasındaysak kontrol yapma
+    if (window.location.pathname.includes('login.html')) {
+        return;
+    }
+    
     const currentUser = getCurrentUser();
     const authToken = localStorage.getItem('authToken');
     
@@ -107,9 +114,7 @@ function checkAuth() {
     // Eğer giriş yapılmamışsa veya token yoksa login sayfasına yönlendir
     if (!currentUser || !authToken) {
         console.log('Redirecting to login - missing user or token'); // Debug log
-        if (window.location.pathname !== '/login.html' && !window.location.pathname.includes('login.html')) {
-            window.location.href = 'login.html';
-        }
+        window.location.href = 'login.html';
     }
 }
 

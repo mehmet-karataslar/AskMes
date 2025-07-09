@@ -79,18 +79,18 @@ async function login() {
             // Kullanıcı bilgilerini kaydet
             localStorage.setItem('currentUser', selectedUser);
             
-            // Token'ı kontrol et
-            const savedToken = localStorage.getItem('authToken');
-            console.log('Saved token:', savedToken); // Debug log
-            
-            if (rememberMe) {
-                localStorage.setItem('rememberMe', 'true');
-            }
-            
-            // Ana sayfaya yönlendir
+            // Token'ın kaydedildiğinden emin ol
             setTimeout(() => {
+                const savedToken = localStorage.getItem('authToken');
+                console.log('Saved token after delay:', savedToken); // Debug log
+                
+                if (rememberMe) {
+                    localStorage.setItem('rememberMe', 'true');
+                }
+                
+                // Ana sayfaya yönlendir
                 window.location.href = 'index.html';
-            }, 1500);
+            }, 500);
         }
         
     } catch (error) {
