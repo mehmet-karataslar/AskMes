@@ -249,3 +249,37 @@ body {
         font-size: 2em;
     }
 }
+
+/* --- Games Link --- */
+.games-link {
+    margin-top: 30px;
+}
+
+.games-btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 1.1em;
+    font-weight: 600;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+}
+
+.games-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(45deg, #5a6fd8, #6a42a0);
+}
+
+@media (max-width: 480px) {
+    .games-btn {
+        font-size: 1em;
+        padding: 10px 25px;
+    }
+}

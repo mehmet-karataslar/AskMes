@@ -3,145 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sana Özel Bir Sürprizim Var ❤️</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Bizim Özel Dünyamız ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="main-style.css">
 </head>
 <body>
+    <!-- Arka Plan Animasyonları -->
+    <div class="background-animation">
+        <div class="particle-background" id="particle-background"></div>
+        <div class="heart-container" id="heart-container"></div>
+    </div>
 
+    <!-- Ana Container -->
+    <div class="main-container">
+        <!-- Üst Başlık -->
+        <header class="main-header">
+            <h1 class="site-title">Bizim Özel Dünyamız</h1>
+            <p class="site-subtitle">Mehmet ❤️ Sevgilim</p>
+            <div class="user-info">
+                <div class="user-selector">
+                    <button class="user-btn active" data-user="mehmet">
+                        <i class="fas fa-user"></i> Mehmet
+                    </button>
+                    <button class="user-btn" data-user="sevgili">
+                        <i class="fas fa-heart"></i> Sevgilim
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigasyon Sekmeleri -->
+        <nav class="main-nav">
+            <button class="nav-tab active" data-tab="messages">
+                <i class="fas fa-envelope"></i>
+                <span>Mesajlar</span>
+                <div class="notification-badge" id="messages-badge">2</div>
+            </button>
+            <button class="nav-tab" data-tab="games">
+                <i class="fas fa-gamepad"></i>
+                <span>Oyunlar</span>
+            </button>
+            <button class="nav-tab" data-tab="gifts">
+                <i class="fas fa-gift"></i>
+                <span>Hediyeler</span>
+                <div class="notification-badge" id="gifts-badge">1</div>
+            </button>
+            <button class="nav-tab" data-tab="memories">
+                <i class="fas fa-images"></i>
+                <span>Anılar</span>
+            </button>
+        </nav>
+
+        <!-- Ana İçerik Alanı -->
+        <main class="main-content">
+            <!-- Mesajlar Bölümü -->
+            <section class="content-section active" id="messages-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-envelope"></i> Mesajlarımız</h2>
+                    <button class="add-btn" onclick="openNewMessageModal()">
+                        <i class="fas fa-plus"></i> Yeni Mesaj
+                    </button>
+                </div>
+                
+                <div class="messages-container">
+                    <div class="message-card featured">
+                        <div class="message-header">
+                            <div class="sender-info">
+                                <div class="sender-avatar">M</div>
+                                <div class="sender-details">
+                                    <span class="sender-name">Mehmet</span>
+                                    <span class="message-date">Bugün, 08:00</span>
+                                </div>
+                            </div>
+                            <div class="message-type">
+                                <i class="fas fa-star"></i> Özel Mektup
+                            </div>
+                        </div>
+                        <div class="message-preview">
+                            <h3>Günaydın Canım Aşkım</h3>
+                            <p>Güneş doğmuş, yeni bir gün başlamış... Ama benim için günün en güzel anı, gözlerimi açtığımda seni düşünmeye başladığım an...</p>
+                        </div>
+                        <div class="message-actions">
+                            <button class="action-btn primary" onclick="readFullMessage('morning-letter')">
+                                <i class="fas fa-book-open"></i> Mektubu Oku
+                            </button>
+                            <button class="action-btn" onclick="likeMessage('morning-letter')">
+                                <i class="fas fa-heart"></i> <span id="like-count-morning">5</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="message-card">
+                        <div class="message-header">
+                            <div class="sender-info">
+                                <div class="sender-avatar">S</div>
+                                <div class="sender-details">
+                                    <span class="sender-name">Sevgilim</span>
+                                    <span class="message-date">Dün, 20:30</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message-preview">
+                            <h3>Sana Teşekkür</h3>
+                            <p>Bu güzel sürpriz için çok teşekkür ederim canım... Beni çok mutlu ettin ❤️</p>
+                        </div>
+                        <div class="message-actions">
+                            <button class="action-btn primary" onclick="readFullMessage('thank-you')">
+                                <i class="fas fa-book-open"></i> Mesajı Oku
+                            </button>
+                            <button class="action-btn" onclick="likeMessage('thank-you')">
+                                <i class="fas fa-heart"></i> <span id="like-count-thank">3</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Oyunlar Bölümü -->
+            <section class="content-section" id="games-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-gamepad"></i> Oyunlarımız</h2>
+                    <div class="stats-summary">
+                        <span>Toplam Oyun: <strong>5</strong></span>
+                        <span>En Yüksek Skor: <strong>450</strong></span>
+                    </div>
+                </div>
+
+                <div class="games-grid">
+                    <div class="game-card" onclick="openGame('heart-catcher')">
+                        <div class="game-icon">💖</div>
+                        <h3>Kalp Yakalama</h3>
+                        <p>Düşen kalpleri yakala ve puan kazan!</p>
+                        <div class="game-stats">
+                            <span>En İyi: 320</span>
+                            <span>Oynanan: 15</span>
+                        </div>
+                        <div class="difficulty-badge easy">Kolay</div>
+                    </div>
+
+                    <div class="game-card" onclick="openGame('memory-game')">
+                        <div class="game-icon">🧠</div>
+                        <h3>Anı Hafızası</h3>
+                        <p>Anılarımızdan kartları eşleştir</p>
+                        <div class="game-stats">
+                            <span>En İyi: 450</span>
+                            <span>Oynanan: 8</span>
+                        </div>
+                        <div class="difficulty-badge medium">Orta</div>
+                    </div>
+
+                    <div class="game-card coming-soon">
+                        <div class="game-icon">🔍</div>
+                        <h3>Kelime Avcısı</h3>
+                        <p>Birbirimizle ilgili kelimeleri bul</p>
+                        <div class="coming-soon-badge">Yakında</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hediyeler Bölümü -->
+            <section class="content-section" id="gifts-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-gift"></i> Hediyelerimiz</h2>
+                    <button class="add-btn" onclick="openNewGiftModal()">
+                        <i class="fas fa-plus"></i> Hediye Ekle
+                    </button>
+                </div>
+
+                <div class="gifts-container">
+                    <div class="gift-card new">
+                        <div class="gift-icon">🎁</div>
+                        <div class="gift-info">
+                            <h3>Yeni Hediye!</h3>
+                            <p>Sana özel bir sürprizim var...</p>
+                            <span class="gift-date">Bugün</span>
+                        </div>
+                        <button class="gift-open-btn" onclick="openGift('surprise-1')">
+                            <i class="fas fa-gift"></i> Aç
+                        </button>
+                    </div>
+
+                    <div class="gift-card opened">
+                        <div class="gift-icon">💝</div>
+                        <div class="gift-info">
+                            <h3>Sevgi Dolu Mektup</h3>
+                            <p>Sabah mektubum senin için...</p>
+                            <span class="gift-date">Bugün, 08:00</span>
+                        </div>
+                        <button class="gift-view-btn" onclick="viewGift('morning-letter')">
+                            <i class="fas fa-eye"></i> Görüntüle
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Anılar Bölümü -->
+            <section class="content-section" id="memories-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-images"></i> Anılarımız</h2>
+                    <button class="add-btn" onclick="openNewMemoryModal()">
+                        <i class="fas fa-plus"></i> Anı Ekle
+                    </button>
+                </div>
+
+                <div class="memories-container">
+                    <div class="memory-card">
+                        <div class="memory-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="memory-info">
+                            <h3>İlk Buluşmamız</h3>
+                            <p>O güzel günü hiç unutmayacağım...</p>
+                            <span class="memory-date">15 Şubat 2024</span>
+                        </div>
+                    </div>
+
+                    <div class="memory-card">
+                        <div class="memory-image">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="memory-info">
+                            <h3>İlk "Seni Seviyorum"</h3>
+                            <p>Kalbimin en derin yerinden...</p>
+                            <span class="memory-date">20 Şubat 2024</span>
+                        </div>
+                    </div>
+
+                    <div class="add-memory-card" onclick="openNewMemoryModal()">
+                        <div class="add-memory-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <p>Yeni Anı Ekle</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modaller ve Popup'lar buraya gelecek -->
+    <div id="modal-container"></div>
+
+    <!-- Müzik Kontrolü -->
     <audio id="background-music" loop>
         <source src="music.mp3" type="audio/mpeg">
-        Tarayıcınız ses etiketini desteklemiyor.
     </audio>
 
-    <div class="particle-background" id="particle-background"></div>
-    <div class="heart-container" id="heart-container"></div>
-
-    <div class="letter-cover" id="letter-cover">
-        <h1 class="cover-title">Mehmedinden Sana Bir Mektup Var</h1>
-        <p class="cover-subtitle">Sevgiyle hazırlanmış özel mesaj</p>
-        <button class="open-button" id="open-button">📜 Mektubu Aç</button>
+    <div class="music-control">
+        <button id="music-toggle" onclick="toggleMusic()">
+            <i class="fas fa-music"></i>
+        </button>
     </div>
 
-    <div class="love-letter" id="loveLetter">
-        <div class="letter-title">Canım Aşkım,</div>
-        <div class="letter-content">
-            <p>
-                Güneş doğmuş, yeni bir gün başlamış... Ama benim için günün en güzel anı, 
-                gözlerimi açtığımda seni düşünmeye başladığım an. Sabahın ilk nefesinde 
-                senin kokun var, ilk düşüncemde senin gülümsemen...
-            </p>
-            
-            <p>
-                Biliyorsun, her sabah uyandığımda kalbimde bir sıcaklık hissediyorum. 
-                Bu sıcaklık senin varlığından geliyor, senin benimle olduğunu bilmekten. 
-                Hayatıma kattığın renklerin, getirdiğin mutluluğun farkında mısın?
-            </p>
-            
-            <p>
-                Sabahın sessizliğinde seni düşünüyorum... Nasıl bir melek olabilirsin ki 
-                böyle? Gülüşün baharı getiriyor kalbime, sesinin melodisi kulaklarımda. 
-                Sen sadece sevgilim değilsin, sen benim nefesimsin, kalbimin atışısın.
-            </p>
-            
-            <p>
-                Bugün de seninle geçireceğim her an bir hediye benim için. Senin varlığın 
-                beni daha iyi bir insan yapıyor, seni sevmek beni daha güçlü kılıyor. 
-                Bu sabah sana söylemek istiyorum ki, sen benim hayatımın en güzel şiirisin.
-            </p>
-            
-            <p>
-                Gözlerinin derinliğinde kayboluyorum her baktığımda... Orada gördüğüm 
-                sevgi, sıcaklık ve sonsuzluk beni mest ediyor. Sen benim sonsuzluğumsun, 
-                benim ebediyetimsun, benim her şeyimsin.
-            </p>
-            
-            <p>
-                Bu güzel sabahta sana söylemek istiyorum: Seni seviyorum, çok seviyorum. 
-                Bu aşk sözcüklerle anlatılamayacak kadar büyük, kalbimde hissettiğim 
-                bu sevgi tarif edilemeyecek kadar derin. Sen benim mucizem, benim 
-                hayatımın anlamısın.
-            </p>
-            
-            <p>
-                Günaydın canım, ruhumun diğer yarısı... Bugün de seni sevecek, 
-                seni düşünecek, seninle mutlu olacağım. Bu sabah sana olan aşkımla 
-                uyanıyorum ve bu gece sana olan sevgimle uyuyacağım.
-            </p>
-        </div>
-        <div class="signature">
-            Mehmet'in...
-        </div>
-    </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const openButton = document.getElementById('open-button');
-            const letterCover = document.getElementById('letter-cover');
-            const loveLetter = document.getElementById('loveLetter');
-            const particleBg = document.getElementById('particle-background');
-            const heartContainer = document.getElementById('heart-container');
-            const music = document.getElementById('background-music');
-
-            // --- Particle Background ---
-            const particleCount = 100;
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.width = `${Math.random() * 3 + 1}px`;
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
-                particleBg.appendChild(particle);
-            }
-
-            // --- Open Letter ---
-            openButton.addEventListener('click', () => {
-                letterCover.style.transition = 'opacity 1s ease-out';
-                letterCover.style.opacity = '0';
-                
-                loveLetter.classList.add('show');
-                
-                triggerHeartBurst();
-                
-                // Play Music
-                music.play().catch(error => {
-                    console.log("Tarayıcı otomatik oynatmayı engelledi. Kullanıcı etkileşimi gerekiyor.");
-                });
-
-                setTimeout(() => {
-                    letterCover.style.display = 'none';
-                }, 1000);
-            }, { once: true });
-
-            // --- Heart Burst ---
-            function triggerHeartBurst() {
-                const heartCount = 50;
-                const EMOJIS = ['❤️', '💖', '💕', '💗', '💓', '💞'];
-                for (let i = 0; i < heartCount; i++) {
-                    const heart = document.createElement('div');
-                    heart.className = 'flying-heart';
-                    heart.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-                    heart.style.fontSize = `${Math.random() * 20 + 15}px`;
-                    
-                    const angle = Math.random() * 360;
-                    const radius = Math.random() * window.innerWidth / 2;
-                    const xEnd = Math.cos(angle) * radius + 'px';
-                    const yEnd = Math.sin(angle) * radius + 'px';
-
-                    heart.style.setProperty('--x-end', xEnd);
-                    heart.style.setProperty('--y-end', yEnd);
-                    
-                    heart.style.animationDuration = `${Math.random() * 2 + 2}s`;
-                    
-                    heartContainer.appendChild(heart);
-
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 4000);
-                }
-            }
-        });
-    </script>
+    <script src="main-script.js"></script>
 </body>
 </html>

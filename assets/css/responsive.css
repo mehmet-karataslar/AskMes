@@ -1,0 +1,439 @@
+/* Responsive Tasarım */
+
+/* Tablet ve Küçük Masaüstü */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 15px;
+    }
+    
+    .site-title {
+        font-size: 2.5rem;
+    }
+    
+    .main-nav {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .nav-tab {
+        padding: 10px 15px;
+        min-width: 70px;
+    }
+    
+    .nav-tab i {
+        font-size: 1.3rem;
+    }
+    
+    .nav-tab span {
+        font-size: 0.8rem;
+    }
+    
+    .content-section {
+        padding: 20px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .memories-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .gift-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .message-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .message-actions {
+        flex-wrap: wrap;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .modal-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Mobil Cihazlar */
+@media (max-width: 480px) {
+    .site-title {
+        font-size: 2rem;
+    }
+    
+    .user-selector {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .main-nav {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .nav-tab {
+        flex-direction: row;
+        justify-content: center;
+        padding: 15px;
+    }
+    
+    .music-control {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    #music-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .content-section {
+        padding: 15px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .game-card {
+        padding: 20px;
+    }
+    
+    .game-icon {
+        font-size: 3rem;
+    }
+    
+    .memory-image {
+        height: 120px;
+        font-size: 2.5rem;
+    }
+    
+    .memory-info {
+        padding: 15px;
+    }
+    
+    .message-card {
+        padding: 15px;
+    }
+    
+    .sender-avatar {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .gift-card {
+        padding: 15px;
+    }
+    
+    .gift-icon {
+        font-size: 2.5rem;
+    }
+    
+    .modal-content {
+        padding: 15px;
+        margin: 10px;
+        width: 95%;
+    }
+    
+    .modal-title {
+        font-size: 1.3rem;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .form-input, .form-textarea {
+        padding: 8px;
+    }
+    
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        transform: translateY(-100%);
+    }
+    
+    .notification.show {
+        transform: translateY(0);
+    }
+}
+
+/* Çok Küçük Mobil Cihazlar */
+@media (max-width: 320px) {
+    .main-container {
+        padding: 10px;
+    }
+    
+    .site-title {
+        font-size: 1.8rem;
+    }
+    
+    .site-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .main-header {
+        padding: 20px;
+    }
+    
+    .content-section {
+        padding: 10px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .add-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .game-card {
+        padding: 15px;
+    }
+    
+    .memory-card {
+        margin-bottom: 15px;
+    }
+    
+    .message-card {
+        padding: 12px;
+    }
+    
+    .gift-card {
+        padding: 12px;
+    }
+    
+    .modal-content {
+        padding: 12px;
+        margin: 5px;
+    }
+    
+    .form-input, .form-textarea {
+        padding: 6px;
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Yatay Modda Mobil */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-header {
+        padding: 15px;
+    }
+    
+    .site-title {
+        font-size: 2rem;
+    }
+    
+    .main-nav {
+        margin-bottom: 20px;
+    }
+    
+    .nav-tab {
+        padding: 10px 15px;
+    }
+    
+    .content-section {
+        padding: 15px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .modal-content {
+        max-height: 90vh;
+        padding: 15px;
+    }
+    
+    .memory-image {
+        height: 100px;
+    }
+}
+
+/* Büyük Ekranlar */
+@media (min-width: 1400px) {
+    .main-container {
+        max-width: 1400px;
+        padding: 30px;
+    }
+    
+    .site-title {
+        font-size: 3.5rem;
+    }
+    
+    .section-header h2 {
+        font-size: 3rem;
+    }
+    
+    .games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+    
+    .memories-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .content-section {
+        padding: 40px;
+    }
+    
+    .modal-content {
+        max-width: 600px;
+        padding: 40px;
+    }
+}
+
+/* Print Stilleri */
+@media print {
+    .background-animation,
+    .music-control,
+    .main-nav,
+    .add-btn,
+    .action-btn,
+    .gift-open-btn,
+    .gift-view-btn {
+        display: none !important;
+    }
+    
+    .main-container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    .main-content {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .content-section {
+        display: block !important;
+        padding: 20px;
+    }
+    
+    .message-card,
+    .game-card,
+    .gift-card,
+    .memory-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .site-title,
+    .section-header h2 {
+        color: #333 !important;
+    }
+}
+
+/* Yüksek Kontrast Modu */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #0066cc;
+        --secondary-color: #004499;
+        --accent-color: #cc0000;
+        --success-color: #006600;
+        --warning-color: #cc6600;
+        --text-primary: #000;
+        --text-secondary: #333;
+        --text-light: #666;
+        --border-color: #999;
+    }
+    
+    .nav-tab.active,
+    .user-btn.active {
+        background: #000;
+        color: #fff;
+    }
+    
+    .message-card,
+    .game-card,
+    .gift-card,
+    .memory-card {
+        border: 2px solid #000;
+    }
+}
+
+/* Azaltılmış Hareket Tercihi */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .particle,
+    .flying-heart {
+        animation: none;
+    }
+    
+    .background-animation {
+        display: none;
+    }
+}
+
+/* Koyu Tema Desteği */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        --card-bg: rgba(44, 62, 80, 0.95);
+        --text-primary: #ecf0f1;
+        --text-secondary: #bdc3c7;
+        --text-light: #95a5a6;
+        --border-color: #34495e;
+    }
+    
+    .message-card,
+    .game-card,
+    .gift-card,
+    .memory-card,
+    .modal-content {
+        background: #2c3e50;
+        color: #ecf0f1;
+    }
+    
+    .form-input,
+    .form-textarea {
+        background: #34495e;
+        color: #ecf0f1;
+        border-color: #4a5f7a;
+    }
+    
+    .form-input:focus,
+    .form-textarea:focus {
+        border-color: var(--primary-color);
+    }
+} 

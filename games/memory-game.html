@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Anı Hafızası - Memory Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="memory-game.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🧠 Anı Hafızası</h1>
+            <div class="game-info">
+                <div class="score-display">
+                    <span>Skor: </span>
+                    <span id="score">0</span>
+                </div>
+                <div class="moves-display">
+                    <span>Hamle: </span>
+                    <span id="moves">0</span>
+                </div>
+                <div class="time-display">
+                    <span>Süre: </span>
+                    <span id="time">0:00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="start-screen" id="startScreen">
+                <h2>Anılarımızı Hatırla!</h2>
+                <p>Kartları çevir ve eşleştir</p>
+                <div class="difficulty-selection">
+                    <h3>Zorluk Seviyesi Seç:</h3>
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn" onclick="selectDifficulty('easy')">
+                            <span class="diff-icon">😊</span>
+                            <span class="diff-name">Kolay</span>
+                            <span class="diff-desc">4x3 (12 kart)</span>
+                        </button>
+                        <button class="difficulty-btn" onclick="selectDifficulty('medium')">
+                            <span class="diff-icon">🤔</span>
+                            <span class="diff-name">Orta</span>
+                            <span class="diff-desc">4x4 (16 kart)</span>
+                        </button>
+                        <button class="difficulty-btn" onclick="selectDifficulty('hard')">
+                            <span class="diff-icon">😅</span>
+                            <span class="diff-name">Zor</span>
+                            <span class="diff-desc">6x4 (24 kart)</span>
+                        </button>
+                    </div>
+                </div>
+                <button class="start-btn" id="startBtn" onclick="startGame()" disabled>
+                    🎮 Oyunu Başlat
+                </button>
+            </div>
+
+            <div class="game-screen" id="gameScreen" style="display: none;">
+                <div class="game-board" id="gameBoard">
+                    <!-- Kartlar burada dinamik olarak oluşturulacak -->
+                </div>
+            </div>
+
+            <div class="game-over-screen" id="gameOverScreen" style="display: none;">
+                <h2>Tebrikler! 🎉</h2>
+                <div class="final-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Final Skor:</span>
+                        <span class="stat-value" id="finalScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Toplam Hamle:</span>
+                        <span class="stat-value" id="finalMoves">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Süre:</span>
+                        <span class="stat-value" id="finalTime">0:00</span>
+                    </div>
+                    <div class="performance-message" id="performanceMessage"></div>
+                </div>
+                <div class="game-over-buttons">
+                    <button class="restart-btn" onclick="restartGame()">🔄 Tekrar Oyna</button>
+                    <button class="back-btn" onclick="goBack()">🏠 Ana Menü</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <div class="control-info">
+                <h3>🎯 Nasıl Oynanır?</h3>
+                <ul>
+                    <li>Kartları tıklayarak çevir</li>
+                    <li>Aynı kartları eşleştirmeye çalış</li>
+                    <li>Tüm kartları eşleştir ve oyunu bitir</li>
+                    <li>Daha az hamle = Daha yüksek skor!</li>
+                </ul>
+            </div>
+            <div class="theme-info">
+                <h3>💕 Tema: Aşk ve Anılar</h3>
+                <p>Bu oyunda birlikte yaşadığımız güzel anıları ve aşkımızı simgeleyen kartları eşleştireceğiz!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="memory-game.js"></script>
+</body>
+</html> 

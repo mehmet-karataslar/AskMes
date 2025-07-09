@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖 Kalp Yakalama Oyunu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="heart-catcher.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>💖 Kalp Yakalama</h1>
+            <div class="game-info">
+                <div class="score-display">
+                    <span>Skor: </span>
+                    <span id="score">0</span>
+                </div>
+                <div class="time-display">
+                    <span>Süre: </span>
+                    <span id="time">60</span>
+                </div>
+                <div class="lives-display">
+                    <span>Can: </span>
+                    <span id="lives">💖💖💖</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="start-screen" id="startScreen">
+                <h2>Düşen Kalpleri Yakala!</h2>
+                <p>💖 Pembe kalpler = +10 puan</p>
+                <p>💙 Mavi kalpler = +20 puan</p>
+                <p>💜 Mor kalpler = +30 puan</p>
+                <p>🖤 Siyah kalpler = -10 puan (Kaçır!)</p>
+                <p>⚡ Yıldırım = Hızlandırır</p>
+                <button class="start-btn" onclick="startGame()">🎮 Oyunu Başlat</button>
+            </div>
+
+            <div class="game-screen" id="gameScreen" style="display: none;">
+                <div class="game-canvas" id="gameCanvas">
+                    <!-- Kalpler burada dinamik olarak oluşturulacak -->
+                </div>
+                <div class="player" id="player">🙋‍♀️</div>
+            </div>
+
+            <div class="game-over-screen" id="gameOverScreen" style="display: none;">
+                <h2>Oyun Bitti!</h2>
+                <div class="final-score">
+                    <p>Final Skorun: <span id="finalScore">0</span></p>
+                    <div class="score-message" id="scoreMessage"></div>
+                </div>
+                <div class="game-over-buttons">
+                    <button class="restart-btn" onclick="restartGame()">🔄 Tekrar Oyna</button>
+                    <button class="back-btn" onclick="goBack()">🏠 Ana Menü</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <div class="control-info">
+                <p>🖱️ Fare ile hareket et veya 👆 dokunarak oyna</p>
+                <p>⌨️ Klavye: A/D veya ←/→ ok tuşları</p>
+            </div>
+            <div class="power-ups-info">
+                <h3>Güç Artırıcılar:</h3>
+                <div class="power-up-list">
+                    <div class="power-up-item">
+                        <span class="power-up-icon">⚡</span>
+                        <span>Yavaşlatma (3 saniye)</span>
+                    </div>
+                    <div class="power-up-item">
+                        <span class="power-up-icon">🌟</span>
+                        <span>Çift Puan (5 saniye)</span>
+                    </div>
+                    <div class="power-up-item">
+                        <span class="power-up-icon">🛡️</span>
+                        <span>Kalkan (1 hata affı)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="heart-catcher.js"></script>
+</body>
+</html> 

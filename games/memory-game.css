@@ -1,0 +1,459 @@
+/* Anı Hafızası Oyunu Stilleri */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lora', serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.game-container {
+    width: 95%;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Oyun Başlığı */
+.game-header {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.game-header h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.score-display, .moves-display, .time-display {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Oyun Alanı */
+.game-area {
+    min-height: 500px;
+    position: relative;
+    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Başlangıç Ekranı */
+.start-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    padding: 30px;
+    text-align: center;
+}
+
+.start-screen h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.start-screen p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Zorluk Seçimi */
+.difficulty-selection {
+    margin-bottom: 30px;
+}
+
+.difficulty-selection h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.difficulty-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.difficulty-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.difficulty-btn.selected {
+    border-color: #667eea;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.diff-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.diff-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.diff-desc {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.start-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.start-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.start-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Oyun Ekranı */
+.game-screen {
+    padding: 20px;
+    min-height: 500px;
+}
+
+.game-board {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.game-board.easy {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.game-board.medium {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+.game-board.hard {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+/* Kartlar */
+.memory-card {
+    aspect-ratio: 1;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    transform-style: preserve-3d;
+    min-height: 80px;
+}
+
+.memory-card:hover:not(.flipped):not(.matched) {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.memory-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched {
+    opacity: 0.7;
+    transform: scale(0.95);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+    font-size: 2rem;
+}
+
+.card-front {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.card-back {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    font-size: 1.5rem;
+}
+
+/* Oyun Bitti Ekranı */
+.game-over-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    padding: 30px;
+    text-align: center;
+}
+
+.game-over-screen h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    color: #667eea;
+    margin-bottom: 30px;
+}
+
+.final-stats {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    min-width: 300px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: #667eea;
+}
+
+.performance-message {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #666;
+    font-style: italic;
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.restart-btn, .back-btn {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.restart-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.back-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+}
+
+.restart-btn:hover, .back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Kontrol Bilgileri */
+.game-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.control-info, .theme-info {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.control-info h3, .theme-info h3 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.5rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.control-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.control-info li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.control-info li:before {
+    content: "💡";
+    position: absolute;
+    left: 0;
+}
+
+.theme-info p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Animasyonlar */
+@keyframes cardFlip {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(180deg); }
+}
+
+@keyframes cardMatch {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(0.95); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.memory-card.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-container {
+        width: 98%;
+        margin: 10px;
+    }
+    
+    .game-header h1 {
+        font-size: 2rem;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .difficulty-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .game-board {
+        gap: 8px;
+        padding: 10px;
+    }
+    
+    .memory-card {
+        min-height: 60px;
+    }
+    
+    .card-front, .card-back {
+        font-size: 1.5rem;
+    }
+    
+    .game-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-over-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .start-screen h2 {
+        font-size: 2rem;
+    }
+    
+    .game-board.hard {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+    }
+    
+    .memory-card {
+        min-height: 50px;
+    }
+    
+    .card-front, .card-back {
+        font-size: 1.2rem;
+    }
+    
+    .final-stats {
+        min-width: auto;
+        width: 100%;
+    }
+} 

@@ -1,0 +1,816 @@
+/* Ana Sayfa Stilleri - Yeni Tasarım */
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --accent-color: #ff6b6b;
+    --success-color: #51cf66;
+    --warning-color: #ffd43b;
+    --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-light: #999;
+    --border-color: #e0e0e0;
+    --shadow-light: 0 2px 10px rgba(0,0,0,0.1);
+    --shadow-medium: 0 5px 20px rgba(0,0,0,0.15);
+    --shadow-heavy: 0 10px 30px rgba(0,0,0,0.2);
+    --border-radius: 15px;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lora', serif;
+    background: var(--background-gradient);
+    min-height: 100vh;
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+/* Arka Plan Animasyonları */
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 15s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.heart-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.flying-heart {
+    position: absolute;
+    animation: heartFloat 8s infinite ease-in-out;
+    font-size: 20px;
+    color: rgba(255, 107, 107, 0.7);
+}
+
+@keyframes heartFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 1;
+    }
+}
+
+/* Ana Container */
+.main-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Üst Başlık */
+.main-header {
+    text-align: center;
+    margin-bottom: 30px;
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    backdrop-filter: blur(10px);
+}
+
+.site-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.site-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.user-info {
+    display: flex;
+    justify-content: center;
+}
+
+.user-selector {
+    display: flex;
+    gap: 10px;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 5px;
+    border-radius: 25px;
+}
+
+.user-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.user-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-light);
+}
+
+.user-btn:hover:not(.active) {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+/* Navigasyon Sekmeleri */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 30px;
+    background: var(--card-bg);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+}
+
+.nav-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 15px 20px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-secondary);
+    position: relative;
+    min-width: 80px;
+}
+
+.nav-tab i {
+    font-size: 1.5rem;
+}
+
+.nav-tab span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.nav-tab.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-light);
+}
+
+.nav-tab:hover:not(.active) {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* Ana İçerik */
+.main-content {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    min-height: 600px;
+    overflow: hidden;
+}
+
+.content-section {
+    display: none;
+    padding: 30px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.section-header h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-header i {
+    font-size: 2rem;
+}
+
+.add-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-btn:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+.stats-summary {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Mesajlar Bölümü */
+.messages-container {
+    display: grid;
+    gap: 20px;
+}
+
+.message-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    border-left: 4px solid var(--border-color);
+}
+
+.message-card.featured {
+    border-left-color: var(--primary-color);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.message-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.sender-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sender-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.sender-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.sender-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.message-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.message-type {
+    background: var(--warning-color);
+    color: var(--text-primary);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.message-preview h3 {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+.message-preview p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.message-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-btn.primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.action-btn:not(.primary) {
+    background: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-light);
+}
+
+/* Oyunlar Bölümü */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card:hover:not(.coming-soon) {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.game-card.coming-soon {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.game-icon {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.game-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.game-card p {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.difficulty-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.difficulty-badge.easy {
+    background: var(--success-color);
+    color: white;
+}
+
+.difficulty-badge.medium {
+    background: var(--warning-color);
+    color: var(--text-primary);
+}
+
+.difficulty-badge.hard {
+    background: var(--accent-color);
+    color: white;
+}
+
+.coming-soon-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--text-light);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+/* Hediyeler Bölümü */
+.gifts-container {
+    display: grid;
+    gap: 20px;
+}
+
+.gift-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow-light);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: var(--transition);
+}
+
+.gift-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.gift-card.new {
+    border: 2px solid var(--success-color);
+    background: linear-gradient(135deg, rgba(81, 207, 102, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.gift-card.opened {
+    opacity: 0.8;
+}
+
+.gift-icon {
+    font-size: 3rem;
+    min-width: 60px;
+    text-align: center;
+}
+
+.gift-info {
+    flex: 1;
+}
+
+.gift-info h3 {
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.gift-info p {
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.gift-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.gift-open-btn, .gift-view-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.gift-open-btn {
+    background: var(--success-color);
+    color: white;
+}
+
+.gift-view-btn {
+    background: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.gift-open-btn:hover, .gift-view-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+/* Anılar Bölümü */
+.memories-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.memory-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+}
+
+.memory-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.memory-image {
+    height: 150px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+}
+
+.memory-info {
+    padding: 20px;
+}
+
+.memory-info h3 {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.memory-info p {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.memory-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.add-memory-card {
+    background: rgba(102, 126, 234, 0.1);
+    border: 2px dashed var(--primary-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.add-memory-card:hover {
+    background: rgba(102, 126, 234, 0.2);
+    transform: translateY(-3px);
+}
+
+.add-memory-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.add-memory-card p {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Müzik Kontrolü */
+.music-control {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+#music-toggle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-medium);
+}
+
+#music-toggle:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+#music-toggle.playing {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 15px;
+    }
+    
+    .site-title {
+        font-size: 2.5rem;
+    }
+    
+    .main-nav {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .nav-tab {
+        padding: 10px 15px;
+        min-width: 70px;
+    }
+    
+    .nav-tab i {
+        font-size: 1.3rem;
+    }
+    
+    .nav-tab span {
+        font-size: 0.8rem;
+    }
+    
+    .content-section {
+        padding: 20px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .memories-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .gift-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .message-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .message-actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-title {
+        font-size: 2rem;
+    }
+    
+    .user-selector {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .main-nav {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .nav-tab {
+        flex-direction: row;
+        justify-content: center;
+        padding: 15px;
+    }
+    
+    .music-control {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    #music-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+} 
