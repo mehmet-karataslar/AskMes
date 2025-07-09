@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bizim Özel Dünyamız ❤️</title>
-    
-    <!-- CSS Dosyaları -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
-    
-    <!-- Font'lar -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sürprizler - Ana Sayfa</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Basit giriş kontrolü - döngü yaratmayacak şekilde
+        const currentUser = localStorage.getItem('currentUser');
+        const authToken = localStorage.getItem('authToken');
+        
+        if (!currentUser || !authToken) {
+            // Eğer giriş yapılmamışsa login sayfasına yönlendir
+            window.location.replace('login.html');
+        }
+    </script>
 </head>
 <body>
     <!-- Header -->

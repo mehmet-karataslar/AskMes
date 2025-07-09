@@ -1,9 +1,6 @@
 // Login JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-    // localStorage'ı temizle - döngü önlemi
-    localStorage.clear();
-    
     const userOptions = document.querySelectorAll('.user-option');
     const passwordInput = document.getElementById('password');
     const loginBtn = document.querySelector('.login-btn');
