@@ -57,8 +57,7 @@ function checkUserSession() {
         
         console.log('Kullanıcı oturumu:', session);
     } catch (error) {
-        console.error('Oturum verisi okunamadı:', error);
-        // Login yönlendirmesi geçici olarak kaldırıldı
+        console.error('Oturum verisi okunamadı:', error);        // Login yönlendirmesi geçici olarak kaldırıldı
         // window.location.href = '../login.html';
     }
 }

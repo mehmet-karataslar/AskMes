@@ -3,257 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sürprizler - Ana Sayfa</title>
+    <title>Bahar & Mehmet - Aşk Dünyamız</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        // Giriş kontrolü geçici olarak kaldırıldı
-        // Direkt ana sayfaya erişim sağlanıyor
-        localStorage.setItem('currentUser', 'mehmet');
-        localStorage.setItem('authToken', 'temp-token-' + Date.now());
-    </script>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Ana Header -->
     <header class="main-header">
-        <div class="header-container">
-            <div class="logo">
-                <h1>💕 Bizim Dünyamız</h1>
-            </div>
-            
-            <div class="user-profile">
-                <div class="user-avatar">
-                    <i class="fas fa-user"></i>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="site-title">
+                    <i class="fas fa-heart"></i>
+                    Bahar & Mehmet
+                </h1>
+                <div class="user-info">
+                    <span class="user-name">Mehmet</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                 </div>
-                <span class="user-name" data-user-display>Kullanıcı</span>
-                <button class="logout-btn" onclick="logout()" title="Çıkış Yap">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- Navigation -->
+    <!-- Ana Navigasyon -->
     <nav class="main-nav">
-        <div class="nav-container">
-            <button class="nav-btn active" data-section="messages">
-                <i class="fas fa-envelope"></i>
-                <span>Mesajlar</span>
-            </button>
-            <button class="nav-btn" data-section="games">
-                <i class="fas fa-gamepad"></i>
-                <span>Oyunlar</span>
-            </button>
-            <button class="nav-btn" data-section="gifts">
-                <i class="fas fa-gift"></i>
-                <span>Hediyeler</span>
-            </button>
-            <button class="nav-btn" data-section="memories">
-                <i class="fas fa-camera"></i>
-                <span>Anılar</span>
-            </button>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="#messages" class="nav-link active" onclick="showSection('messages')">
+                    <i class="fas fa-envelope"></i>
+                    <span>Mesajlar</span>
+                </a></li>
+                <li><a href="#games" class="nav-link" onclick="showSection('games')">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Oyunlar</span>
+                </a></li>
+                <li><a href="#gifts" class="nav-link" onclick="showSection('gifts')">
+                    <i class="fas fa-gift"></i>
+                    <span>Hediyeler</span>
+                </a></li>
+                <li><a href="#memories" class="nav-link" onclick="showSection('memories')">
+                    <i class="fas fa-camera"></i>
+                    <span>Anılar</span>
+                </a></li>
+            </ul>
         </div>
     </nav>
 
     <!-- Ana İçerik -->
     <main class="main-content">
-        <!-- Mesajlar Bölümü -->
-        <section class="content-section active" id="messages">
-            <div class="section-header">
-                <h2><i class="fas fa-envelope"></i> Mesajlarımız</h2>
-                <p>Birbirimize yazdığımız özel mesajlar</p>
-            </div>
+        <div class="container">
             
-            <div class="action-cards">
-                <div class="action-card primary">
-                    <div class="card-icon">
-                        <i class="fas fa-eye"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Mesajları Görüntüle</h3>
-                        <p>Tüm mesajlarımızı oku</p>
-                    </div>
-                    <button class="card-btn" onclick="window.location.href='pages/messages.html'">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-                
-                <div class="action-card secondary">
-                    <div class="card-icon">
+            <!-- Mesajlar Bölümü -->
+            <section id="messages" class="content-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-envelope"></i> Aşk Mesajlarımız</h2>
+                    <button class="primary-btn" onclick="openNewMessageModal()">
                         <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Yeni Mesaj Gönder</h3>
-                        <p>Sevgilime mesaj yaz</p>
-                    </div>
-                    <button class="card-btn" onclick="window.location.href='pages/messages.html'">
-                        <i class="fas fa-arrow-right"></i>
+                        Yeni Mesaj
                     </button>
                 </div>
-            </div>
-        </section>
+                
+                <div class="messages-container">
+                    <div class="messages-list">
+                        <div class="empty-state">
+                            <i class="fas fa-envelope-open"></i>
+                            <h3>Henüz mesaj yok</h3>
+                            <p>İlk aşk mesajınızı gönderin!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="message-detail">
+                        <div class="detail-header">
+                            <h3>Mesaj Detayı</h3>
+                        </div>
+                        <div class="detail-content">
+                            <p>Bir mesaj seçin veya yeni mesaj oluşturun</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <!-- Oyunlar Bölümü -->
-        <section class="content-section" id="games">
-            <div class="section-header">
-                <h2><i class="fas fa-gamepad"></i> Oyunlarımız</h2>
-                <p>Birlikte oynayabileceğimiz eğlenceli oyunlar</p>
-            </div>
-            
-            <div class="games-grid">
-                <div class="game-card" onclick="playDiceGame()">
-                    <div class="game-icon">
-                        <i class="fas fa-dice"></i>
-                    </div>
-                    <h3>Zar Oyunu</h3>
-                    <p>Kim şanslı?</p>
+            <!-- Oyunlar Bölümü -->
+            <section id="games" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-gamepad"></i> Aşk Oyunlarımız</h2>
                 </div>
                 
-                <div class="game-card" onclick="playQuizGame()">
-                    <div class="game-icon">
-                        <i class="fas fa-question-circle"></i>
+                <div class="games-grid">
+                    <div class="game-card" onclick="playGame('dice')">
+                        <div class="game-icon">
+                            <i class="fas fa-dice"></i>
+                        </div>
+                        <h3>Aşk Zarı</h3>
+                        <p>Zar atın ve aşk görevlerinizi keşfedin</p>
                     </div>
-                    <h3>Soru-Cevap</h3>
-                    <p>Birbirimizi tanıyalım</p>
-                </div>
-                
-                <div class="game-card" onclick="playMemoryGame()">
-                    <div class="game-icon">
-                        <i class="fas fa-puzzle-piece"></i>
+                    
+                    <div class="game-card" onclick="playGame('quiz')">
+                        <div class="game-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>Aşk Bilgisi</h3>
+                        <p>Birbirinizi ne kadar tanıyorsunuz?</p>
                     </div>
-                    <h3>Hafıza Oyunu</h3>
-                    <p>Kartları eşleştir</p>
-                </div>
-                
-                <div class="game-card" onclick="playLoveTest()">
-                    <div class="game-icon">
-                        <i class="fas fa-heart"></i>
+                    
+                    <div class="game-card" onclick="playGame('memory')">
+                        <div class="game-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Hafıza Oyunu</h3>
+                        <p>Aşk sembolleri ile hafıza oyunu</p>
                     </div>
-                    <h3>Aşk Testi</h3>
-                    <p>Aşkımızı test et</p>
-                </div>
-                
-                <div class="game-card" onclick="playRockPaperScissors()">
-                    <div class="game-icon">
-                        <i class="fas fa-hand-rock"></i>
+                    
+                    <div class="game-card" onclick="playGame('love-test')">
+                        <div class="game-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3>Aşk Testi</h3>
+                        <p>Aşkınızı test edin</p>
                     </div>
-                    <h3>Taş-Kağıt-Makas</h3>
-                    <p>Klasik oyun</p>
-                </div>
-                
-                <div class="game-card" onclick="playTruthOrDare()">
-                    <div class="game-icon">
-                        <i class="fas fa-mask"></i>
+                    
+                    <div class="game-card" onclick="playGame('rock-paper-scissors')">
+                        <div class="game-icon">
+                            <i class="fas fa-hand-rock"></i>
+                        </div>
+                        <h3>Taş Kağıt Makas</h3>
+                        <p>Klasik oyun aşk temasıyla</p>
                     </div>
-                    <h3>Doğruluk-Cesaret</h3>
-                    <p>Eğlenceli sorular</p>
+                    
+                    <div class="game-card" onclick="playGame('truth-dare')">
+                        <div class="game-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Doğruluk Cesaret</h3>
+                        <p>Birbirinizi daha iyi tanıyın</p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Hediyeler Bölümü -->
-        <section class="content-section" id="gifts">
-            <div class="section-header">
-                <h2><i class="fas fa-gift"></i> Hediyelerimiz</h2>
-                <p>Birbirimize verdiğimiz özel hediyeler</p>
-            </div>
-            
-            <div class="action-cards">
-                <div class="action-card primary">
-                    <div class="card-icon">
+            <!-- Hediyeler Bölümü -->
+            <section id="gifts" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-gift"></i> Hediye Planlarımız</h2>
+                    <button class="primary-btn" onclick="openNewGiftModal()">
+                        <i class="fas fa-plus"></i>
+                        Yeni Hediye
+                    </button>
+                </div>
+                
+                <div class="gifts-grid">
+                    <div class="empty-state">
                         <i class="fas fa-gift"></i>
+                        <h3>Henüz hediye yok</h3>
+                        <p>İlk hediye planınızı ekleyin!</p>
                     </div>
-                    <div class="card-content">
-                        <h3>Hediye Listesi</h3>
-                        <p>Tüm hediyelerimizi gör</p>
-                    </div>
-                    <button class="card-btn" onclick="window.location.href='pages/gifts.html'">
-                        <i class="fas fa-arrow-right"></i>
+                </div>
+            </section>
+
+            <!-- Anılar Bölümü -->
+            <section id="memories" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-camera"></i> Güzel Anılarımız</h2>
+                    <button class="primary-btn" onclick="openNewMemoryModal()">
+                        <i class="fas fa-plus"></i>
+                        Yeni Anı
                     </button>
                 </div>
                 
-                <div class="action-card secondary">
-                    <div class="card-icon">
-                        <i class="fas fa-star"></i>
+                <div class="memories-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-camera"></i>
+                        <h3>Henüz anı yok</h3>
+                        <p>İlk güzel anınızı ekleyin!</p>
                     </div>
-                    <div class="card-content">
-                        <h3>Dilek Listesi</h3>
-                        <p>İstediğim hediyeler</p>
-                    </div>
-                    <button class="card-btn" onclick="window.location.href='pages/gifts.html'">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
                 </div>
-            </div>
-        </section>
-
-        <!-- Anılar Bölümü -->
-        <section class="content-section" id="memories">
-            <div class="section-header">
-                <h2><i class="fas fa-camera"></i> Anılarımız</h2>
-                <p>Güzel anılarımızı paylaştığımız özel yer</p>
-            </div>
-            
-            <div class="action-cards">
-                <div class="action-card primary">
-                    <div class="card-icon">
-                        <i class="fas fa-images"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Anı Galerisi</h3>
-                        <p>Fotoğraf ve videolarımız</p>
-                    </div>
-                    <button class="card-btn" onclick="window.location.href='pages/memories.html'">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-                
-                <div class="action-card secondary">
-                    <div class="card-icon">
-                        <i class="fas fa-camera-retro"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Yeni Anı Ekle</h3>
-                        <p>Fotoğraf veya video paylaş</p>
-                    </div>
-                    <button class="card-btn" onclick="window.location.href='pages/memories.html'">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Oyun Modal'ları -->
-    <div class="modal" id="gameModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="gameTitle">Oyun</h3>
-                <button class="modal-close" onclick="closeGameModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body" id="gameContent">
-                <!-- Oyun içeriği buraya yüklenecek -->
-            </div>
+            </section>
         </div>
-    </div>
+    </main>
 
     <!-- Müzik Kontrolü -->
     <div class="music-control">
         <button id="music-toggle">
             <i class="fas fa-music"></i>
         </button>
+        <audio id="background-music" loop>
+            <source src="assets/audio/romantic-music.mp3" type="audio/mpeg">
+        </audio>
     </div>
 
-    <!-- JavaScript Dosyaları -->
-    <script src="config/settings.js"></script>
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/database.js"></script>
-    <script src="assets/js/components.js"></script>
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/api.js"></script>
-    <script src="assets/js/games.js"></script>
-    <script src="assets/js/main.js"></script>
+    <!-- Modal'lar buraya eklenecek -->
+    
+    <script>
+        // Basit kullanıcı ayarları
+        localStorage.setItem('currentUser', 'mehmet');
+        localStorage.setItem('authToken', 'temp-token-' + Date.now());
+        
+        // Bölüm geçişi
+        function showSection(sectionId) {
+            // Tüm bölümleri gizle
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Tüm nav linklerini pasif yap
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Seçili bölümü göster
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Seçili nav linki aktif yap
+            document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
+        }
+        
+        // Oyun başlatma
+        function playGame(gameType) {
+            alert(`${gameType} oyunu yakında aktif olacak!`);
+        }
+        
+        // Modal açma fonksiyonları
+        function openNewMessageModal() {
+            alert('Mesaj ekleme modalı yakında aktif olacak!');
+        }
+        
+        function openNewGiftModal() {
+            alert('Hediye ekleme modalı yakında aktif olacak!');
+        }
+        
+        function openNewMemoryModal() {
+            alert('Anı ekleme modalı yakında aktif olacak!');
+        }
+        
+        // Çıkış
+        function logout() {
+            if(confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+        
+        // Müzik kontrolü
+        document.getElementById('music-toggle').addEventListener('click', function() {
+            const music = document.getElementById('background-music');
+            if (music.paused) {
+                music.play().catch(e => console.log('Müzik çalınamadı:', e));
+                this.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                music.pause();
+                this.innerHTML = '<i class="fas fa-music"></i>';
+            }
+        });
+        
+        console.log('Bahar & Mehmet sitesi yüklendi! ❤️');
+    </script>
 </body>
 </html>
