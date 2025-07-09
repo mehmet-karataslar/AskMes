@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Login sayfasında değilsek giriş kontrolü yap
     if (!window.location.pathname.includes('login.html')) {
         checkAuth();
+        
+        // Token doğrulaması için bir API çağrısı yap
+        setTimeout(() => {
+            validateTokenWithAPI();
+        }, 1000);
     }
     
     // Navigasyon event listener'ları
@@ -115,6 +120,19 @@ function checkAuth() {
     if (!currentUser || !authToken) {
         console.log('Redirecting to login - missing user or token'); // Debug log
         window.location.href = 'login.html';
+    }
+}
+
+// Token'ı API ile doğrula
+async function validateTokenWithAPI() {
+    try {
+        console.log('Validating token with API...'); // Debug log
+        // Basit bir API çağrısı yaparak token'ı doğrula
+        await api.getMessages();
+        console.log('Token validation successful'); // Debug log
+    } catch (error) {
+        console.log('Token validation failed:', error); // Debug log
+        // API çağrısı başarısız olursa, zaten api.js'de 401 kontrolü yapılıyor
     }
 }
 

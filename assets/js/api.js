@@ -39,6 +39,15 @@ class APIClient {
             const data = await response.json();
 
             if (!response.ok) {
+                // 401 hatası (Unauthorized) gelirse token geçersiz, çıkış yap
+                if (response.status === 401) {
+                    console.log('Token geçersiz, çıkış yapılıyor...');
+                    this.setToken(null);
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('rememberMe');
+                    window.location.href = 'login.html';
+                    return;
+                }
                 throw new Error(data.error || 'API hatası');
             }
 
