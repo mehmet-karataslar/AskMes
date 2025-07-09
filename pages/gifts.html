@@ -412,22 +412,23 @@
     </div>
 
     <!-- Müzik Kontrolü -->
-    <audio id="background-music" loop>
-        <source src="../assets/audio/music.mp3" type="audio/mpeg">
-    </audio>
-
     <div class="music-control">
-        <button id="music-toggle">
+        <button id="musicToggle">
             <i class="fas fa-music"></i>
         </button>
+        <div class="music-info">
+            <span id="musicStatus">Müzik 🎵</span>
+        </div>
     </div>
 
     <!-- JavaScript Dosyaları -->
+    <script src="../config/api.js"></script>
     <script src="../config/settings.js"></script>
     <script src="../assets/js/utils.js"></script>
     <script src="../assets/js/database.js"></script>
     <script src="../assets/js/components.js"></script>
     <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/music.js"></script>
     <script src="../assets/js/gifts.js"></script>
 </body>
 </html> 

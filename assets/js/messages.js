@@ -15,12 +15,61 @@ let messageItems, messageDetail, detailContent, userName;
 
 // Sayfa Yüklendiğinde
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Messages page DOM loaded');
+    
     initializeMessagesPage();
     checkUserSession();
-    loadMessages();
-    setupEventListeners();
-    setupMusicControl();
+    
+    // Veritabanı yüklenmesini bekle
+    const waitForDB = () => {
+        if (window.db) {
+            console.log('Database is ready, loading messages...');
+            loadMessages();
+            setupEventListeners();
+        } else {
+            console.log('Database not ready, waiting...');
+            setTimeout(waitForDB, 100);
+        }
+    };
+    
+    waitForDB();
+    
+    console.log('Messages page initialization complete');
 });
+
+// Event Listener'ları Ayarla
+function setupEventListeners() {
+    // Yeni mesaj form'u
+    const newMessageForm = document.getElementById('newMessageForm');
+    if (newMessageForm) {
+        newMessageForm.addEventListener('submit', handleNewMessage);
+        console.log('New message form listener added');
+    }
+    
+    // Düzenleme form'u
+    const editMessageForm = document.getElementById('editMessageForm');
+    if (editMessageForm) {
+        editMessageForm.addEventListener('submit', handleEditMessage);
+        console.log('Edit message form listener added');
+    }
+    
+    // Dosya yüklemelerini ayarla
+    setupFileUpload('messageImage', 'uploadPreview');
+    setupFileUpload('editMessageImage', 'editUploadPreview');
+    
+    // ESC tuşuyla modal'ları kapat
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modals = document.querySelectorAll('.modal.active');
+            modals.forEach(modal => {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            });
+        }
+    });
+    
+    console.log('Event listeners kuruldu');
+}
 
 // Mesajlar Sayfasını Başlat
 function initializeMessagesPage() {
@@ -71,16 +120,31 @@ async function loadMessages() {
     setLoadingState(true);
     
     try {
-        // Veri tabanından mesajları al
+        // Veri tabanının hazır olmasını bekle
+        if (!window.db) {
+            console.log('Veritabanı henüz yüklenmemiş, bekleniyor...');
+            setTimeout(() => loadMessages(), 500);
+            return;
+        }
+        
+        // Server'dan mesajları al (async)
         const messagesData = await window.db.getMessages();
-        MessageState.messages = messagesData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        console.log('Server\'dan yüklenen mesajlar:', messagesData);
+        
+        if (messagesData && messagesData.length > 0) {
+            MessageState.messages = messagesData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        } else {
+            MessageState.messages = [];
+            console.log('Hiç mesaj bulunamadı');
+        }
         
         // Mesajları görüntüle
         displayMessages();
         
     } catch (error) {
         console.error('Mesajlar yüklenirken hata:', error);
-        showError('Mesajlar yüklenirken bir hata oluştu');
+        MessageState.messages = [];
+        displayMessages();
     } finally {
         setLoadingState(false);
     }
@@ -88,7 +152,10 @@ async function loadMessages() {
 
 // Mesajları Görüntüle
 function displayMessages() {
-    if (!messageItems) return;
+    if (!messageItems) {
+        console.error('messageItems element not found');
+        return;
+    }
     
     if (MessageState.messages.length === 0) {
         messageItems.innerHTML = `
@@ -105,34 +172,41 @@ function displayMessages() {
         return;
     }
     
-    const messagesHtml = MessageState.messages.map(message => `
-        <div class="message-item ${message.author === MessageState.currentUser ? 'from-me' : 'from-partner'}" 
-             data-id="${message.id}" onclick="selectMessage('${message.id}')">
-            <div class="message-header">
-                <h3 class="message-title">${message.title}</h3>
-                <div class="message-meta">
-                    <span class="message-author ${message.author === MessageState.currentUser ? 'from-me' : 'from-partner'}">
-                        <i class="fas ${message.author === MessageState.currentUser ? 'fa-user' : 'fa-heart'}"></i>
-                        ${message.author === MessageState.currentUser ? 'Ben' : 'Sevgilim'}
-                    </span>
-                    <span class="message-date">${formatDate(message.date)}</span>
+    const messagesHtml = MessageState.messages.map(message => {
+        // Mesaj göndericisini belirle (hem author hem sender field'ını kontrol et)
+        const messageAuthor = message.author || message.sender;
+        const isFromMe = messageAuthor === MessageState.currentUser;
+        
+        return `
+            <div class="message-item ${isFromMe ? 'from-me' : 'from-partner'}" 
+                 data-id="${message.id}" onclick="selectMessage('${message.id}')">
+                <div class="message-header">
+                    <h3 class="message-title">${message.title}</h3>
+                    <div class="message-meta">
+                        <span class="message-author ${isFromMe ? 'from-me' : 'from-partner'}">
+                            <i class="fas ${isFromMe ? 'fa-user' : 'fa-heart'}"></i>
+                            ${isFromMe ? 'Ben' : 'Sevgilim'}
+                        </span>
+                        <span class="message-date">${formatDate(message.createdAt || message.date)}</span>
+                    </div>
                 </div>
+                <div class="message-preview">${message.content.substring(0, 100)}${message.content.length > 100 ? '...' : ''}</div>
+                ${isFromMe ? `
+                    <div class="message-actions">
+                        <button class="action-btn edit" onclick="event.stopPropagation(); editMessage('${message.id}')">
+                            <i class="fas fa-edit"></i> Düzenle
+                        </button>
+                        <button class="action-btn delete" onclick="event.stopPropagation(); deleteMessage('${message.id}')">
+                            <i class="fas fa-trash"></i> Sil
+                        </button>
+                    </div>
+                ` : ''}
             </div>
-            <div class="message-preview">${message.content}</div>
-            ${message.author === MessageState.currentUser ? `
-                <div class="message-actions">
-                    <button class="action-btn edit" onclick="event.stopPropagation(); editMessage('${message.id}')">
-                        <i class="fas fa-edit"></i> Düzenle
-                    </button>
-                    <button class="action-btn delete" onclick="event.stopPropagation(); deleteMessage('${message.id}')">
-                        <i class="fas fa-trash"></i> Sil
-                    </button>
-                </div>
-            ` : ''}
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     messageItems.innerHTML = messagesHtml;
+    console.log('Mesajlar görüntülendi:', MessageState.messages.length);
 }
 
 // Mesaj Seç
@@ -303,7 +377,7 @@ async function confirmDeleteMessage() {
     if (!MessageState.deletingMessage) return;
     
     try {
-        // Veri tabanından sil
+        // Server'dan sil
         await window.db.deleteMessage(MessageState.deletingMessage.id);
         
         // Local state'i güncelle
@@ -320,7 +394,7 @@ async function confirmDeleteMessage() {
         // Modal'ı kapat
         closeDeleteConfirmModal();
         
-        showSuccess('Mesaj başarıyla silindi');
+        showSuccess('Mesaj başarıyla silindi! 🗑️');
         
     } catch (error) {
         console.error('Mesaj silinirken hata:', error);
@@ -331,15 +405,17 @@ async function confirmDeleteMessage() {
 // Event Listener'ları Ayarla
 function setupEventListeners() {
     // Yeni mesaj formu
-    const messageForm = document.getElementById('messageForm');
-    if (messageForm) {
-        messageForm.addEventListener('submit', handleNewMessage);
+    const newMessageForm = document.getElementById('newMessageForm');
+    if (newMessageForm) {
+        newMessageForm.addEventListener('submit', handleNewMessage);
+        console.log('New message form listener added');
     }
     
     // Mesaj düzenleme formu
     const editMessageForm = document.getElementById('editMessageForm');
     if (editMessageForm) {
         editMessageForm.addEventListener('submit', handleEditMessage);
+        console.log('Edit message form listener added');
     }
     
     // Dosya yükleme
@@ -351,9 +427,12 @@ function setupEventListeners() {
         modal.addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.remove('active');
+                this.style.display = 'none';
             }
         });
     });
+    
+    console.log('Event listeners setup complete');
 }
 
 // Yeni Mesaj Gönder
@@ -393,11 +472,11 @@ async function handleNewMessage(e) {
             createdAt: new Date().toISOString()
         };
         
-        // Veri tabanına kaydet
-        await window.db.saveMessage(newMessage);
+        // Server'a kaydet
+        const savedMessage = await window.db.saveMessage(newMessage);
         
         // Local state'i güncelle
-        MessageState.messages.unshift(newMessage);
+        MessageState.messages.unshift(savedMessage);
         
         // Görüntüyü güncelle
         displayMessages();
@@ -406,7 +485,7 @@ async function handleNewMessage(e) {
         closeNewMessageModal();
         
         // Yeni mesajı seç
-        selectMessage(newMessage.id);
+        selectMessage(savedMessage.id);
         
         showSuccess('Mesaj başarıyla gönderildi! ❤️');
         
@@ -451,8 +530,8 @@ async function handleEditMessage(e) {
             updatedAt: new Date().toISOString()
         };
         
-        // Veri tabanını güncelle
-        await window.db.updateMessage(updatedMessage);
+        // Server'da güncelle
+        const serverResponse = await window.db.updateMessage(updatedMessage);
         
         // Local state'i güncelle
         const index = MessageState.messages.findIndex(m => m.id === updatedMessage.id);
@@ -649,6 +728,79 @@ function showSuccess(message) {
 // Sayfa Kapatılırken Temizlik
 window.addEventListener('beforeunload', function() {
     // Gerekirse temizlik işlemleri
+});
+
+// Modal Fonksiyonları
+function openNewMessageModal() {
+    const modal = document.getElementById('newMessageModal');
+    if (!modal) {
+        console.error('New message modal not found');
+        return;
+    }
+    
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+    
+    // Form'u sıfırla
+    const form = document.getElementById('newMessageForm');
+    if (form) {
+        form.reset();
+        resetUploadPreview('uploadPreview');
+    }
+    
+    // İlk input'a focus
+    const titleInput = document.getElementById('messageTitle');
+    if (titleInput) {
+        setTimeout(() => titleInput.focus(), 100);
+    }
+}
+
+function closeNewMessageModal() {
+    const modal = document.getElementById('newMessageModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+    }
+}
+
+function openEditMessageModal() {
+    const modal = document.getElementById('editMessageModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+    }
+}
+
+function closeEditMessageModal() {
+    const modal = document.getElementById('editMessageModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+    }
+}
+
+function openDeleteConfirmModal() {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+    }
+}
+
+function closeDeleteConfirmModal() {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+    }
+}
+
+// Modal dışına tıklandığında kapat
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal')) {
+        e.target.style.display = 'none';
+        e.target.classList.remove('active');
+    }
 });
 
 console.log('Mesajlar sayfası yüklendi! 💌'); 

@@ -1,108 +1,82 @@
-// Global Müzik Kontrolü Sistemi
-class MusicController {
+// Global Müzik Sistemi
+class MusicPlayer {
     constructor() {
-        this.isPlaying = false;
-        this.isInitialized = false;
         this.audio = null;
-        this.musicToggle = null;
+        this.isPlaying = false;
+        this.musicButton = null;
         this.musicStatus = null;
-        
-        // LocalStorage'dan durum oku
-        const savedState = localStorage.getItem('musicPlaying');
-        this.isPlaying = savedState === 'true';
+        this.currentTrack = 'assets/audio/music.mp3';
         
         this.init();
     }
     
     init() {
-        // DOM yüklendiğinde çalıştır
+        // Audio element'i oluştur
+        this.createAudioElement();
+        
+        // DOM yüklendiğinde kontrolleri bağla
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.setupMusic());
+            document.addEventListener('DOMContentLoaded', () => this.bindControls());
         } else {
-            this.setupMusic();
+            this.bindControls();
         }
-    }
-    
-    setupMusic() {
-        // Audio elementi bul veya oluştur
-        this.audio = document.getElementById('backgroundMusic');
-        if (!this.audio) {
-            this.createAudioElement();
-        }
-        
-        // Kontrol elementlerini bul
-        this.musicToggle = document.getElementById('musicToggle');
-        this.musicStatus = document.getElementById('musicStatus');
-        
-        if (this.musicToggle) {
-            this.musicToggle.addEventListener('click', () => this.toggle());
-        }
-        
-        // Müzik durumunu güncelle
-        this.updateUI();
-        
-        // Otomatik başlatma (sadece ana sayfada)
-        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-            setTimeout(() => {
-                if (!this.isPlaying) {
-                    this.play();
-                }
-            }, 1500);
-        } else {
-            // Diğer sayfalarda saved state'e göre çal
-            if (this.isPlaying) {
-                setTimeout(() => this.play(), 500);
-            }
-        }
-        
-        this.isInitialized = true;
     }
     
     createAudioElement() {
-        this.audio = document.createElement('audio');
-        this.audio.id = 'backgroundMusic';
-        this.audio.loop = true;
-        this.audio.volume = 0.7;
-        
-        const source = document.createElement('source');
-        source.src = this.getAudioPath();
-        source.type = 'audio/mpeg';
-        
-        this.audio.appendChild(source);
-        document.body.appendChild(this.audio);
-    }
-    
-    getAudioPath() {
-        // Sayfa konumuna göre doğru path döndür
-        const currentPath = window.location.pathname;
-        if (currentPath.includes('/pages/')) {
-            return '../assets/audio/music.mp3';
-        } else {
-            return 'assets/audio/music.mp3';
+        if (!this.audio) {
+            this.audio = new Audio(this.currentTrack);
+            this.audio.loop = true;
+            this.audio.volume = 0.7;
+            
+            // Audio event listeners
+            this.audio.addEventListener('loadstart', () => {
+                console.log('Müzik yükleniyor...');
+            });
+            
+            this.audio.addEventListener('canplay', () => {
+                console.log('Müzik hazır');
+            });
+            
+            this.audio.addEventListener('error', (e) => {
+                console.error('Müzik hatası:', e);
+                this.updateStatus('Müzik Hatası ⚠️');
+            });
         }
     }
     
-    async play() {
-        if (!this.audio) return;
+    bindControls() {
+        this.musicButton = document.getElementById('musicToggle');
+        this.musicStatus = document.getElementById('musicStatus');
         
+        if (this.musicButton) {
+            this.musicButton.addEventListener('click', () => this.toggle());
+        }
+        
+        // Otomatik başlatma (1 saniye sonra)
+        setTimeout(() => {
+            if (!this.isPlaying) {
+                this.play();
+            }
+        }, 1000);
+    }
+    
+    async play() {
         try {
             await this.audio.play();
             this.isPlaying = true;
-            this.saveState();
             this.updateUI();
+            this.updateStatus('Müzik Çalıyor 🎵');
         } catch (error) {
-            console.log('Müzik çalınamadı:', error);
-            this.updateStatus('Müzik Hatası ⚠️');
+            console.error('Müzik çalınamadı:', error);
+            this.updateStatus('Müzik Çalınamadı ⚠️');
         }
     }
     
     pause() {
-        if (!this.audio) return;
-        
         this.audio.pause();
         this.isPlaying = false;
-        this.saveState();
         this.updateUI();
+        this.updateStatus('Müzik Durdu 🎵');
     }
     
     toggle() {
@@ -114,18 +88,16 @@ class MusicController {
     }
     
     updateUI() {
-        if (!this.musicToggle) return;
-        
-        if (this.isPlaying) {
-            this.musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
-            this.musicToggle.classList.remove('paused');
-            this.musicToggle.classList.add('playing');
-            this.updateStatus('Müzik Çalıyor 🎵');
-        } else {
-            this.musicToggle.innerHTML = '<i class="fas fa-music"></i>';
-            this.musicToggle.classList.remove('playing');
-            this.musicToggle.classList.add('paused');
-            this.updateStatus('Müzik Durdu 🎵');
+        if (this.musicButton) {
+            if (this.isPlaying) {
+                this.musicButton.innerHTML = '<i class="fas fa-pause"></i>';
+                this.musicButton.classList.add('playing');
+                this.musicButton.classList.remove('paused');
+            } else {
+                this.musicButton.innerHTML = '<i class="fas fa-music"></i>';
+                this.musicButton.classList.remove('playing');
+                this.musicButton.classList.add('paused');
+            }
         }
     }
     
@@ -135,37 +107,20 @@ class MusicController {
         }
     }
     
-    saveState() {
-        localStorage.setItem('musicPlaying', this.isPlaying.toString());
-    }
-    
-    // Sayfa değişimlerinde çağırılacak
-    syncWithOtherPages() {
-        // Diğer sayfalardan müzik durumu değiştiğinde
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'musicPlaying') {
-                const newState = e.newValue === 'true';
-                if (newState !== this.isPlaying) {
-                    if (newState) {
-                        this.play();
-                    } else {
-                        this.pause();
-                    }
-                }
-            }
-        });
+    // Sayfa değişikliklerinde müziğin devam etmesi için
+    static getInstance() {
+        if (!window.globalMusicPlayer) {
+            window.globalMusicPlayer = new MusicPlayer();
+        }
+        return window.globalMusicPlayer;
     }
 }
 
-// Global müzik kontrolcüsü oluştur
-window.musicController = new MusicController();
+// Global müzik player'ı başlat
+const musicPlayer = MusicPlayer.getInstance();
 
-// Eski fonksiyonlarla uyumluluk için
-function toggleMusic() {
-    if (window.musicController) {
-        window.musicController.toggle();
-    }
-}
+// Global fonksiyon (eski kodlarla uyumluluk için)
+window.toggleMusic = () => musicPlayer.toggle();
 
 // Sayfa kapatılırken durumu kaydet
 window.addEventListener('beforeunload', () => {
