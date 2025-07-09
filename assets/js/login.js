@@ -1,9 +1,17 @@
 // Login JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Login JavaScript yüklendi');
+    
     const userOptions = document.querySelectorAll('.user-option');
     const passwordInput = document.getElementById('password');
     const loginBtn = document.querySelector('.login-btn');
+    
+    console.log('Bulunan elementler:', {
+        userOptions: userOptions.length,
+        passwordInput: passwordInput ? 'var' : 'yok',
+        loginBtn: loginBtn ? 'var' : 'yok'
+    });
     
     let selectedUser = 'mehmet'; // Varsayılan seçim
     
@@ -52,9 +60,17 @@ function togglePasswordVisibility() {
 }
 
 function login() {
+    console.log('Login fonksiyonu çağrıldı');
+    
     const password = document.getElementById('password').value;
     const rememberMe = document.getElementById('rememberMe').checked;
     const selectedUser = document.querySelector('.user-option.active')?.dataset.user || 'mehmet';
+    
+    console.log('Login bilgileri:', {
+        password: password ? '***' : 'boş',
+        rememberMe: rememberMe,
+        selectedUser: selectedUser
+    });
     
     if (!password) {
         showError('Lütfen şifrenizi girin!');

@@ -67,7 +67,7 @@ function updateUserDisplay() {
     userDisplays.forEach(display => {
         if (currentUser === 'mehmet') {
             display.textContent = 'Mehmet';
-        } else if (currentUser === 'sevgili') {
+        } else         if (currentUser === 'sevgilim') {
             display.textContent = 'Sevgilim';
         } else {
             display.textContent = 'Kullanıcı';
