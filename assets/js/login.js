@@ -1,6 +1,9 @@
 // Login JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
+    // localStorage'ı temizle - döngü önlemi
+    localStorage.clear();
+    
     const userOptions = document.querySelectorAll('.user-option');
     const passwordInput = document.getElementById('password');
     const loginBtn = document.querySelector('.login-btn');
@@ -29,8 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Otomatik giriş kontrolü
-    checkAutoLogin();
+    // Otomatik giriş kontrolü kaldırıldı
     
     // Sayfa yüklendiğinde password input'a focus ver
     setTimeout(() => {
@@ -135,13 +137,4 @@ function showSuccess(message) {
     icon.className = 'fas fa-check-circle';
 }
 
-function checkAutoLogin() {
-    const rememberMe = localStorage.getItem('rememberMe');
-    const currentUser = localStorage.getItem('currentUser');
-    const authToken = localStorage.getItem('authToken');
-    
-    if (rememberMe === 'true' && currentUser && authToken) {
-        // Otomatik giriş
-        window.location.href = 'index.html';
-    }
-} 
+// Otomatik giriş fonksiyonu kaldırıldı - döngü önlemi 
