@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Aşk Kelimeleri - Word Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-header h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .word-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .scrambled-word {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hint {
+            font-size: 1.2rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            margin-bottom: 30px;
+        }
+
+        .word-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .word-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .result-message.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .result-message.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .result-message.show {
+            display: block;
+        }
+
+        .game-over {
+            text-align: center;
+            display: none;
+        }
+
+        .game-over.show {
+            display: block;
+        }
+
+        .final-score {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .completed-words {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .completed-words h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .word-item {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>📝 Aşk Kelimeleri</h1>
+            <p>Karışık harflerden aşk kelimelerini bul!</p>
+        </div>
+
+        <div class="game-info">
+            <div class="info-item">
+                <div class="info-label">Skor</div>
+                <div class="info-value" id="score">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Kelime</div>
+                <div class="info-value" id="currentWord">1</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Süre</div>
+                <div class="info-value" id="timeLeft">60</div>
+            </div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="word-container">
+                <div class="scrambled-word" id="scrambledWord">LOADING</div>
+                <div class="hint" id="hint">Oyun yükleniyor...</div>
+            </div>
+
+            <div class="input-container">
+                <input type="text" class="word-input" id="wordInput" placeholder="Cevabınızı yazın..." maxlength="15">
+            </div>
+
+            <div class="result-message" id="resultMessage"></div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="checkAnswer()">
+                    <i class="fas fa-check"></i>
+                    Kontrol Et
+                </button>
+                <button class="btn btn-secondary" onclick="shuffleWord()">
+                    <i class="fas fa-random"></i>
+                    Karıştır
+                </button>
+                <button class="btn btn-success" onclick="skipWord()">
+                    <i class="fas fa-forward"></i>
+                    Geç
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Geri
+                </button>
+            </div>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <div class="final-score">
+                Oyun Bitti!<br>
+                <span id="finalScore">0</span> Puan
+            </div>
+            <div class="completed-words">
+                <h3>Bulduğunuz Kelimeler:</h3>
+                <div class="word-list" id="completedWordsList"></div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="restartGame()">
+                    <i class="fas fa-redo"></i>
+                    Tekrar Oyna
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Geri
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            { word: "AŞK", hint: "En güzel duygu" },
+            { word: "SEVGI", hint: "Kalbimizdeki sıcaklık" },
+            { word: "MUTLULUK", hint: "En büyük hedefimiz" },
+            { word: "ÖPÜCÜK", hint: "Dudakların buluşması" },
+            { word: "SARILIŞ", hint: "Kollarda huzur" },
+            { word: "ROMANTIK", hint: "Aşkın şiirsel hali" },
+            { word: "KALP", hint: "Aşkın evi" },
+            { word: "GÜZEL", hint: "Sevgilinin sıfatı" },
+            { word: "TATLIM", hint: "Sevgiliye hitap" },
+            { word: "HAYAT", hint: "Seninle anlamlı" },
+            { word: "RÜYA", hint: "Gece görülenler" },
+            { word: "YILDIZ", hint: "Gökyüzünde parlayan" },
+            { word: "GÜLLER", hint: "Kırmızı çiçekler" },
+            { word: "MEKTUP", hint: "Aşk mesajları" },
+            { word: "DANS", hint: "Müzikle hareket" },
+            { word: "ŞARKI", hint: "Aşk melodileri" },
+            { word: "HEDIYE", hint: "Sevgi göstergesi" },
+            { word: "SÜRPRIZ", hint: "Beklenmedik güzellik" },
+            { word: "BIRLIKTE", hint: "Yan yana" },
+            { word: "SONSUZA", hint: "Sonsuz zaman" }
+        ];
+
+        let currentWords = [];
+        let currentWordIndex = 0;
+        let score = 0;
+        let timeLeft = 60;
+        let gameTimer;
+        let completedWords = [];
+        let gameState = 'playing';
+
+        function initGame() {
+            // Kelimeleri karıştır ve seç
+            currentWords = [...words].sort(() => Math.random() - 0.5);
+            currentWordIndex = 0;
+            score = 0;
+            timeLeft = 60;
+            completedWords = [];
+            gameState = 'playing';
+            
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('gameOver').style.display = 'none';
+            
+            showNextWord();
+            startTimer();
+        }
+
+        function showNextWord() {
+            if (currentWordIndex >= currentWords.length) {
+                endGame();
+                return;
+            }
+
+            const currentWord = currentWords[currentWordIndex];
+            document.getElementById('scrambledWord').textContent = scrambleWord(currentWord.word);
+            document.getElementById('hint').textContent = currentWord.hint;
+            document.getElementById('wordInput').value = '';
+            document.getElementById('currentWord').textContent = currentWordIndex + 1;
+            
+            hideResultMessage();
+        }
+
+        function scrambleWord(word) {
+            const letters = word.split('');
+            for (let i = letters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [letters[i], letters[j]] = [letters[j], letters[i]];
+            }
+            return letters.join('');
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('wordInput').value.toUpperCase().trim();
+            const correctAnswer = currentWords[currentWordIndex].word;
+            
+            if (userAnswer === correctAnswer) {
+                showResultMessage('Doğru! 🎉', 'correct');
+                score += 10;
+                completedWords.push(correctAnswer);
+                
+                setTimeout(() => {
+                    currentWordIndex++;
+                    showNextWord();
+                }, 1500);
+            } else {
+                showResultMessage('Yanlış! Tekrar dene 😔', 'incorrect');
+            }
+            
+            updateDisplay();
+        }
+
+        function shuffleWord() {
+            const currentWord = currentWords[currentWordIndex];
+            document.getElementById('scrambledWord').textContent = scrambleWord(currentWord.word);
+        }
+
+        function skipWord() {
+            currentWordIndex++;
+            showNextWord();
+        }
+
+        function showResultMessage(message, type) {
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.textContent = message;
+            resultMessage.className = `result-message ${type} show`;
+        }
+
+        function hideResultMessage() {
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.classList.remove('show');
+        }
+
+        function startTimer() {
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('timeLeft').textContent = timeLeft;
+        }
+
+        function endGame() {
+            gameState = 'ended';
+            clearInterval(gameTimer);
+            
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('gameOver').classList.add('show');
+            
+            document.getElementById('finalScore').textContent = score;
+            
+            // Tamamlanan kelimeleri göster
+            const wordsList = document.getElementById('completedWordsList');
+            wordsList.innerHTML = '';
+            
+            completedWords.forEach(word => {
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'word-item';
+                wordSpan.textContent = word;
+                wordsList.appendChild(wordSpan);
+            });
+            
+            // Skor rapor et
+            if (window.reportGameResult) {
+                window.reportGameResult('word-game', score);
+            }
+        }
+
+        function restartGame() {
+            clearInterval(gameTimer);
+            initGame();
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Enter tuşu ile kontrol
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && gameState === 'playing') {
+                checkAnswer();
+            }
+        });
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            initGame();
+        });
+    </script>
+</body>
+</html> 

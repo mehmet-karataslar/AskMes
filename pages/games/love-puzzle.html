@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧩 Aşk Puzzle - Love Puzzle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-header h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
+        .puzzle-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 3px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            max-width: 400px;
+            margin: 0 auto;
+            aspect-ratio: 1;
+        }
+
+        .puzzle-piece {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .puzzle-piece:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .puzzle-piece.empty {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px dashed #ff6b6b;
+        }
+
+        .puzzle-piece.completed {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            animation: pulse 0.5s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .game-over {
+            text-align: center;
+            display: none;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .game-over.show {
+            display: block;
+        }
+
+        .celebration {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .final-message {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-selector {
+            margin-bottom: 20px;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 8px 15px;
+            border: 2px solid #ff6b6b;
+            border-radius: 20px;
+            background: transparent;
+            color: #ff6b6b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .difficulty-btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .puzzle-piece {
+                font-size: 3rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🧩 Aşk Puzzle</h1>
+            <p>Kalp parçalarını birleştir ve resmi tamamla!</p>
+        </div>
+
+        <div class="difficulty-selector">
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn active" onclick="setDifficulty('easy')">Kolay</button>
+                <button class="difficulty-btn" onclick="setDifficulty('medium')">Orta</button>
+                <button class="difficulty-btn" onclick="setDifficulty('hard')">Zor</button>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="info-item">
+                <div class="info-label">Hamle</div>
+                <div class="info-value" id="moves">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Süre</div>
+                <div class="info-value" id="time">0:00</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Zorluk</div>
+                <div class="info-value" id="difficulty">Kolay</div>
+            </div>
+        </div>
+
+        <div class="puzzle-container">
+            <div class="puzzle-grid" id="puzzleGrid">
+                <!-- Puzzle parçaları buraya gelecek -->
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="shufflePuzzle()">
+                <i class="fas fa-random"></i>
+                Karıştır
+            </button>
+            <button class="btn btn-secondary" onclick="solvePuzzle()">
+                <i class="fas fa-magic"></i>
+                Çöz
+            </button>
+            <button class="btn btn-secondary" onclick="resetGame()">
+                <i class="fas fa-redo"></i>
+                Yeniden
+            </button>
+            <button class="btn btn-secondary" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Geri
+            </button>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <div class="celebration">🎉💕🎊</div>
+            <div class="final-message">Tebrikler! Puzzle'ı tamamladın!</div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Toplam Hamle:</span>
+                    <span id="finalMoves">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Süre:</span>
+                    <span id="finalTime">0:00</span>
+                </div>
+                <div class="stat-item">
+                    <span>Zorluk:</span>
+                    <span id="finalDifficulty">Kolay</span>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="playAgain()">
+                    <i class="fas fa-redo"></i>
+                    Tekrar Oyna
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Geri
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const puzzles = {
+            easy: ['💕', '💖', '💝', '💘', '💗', '💞', '💓', '💯', ''],
+            medium: ['💕', '💖', '💝', '💘', '💗', '💞', '💓', '💯', '🌹', '🌷', '🎁', '💍', '👑', '✨', '🌟', ''],
+            hard: ['💕', '💖', '💝', '💘', '💗', '💞', '💓', '💯', '🌹', '🌷', '🎁', '💍', '👑', '✨', '🌟', '💫', '🦋', '🌺', '🥰', '😍', '😘', '💋', '💐', '🍓', '']
+        };
+
+        let currentPuzzle = [];
+        let currentDifficulty = 'easy';
+        let moves = 0;
+        let startTime = Date.now();
+        let gameTimer;
+        let gameEnded = false;
+
+        function initGame() {
+            currentPuzzle = [...puzzles[currentDifficulty]];
+            moves = 0;
+            startTime = Date.now();
+            gameEnded = false;
+            
+            document.getElementById('gameOver').style.display = 'none';
+            
+            createPuzzleGrid();
+            shufflePuzzle();
+            startTimer();
+            updateDisplay();
+        }
+
+        function createPuzzleGrid() {
+            const grid = document.getElementById('puzzleGrid');
+            grid.innerHTML = '';
+            
+            let gridSize = 3;
+            if (currentDifficulty === 'medium') gridSize = 4;
+            if (currentDifficulty === 'hard') gridSize = 5;
+            
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            grid.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+            
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'puzzle-piece';
+                piece.dataset.index = i;
+                piece.onclick = () => movePiece(i);
+                grid.appendChild(piece);
+            }
+            
+            updatePuzzleDisplay();
+        }
+
+        function updatePuzzleDisplay() {
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            pieces.forEach((piece, index) => {
+                const symbol = currentPuzzle[index];
+                piece.textContent = symbol;
+                piece.classList.toggle('empty', symbol === '');
+            });
+        }
+
+        function movePiece(index) {
+            if (gameEnded) return;
+            
+            const emptyIndex = currentPuzzle.indexOf('');
+            const gridSize = Math.sqrt(currentPuzzle.length);
+            
+            // Hareket edilebilir mi kontrol et
+            const canMove = 
+                (Math.abs(index - emptyIndex) === 1 && Math.floor(index / gridSize) === Math.floor(emptyIndex / gridSize)) ||
+                Math.abs(index - emptyIndex) === gridSize;
+            
+            if (canMove) {
+                // Parçaları değiştir
+                [currentPuzzle[index], currentPuzzle[emptyIndex]] = [currentPuzzle[emptyIndex], currentPuzzle[index]];
+                moves++;
+                updateDisplay();
+                updatePuzzleDisplay();
+                
+                // Puzzle tamamlandı mı kontrol et
+                if (isPuzzleSolved()) {
+                    endGame();
+                }
+            }
+        }
+
+        function isPuzzleSolved() {
+            const solution = [...puzzles[currentDifficulty]];
+            const emptyIndex = solution.indexOf('');
+            
+            // Boş parçayı sona al
+            solution.splice(emptyIndex, 1);
+            solution.push('');
+            
+            return JSON.stringify(currentPuzzle) === JSON.stringify(solution);
+        }
+
+        function shufflePuzzle() {
+            // Çözülebilir bir karışım oluştur
+            const emptyIndex = currentPuzzle.indexOf('');
+            const gridSize = Math.sqrt(currentPuzzle.length);
+            
+            for (let i = 0; i < 100; i++) {
+                const possibleMoves = [];
+                const row = Math.floor(emptyIndex / gridSize);
+                const col = emptyIndex % gridSize;
+                
+                // Mümkün hareketleri bul
+                if (row > 0) possibleMoves.push(emptyIndex - gridSize);
+                if (row < gridSize - 1) possibleMoves.push(emptyIndex + gridSize);
+                if (col > 0) possibleMoves.push(emptyIndex - 1);
+                if (col < gridSize - 1) possibleMoves.push(emptyIndex + 1);
+                
+                // Rastgele bir hareket yap
+                const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+                [currentPuzzle[emptyIndex], currentPuzzle[randomMove]] = [currentPuzzle[randomMove], currentPuzzle[emptyIndex]];
+            }
+            
+            updatePuzzleDisplay();
+        }
+
+        function solvePuzzle() {
+            const solution = [...puzzles[currentDifficulty]];
+            const emptyIndex = solution.indexOf('');
+            
+            // Boş parçayı sona al
+            solution.splice(emptyIndex, 1);
+            solution.push('');
+            
+            currentPuzzle = [...solution];
+            updatePuzzleDisplay();
+            endGame();
+        }
+
+        function setDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            document.getElementById('difficulty').textContent = 
+                difficulty === 'easy' ? 'Kolay' : 
+                difficulty === 'medium' ? 'Orta' : 'Zor';
+            
+            initGame();
+        }
+
+        function startTimer() {
+            gameTimer = setInterval(() => {
+                if (!gameEnded) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('time').textContent = 
+                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function updateDisplay() {
+            document.getElementById('moves').textContent = moves;
+        }
+
+        function endGame() {
+            gameEnded = true;
+            clearInterval(gameTimer);
+            
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            
+            document.getElementById('finalMoves').textContent = moves;
+            document.getElementById('finalTime').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('finalDifficulty').textContent = 
+                document.getElementById('difficulty').textContent;
+            
+            document.getElementById('gameOver').classList.add('show');
+            
+            // Parçaları renklendir
+            document.querySelectorAll('.puzzle-piece').forEach(piece => {
+                if (piece.textContent !== '') {
+                    piece.classList.add('completed');
+                }
+            });
+            
+            // Skor hesapla
+            let score = 100;
+            if (currentDifficulty === 'medium') score = 150;
+            if (currentDifficulty === 'hard') score = 200;
+            
+            score = Math.max(score - moves, 10);
+            
+            // Skor rapor et
+            if (window.reportGameResult) {
+                window.reportGameResult('love-puzzle', score);
+            }
+        }
+
+        function resetGame() {
+            clearInterval(gameTimer);
+            initGame();
+        }
+
+        function playAgain() {
+            document.getElementById('gameOver').classList.remove('show');
+            resetGame();
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            initGame();
+        });
+    </script>
+</body>
+</html> 

@@ -23,19 +23,19 @@
                     <i class="fas fa-home"></i>
                     <span>Ana Sayfa</span>
                 </a>
-                <a href="pages/messages.html" class="nav-item">
+                <a href="pages/messages/messages.html" class="nav-item">
                     <i class="fas fa-envelope"></i>
                     <span>Mesajlar</span>
                 </a>
-                <a href="#" class="nav-item" data-section="games">
+                <a href="pages/games/index.html" class="nav-item">
                     <i class="fas fa-gamepad"></i>
                     <span>Oyunlar</span>
                 </a>
-                <a href="#" class="nav-item" data-section="gifts">
+                <a href="pages/gifts/gifts.html" class="nav-item">
                     <i class="fas fa-gift"></i>
                     <span>Hediyeler</span>
                 </a>
-                <a href="#" class="nav-item" data-section="memories">
+                <a href="pages/memories/memories.html" class="nav-item">
                     <i class="fas fa-camera"></i>
                     <span>Anılar</span>
                 </a>
@@ -79,13 +79,13 @@
                             </div>
                         </div>
                         <div class="card-content" id="recentMessages">
-                            <div class="recent-item" onclick="window.location.href='pages/messages.html'">
+                            <div class="recent-item" onclick="window.location.href='pages/messages/messages.html'">
                                 <i class="fas fa-heart"></i>
                                 <span>Henüz mesaj yok - İlk mesajı gönder!</span>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="pages/messages.html" class="card-link">
+                            <a href="pages/messages/messages.html" class="card-link">
                                 <span>Tümünü Gör</span>
                                 <i class="fas fa-arrow-right"></i>
                             </a>
@@ -104,17 +104,17 @@
                             </div>
                         </div>
                         <div class="card-content" id="recentGames">
-                            <div class="recent-item" onclick="showSection('games')">
+                            <div class="recent-item" onclick="window.location.href='pages/games/index.html'">
                                 <i class="fas fa-dice"></i>
                                 <span>Aşk Zarı - Henüz oynanmadı</span>
                             </div>
-                            <div class="recent-item" onclick="showSection('games')">
+                            <div class="recent-item" onclick="window.location.href='pages/games/index.html'">
                                 <i class="fas fa-brain"></i>
                                 <span>Hafıza Oyunu - Henüz oynanmadı</span>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="#" class="card-link" onclick="showSection('games')">
+                            <a href="pages/games/index.html" class="card-link">
                                 <span>Oyunları Gör</span>
                                 <i class="fas fa-arrow-right"></i>
                             </a>
@@ -133,13 +133,13 @@
                             </div>
                         </div>
                         <div class="card-content" id="recentGifts">
-                            <div class="recent-item" onclick="showSection('gifts')">
+                            <div class="recent-item" onclick="window.location.href='pages/gifts/gifts.html'">
                                 <i class="fas fa-heart-circle"></i>
                                 <span>Henüz hediye yok - İlk hediyeyi ekle!</span>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="#" class="card-link" onclick="showSection('gifts')">
+                            <a href="pages/gifts/gifts.html" class="card-link">
                                 <span>Hediyeleri Gör</span>
                                 <i class="fas fa-arrow-right"></i>
                             </a>
@@ -158,13 +158,13 @@
                             </div>
                         </div>
                         <div class="card-content" id="recentMemories">
-                            <div class="recent-item" onclick="showSection('memories')">
+                            <div class="recent-item" onclick="window.location.href='pages/memories/memories.html'">
                                 <i class="fas fa-heart"></i>
                                 <span>Henüz anı yok - İlk anıyı ekle!</span>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="#" class="card-link" onclick="showSection('memories')">
+                            <a href="pages/memories/memories.html" class="card-link">
                                 <span>Anıları Gör</span>
                                 <i class="fas fa-arrow-right"></i>
                             </a>
@@ -172,16 +172,7 @@
                     </div>
                 </div>
 
-                <!-- Müzik Kontrolü -->
-                <div class="music-control">
-                    <button id="musicToggle" onclick="toggleMusic()">
-                        <i class="fas fa-music"></i>
-                        <span>Müzik</span>
-                    </button>
-                    <div class="music-info">
-                        <span id="musicStatus">Müzik Çalıyor 🎵</span>
-                    </div>
-                </div>
+
             </section>
 
 
@@ -315,19 +306,19 @@
                 <i class="fas fa-home"></i>
                 <span>Ana Sayfa</span>
             </a>
-            <a href="pages/messages.html" class="bottom-nav-item">
+            <a href="pages/messages/messages.html" class="bottom-nav-item">
                 <i class="fas fa-envelope"></i>
                 <span>Mesajlar</span>
             </a>
-            <a href="#" class="bottom-nav-item" data-section="games">
+            <a href="pages/games/index.html" class="bottom-nav-item">
                 <i class="fas fa-gamepad"></i>
                 <span>Oyunlar</span>
             </a>
-            <a href="#" class="bottom-nav-item" data-section="gifts">
+            <a href="pages/gifts/gifts.html" class="bottom-nav-item">
                 <i class="fas fa-gift"></i>
                 <span>Hediyeler</span>
             </a>
-            <a href="#" class="bottom-nav-item" data-section="memories">
+            <a href="pages/memories/memories.html" class="bottom-nav-item">
                 <i class="fas fa-camera"></i>
                 <span>Anılar</span>
             </a>
@@ -377,8 +368,8 @@
             });
         }
         
-        // Nav item click events
-        document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(item => {
+        // Nav item click events - Sadece data-section özelliği olanlar için
+        document.querySelectorAll('.nav-item[data-section], .bottom-nav-item[data-section]').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
                 const section = this.getAttribute('data-section');
@@ -393,7 +384,7 @@
         
         // Modal açma fonksiyonları
         function openNewMessageModal() {
-            window.location.href = 'pages/messages.html';
+            window.location.href = 'pages/messages/messages.html';
         }
         
         function openNewGiftModal() {
@@ -428,7 +419,7 @@
                 messages.slice(-2).reverse().forEach(msg => {
                     const item = document.createElement('div');
                     item.className = 'recent-item';
-                    item.onclick = () => window.location.href = 'pages/messages.html';
+                    item.onclick = () => window.location.href = 'pages/messages/messages.html';
                     item.innerHTML = `
                         <i class="fas fa-envelope"></i>
                         <span>${msg.title}</span>
@@ -437,7 +428,7 @@
                 });
             } else {
                 recentMessages.innerHTML = `
-                    <div class="recent-item" onclick="window.location.href='pages/messages.html'">
+                    <div class="recent-item" onclick="window.location.href='pages/messages/messages.html'">
                         <i class="fas fa-heart"></i>
                         <span>Henüz mesaj yok - İlk mesajı gönder!</span>
                     </div>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Aşk Testi - Love Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-header h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .option:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-screen.show {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .result-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .score-display {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>💕 Aşk Testi</h1>
+            <p>Birbirinizi ne kadar iyi tanıyorsunuz?</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <div class="question-container">
+                <div class="question" id="question">
+                    Soruyu yükleniyor...
+                </div>
+                <div class="options" id="options">
+                    <!-- Seçenekler buraya gelecek -->
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                    <i class="fas fa-arrow-right"></i>
+                    Sonraki Soru
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Geri
+                </button>
+            </div>
+        </div>
+
+        <div class="result-screen" id="resultScreen">
+            <div class="result-title" id="resultTitle">
+                Tebrikler!
+            </div>
+            <div class="score-display" id="scoreDisplay">
+                Skorunuz: 0/10
+            </div>
+            <div class="result-description" id="resultDescription">
+                Test tamamlandı!
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">
+                    <i class="fas fa-redo"></i>
+                    Tekrar Oyna
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Geri
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Sevgilinizin en sevdiği renk hangisidir?",
+                options: ["Mavi", "Kırmızı", "Pembe", "Mor"],
+                correct: 0
+            },
+            {
+                question: "Sevgilinizin en sevdiği yemek nedir?",
+                options: ["Pizza", "Makarna", "Kebap", "Çorba"],
+                correct: 1
+            },
+            {
+                question: "Sevgiliniz hangi müzik türünü sever?",
+                options: ["Pop", "Rock", "Türkçe", "Klasik"],
+                correct: 2
+            },
+            {
+                question: "Sevgilinizin en büyük korkusu nedir?",
+                options: ["Yükseklik", "Karanlık", "Böcekler", "Yalnızlık"],
+                correct: 3
+            },
+            {
+                question: "Sevgilinizin hayali tatil yeri neresidir?",
+                options: ["Paris", "Maldivler", "Tokyo", "İtalya"],
+                correct: 0
+            },
+            {
+                question: "Sevgilinizin en sevdiği film türü hangisidir?",
+                options: ["Komedi", "Romantik", "Aksiyon", "Dram"],
+                correct: 1
+            },
+            {
+                question: "Sevgilinizin en sevdiği mevsim hangisidir?",
+                options: ["İlkbahar", "Yaz", "Sonbahar", "Kış"],
+                correct: 2
+            },
+            {
+                question: "Sevgilinizin en sevdiği hayvan nedir?",
+                options: ["Köpek", "Kedi", "Kuş", "Balık"],
+                correct: 0
+            },
+            {
+                question: "Sevgilinizin en sevdiği içecek nedir?",
+                options: ["Kahve", "Çay", "Meyve suyu", "Su"],
+                correct: 1
+            },
+            {
+                question: "Sevgilinizin en büyük hayali nedir?",
+                options: ["Dünya turu", "Kendi işi", "Aile kurmak", "Ünlü olmak"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOption = null;
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            selectedOption = null;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Progress bar güncelle
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Next button'ı deaktif et
+            document.getElementById('nextBtn').disabled = true;
+            selectedOption = null;
+        }
+
+        function selectOption(index) {
+            selectedOption = index;
+            
+            // Tüm seçenekleri temizle
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seçili seçeneği işaretle
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            
+            // Next button'ı aktif et
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (selectedOption === null) return;
+            
+            // Cevabı kontrol et
+            if (selectedOption === questions[currentQuestion].correct) {
+                score++;
+            }
+            
+            currentQuestion++;
+            
+            if (currentQuestion >= questions.length) {
+                showResult();
+            } else {
+                showQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('show');
+            
+            const percentage = (score / questions.length) * 100;
+            document.getElementById('scoreDisplay').textContent = `Skorunuz: ${score}/${questions.length}`;
+            
+            let resultTitle = "";
+            let resultDescription = "";
+            
+            if (percentage >= 80) {
+                resultTitle = "Mükemmel! 🌟";
+                resultDescription = "Birbirinizi çok iyi tanıyorsunuz! Harika bir uyumunuz var.";
+            } else if (percentage >= 60) {
+                resultTitle = "Güzel! 💕";
+                resultDescription = "Birbirinizi iyi tanıyorsunuz, biraz daha zaman geçirmelisiniz.";
+            } else if (percentage >= 40) {
+                resultTitle = "Fena değil! 😊";
+                resultDescription = "Birbirinizi tanımaya devam edin, daha çok konuşun.";
+            } else {
+                resultTitle = "Yeni başlangıç! 💫";
+                resultDescription = "Henüz keşfedecek çok şey var! Bu güzel bir macera.";
+            }
+            
+            document.getElementById('resultTitle').textContent = resultTitle;
+            document.getElementById('resultDescription').textContent = resultDescription;
+            
+            // Skor rapor et
+            if (window.reportGameResult) {
+                window.reportGameResult('love-quiz', score * 10);
+            }
+        }
+
+        function restartQuiz() {
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultScreen').classList.remove('show');
+            startQuiz();
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            startQuiz();
+        });
+    </script>
+</body>
+</html> 

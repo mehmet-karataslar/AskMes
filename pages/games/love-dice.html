@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎲 Aşk Zarı - Love Dice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .game-header h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .game-header p {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .dice-container {
+            margin: 40px 0;
+        }
+
+        .dice {
+            font-size: 8rem;
+            margin: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        .dice:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .result {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .challenges {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .challenges h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .challenge-list {
+            display: none;
+            text-align: left;
+        }
+
+        .challenge-list.show {
+            display: block;
+        }
+
+        .challenge-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .challenge-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🎲 Aşk Zarı</h1>
+            <p>Zarı at ve aşk görevini keşfet!</p>
+        </div>
+
+        <div class="dice-container">
+            <div class="dice" id="dice" onclick="rollDice()">🎲</div>
+        </div>
+
+        <div class="result" id="result">
+            Zarı atmak için üzerine tıkla! 💕
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="rollDice()">
+                <i class="fas fa-dice"></i>
+                Zarı At
+            </button>
+            <button class="btn btn-secondary" onclick="toggleChallenges()">
+                <i class="fas fa-list"></i>
+                Tüm Görevler
+            </button>
+            <button class="btn btn-secondary" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Geri
+            </button>
+        </div>
+
+        <div class="challenges">
+            <h3>💝 Aşk Görevleri</h3>
+            <div class="challenge-list" id="challengeList">
+                <div class="challenge-item">🌹 Sevgilini öp ve "Seni seviyorum" de</div>
+                <div class="challenge-item">💕 Birlikte dans et (müzik açmadan)</div>
+                <div class="challenge-item">🎁 Sevgilinin en sevdiği şeyi söyle</div>
+                <div class="challenge-item">💌 Ona güzel bir kompliman yap</div>
+                <div class="challenge-item">🌟 Birlikte bir anınızı anlat</div>
+                <div class="challenge-item">💖 Sevgilinin elini tut ve 10 saniye bakış</div>
+                <div class="challenge-item">🎵 Birlikte sevdiğiniz şarkıyı söyleyin</div>
+                <div class="challenge-item">💝 Gelecekteki bir planınızı paylaş</div>
+                <div class="challenge-item">🦋 Sevgilinin en güzel özelliğini söyle</div>
+                <div class="challenge-item">💐 Onu sarıl ve teşekkür et</div>
+                <div class="challenge-item">⭐ Birlikte hayal kurun</div>
+                <div class="challenge-item">💓 Ona neden özel olduğunu anlat</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const challenges = [
+            "🌹 Sevgilini öp ve 'Seni seviyorum' de",
+            "💕 Birlikte dans et (müzik açmadan)",
+            "🎁 Sevgilinin en sevdiği şeyi söyle",
+            "💌 Ona güzel bir kompliman yap",
+            "🌟 Birlikte bir anınızı anlat",
+            "💖 Sevgilinin elini tut ve 10 saniye bakış",
+            "🎵 Birlikte sevdiğiniz şarkıyı söyleyin",
+            "💝 Gelecekteki bir planınızı paylaş",
+            "🦋 Sevgilinin en güzel özelliğini söyle",
+            "💐 Onu sarıl ve teşekkür et",
+            "⭐ Birlikte hayal kurun",
+            "💓 Ona neden özel olduğunu anlat"
+        ];
+
+        let isRolling = false;
+
+        function rollDice() {
+            if (isRolling) return;
+            
+            isRolling = true;
+            const dice = document.getElementById('dice');
+            const result = document.getElementById('result');
+            
+            // Zar animasyonu
+            let rollCount = 0;
+            const rollInterval = setInterval(() => {
+                dice.textContent = Math.random() > 0.5 ? '🎲' : '🎯';
+                rollCount++;
+                
+                if (rollCount > 10) {
+                    clearInterval(rollInterval);
+                    
+                    // Sonuç göster
+                    const randomIndex = Math.floor(Math.random() * challenges.length);
+                    const challenge = challenges[randomIndex];
+                    
+                    dice.textContent = '🎲';
+                    result.innerHTML = `<strong>Görevin:</strong><br>${challenge}`;
+                    
+                    // Skor rapor et
+                    if (window.reportGameResult) {
+                        window.reportGameResult('love-dice', 10);
+                    }
+                    
+                    isRolling = false;
+                }
+            }, 100);
+        }
+
+        function toggleChallenges() {
+            const challengeList = document.getElementById('challengeList');
+            challengeList.classList.toggle('show');
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html> 

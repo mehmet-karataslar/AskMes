@@ -446,7 +446,7 @@ function restartGame() {
 }
 
 function goBack() {
-    window.location.href = '../games.html';
+    window.location.href = 'index.html';
 }
 
 // Sayfa yüklendiğinde

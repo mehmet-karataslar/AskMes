@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyunlar - Bahar & Mehmet</title>
+    <link rel="stylesheet" href="games-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="hearts"></div>
+        <div class="sparkles"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="../../index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Ana Sayfaya Dön
+            </a>
+            <h1>🎮 Aşk Oyunlarımız</h1>
+            <p>Birlikte oynayabileceğiniz eğlenceli oyunlar</p>
+        </header>
+
+        <!-- Oyunlar Grid -->
+        <div class="games-grid">
+            <!-- Kalp Yakalama -->
+            <div class="game-card" onclick="openGame('heart-catcher')">
+                <div class="game-icon">💖</div>
+                <h3>Kalp Yakalama</h3>
+                <p>Düşen kalpleri yakalayın ve puanlarınızı toplayın. Siyah kalplere dikkat edin!</p>
+                <div class="difficulty">Kolay</div>
+            </div>
+
+            <!-- Anı Hafızası -->
+            <div class="game-card" onclick="openGame('memory-game')">
+                <div class="game-icon">🧠</div>
+                <h3>Anı Hafızası</h3>
+                <p>Kartları eşleştirin ve hafıza gücünüzü test edin. 3 farklı zorluk seviyesi!</p>
+                <div class="difficulty">Orta</div>
+            </div>
+
+            <!-- Aşk Zarı -->
+            <div class="game-card" onclick="openGame('love-dice')">
+                <div class="game-icon">🎲</div>
+                <h3>Aşk Zarı</h3>
+                <p>Zar atın ve aşk görevlerinizi keşfedin. Sevgilinizle eğlenceli anlar yaşayın!</p>
+                <div class="difficulty">Kolay</div>
+            </div>
+
+            <!-- Aşk Testi -->
+            <div class="game-card" onclick="openGame('love-quiz')">
+                <div class="game-icon">💕</div>
+                <h3>Aşk Testi</h3>
+                <p>Birbirinizi ne kadar iyi tanıyorsunuz? Soruları yanıtlayın ve öğrenin!</p>
+                <div class="difficulty">Kolay</div>
+            </div>
+
+            <!-- Kelime Oyunu -->
+            <div class="game-card" onclick="openGame('word-game')">
+                <div class="game-icon">📝</div>
+                <h3>Aşk Kelimeleri</h3>
+                <p>Aşk ve romantiklik temalı kelimeleri bulun. Zaman yarışı ile heyecan katın!</p>
+                <div class="difficulty">Orta</div>
+            </div>
+
+            <!-- Taş Kağıt Makas -->
+            <div class="game-card" onclick="openGame('rock-paper-scissors')">
+                <div class="game-icon">✂️</div>
+                <h3>Taş Kağıt Makas</h3>
+                <p>Klasik oyun aşk temasıyla! Sevgilinizle rekabet edin.</p>
+                <div class="difficulty">Kolay</div>
+            </div>
+
+            <!-- Emoji Tahmin -->
+            <div class="game-card" onclick="openGame('emoji-guess')">
+                <div class="game-icon">😍</div>
+                <h3>Emoji Tahmin</h3>
+                <p>Emoji kombinasyonlarından aşk şarkıları ve filmleri tahmin edin!</p>
+                <div class="difficulty">Zor</div>
+            </div>
+
+            <!-- Puzzle -->
+            <div class="game-card" onclick="openGame('love-puzzle')">
+                <div class="game-icon">🧩</div>
+                <h3>Aşk Puzzle</h3>
+                <p>Romantik fotoğrafları parçalayın ve yeniden birleştirin!</p>
+                <div class="difficulty">Orta</div>
+            </div>
+        </div>
+
+        <!-- İstatistikler -->
+        <div class="stats-section">
+            <h2>🏆 Oyun İstatistikleri</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalGames">0</div>
+                    <div class="stat-label">Toplam Oyun</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="highScore">0</div>
+                    <div class="stat-label">En Yüksek Skor</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="favoriteGame">-</div>
+                    <div class="stat-label">Favori Oyun</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="winRate">0%</div>
+                    <div class="stat-label">Başarı Oranı</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Müzik Kontrolü -->
+    <div class="music-control">
+        <button id="musicToggle">
+            <i class="fas fa-music"></i>
+        </button>
+        <div class="music-info">
+            <span id="musicStatus">Müzik 🎵</span>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="games-script.js"></script>
+    
+    <script>
+        // Oyun açma fonksiyonu
+        function openGame(gameId) {
+            const gameUrls = {
+                'heart-catcher': 'heart-catcher.html',
+                'memory-game': 'memory-game.html',
+                'love-dice': 'love-dice.html',
+                'love-quiz': 'love-quiz.html',
+                'word-game': 'word-game.html',
+                'rock-paper-scissors': 'rock-paper-scissors.html',
+                'emoji-guess': 'emoji-guess.html',
+                'love-puzzle': 'love-puzzle.html'
+            };
+
+            if (gameUrls[gameId]) {
+                window.location.href = gameUrls[gameId];
+            } else {
+                alert('Bu oyun henüz hazırlanıyor! Yakında aktif olacak.');
+            }
+        }
+
+        // Sayfa yüklendiğinde istatistikleri güncelle
+        document.addEventListener('DOMContentLoaded', function() {
+            updateGameStats();
+        });
+
+        function updateGameStats() {
+            const stats = JSON.parse(localStorage.getItem('loveGamesStats') || '{}');
+            
+            document.getElementById('totalGames').textContent = stats.totalGames || 0;
+            document.getElementById('highScore').textContent = stats.highScore || 0;
+            document.getElementById('favoriteGame').textContent = stats.favoriteGame || '-';
+            
+            // Başarı oranı hesapla
+            const winRate = stats.totalGames > 0 ? Math.round((stats.wins || 0) / stats.totalGames * 100) : 0;
+            document.getElementById('winRate').textContent = winRate + '%';
+        }
+
+        // Oyun sonucu rapor et
+        window.reportGameResult = function(gameId, score) {
+            const stats = JSON.parse(localStorage.getItem('loveGamesStats') || '{}');
+            
+            if (!stats.totalGames) stats.totalGames = 0;
+            if (!stats.highScore) stats.highScore = 0;
+            if (!stats.gameStats) stats.gameStats = {};
+            
+            stats.totalGames++;
+            if (score > stats.highScore) {
+                stats.highScore = score;
+            }
+            
+            if (!stats.gameStats[gameId]) {
+                stats.gameStats[gameId] = { played: 0, bestScore: 0 };
+            }
+            
+            stats.gameStats[gameId].played++;
+            if (score > stats.gameStats[gameId].bestScore) {
+                stats.gameStats[gameId].bestScore = score;
+            }
+            
+            // Favori oyunu hesapla
+            let maxPlayed = 0;
+            let favorite = '-';
+            for (const [id, data] of Object.entries(stats.gameStats)) {
+                if (data.played > maxPlayed) {
+                    maxPlayed = data.played;
+                    favorite = getGameName(id);
+                }
+            }
+            stats.favoriteGame = favorite;
+            
+            localStorage.setItem('loveGamesStats', JSON.stringify(stats));
+            updateGameStats();
+        };
+
+        function getGameName(gameId) {
+            const names = {
+                'heart-catcher': 'Kalp Yakalama',
+                'memory-game': 'Anı Hafızası',
+                'love-dice': 'Aşk Zarı',
+                'love-quiz': 'Aşk Testi',
+                'word-game': 'Aşk Kelimeleri',
+                'rock-paper-scissors': 'Taş Kağıt Makas',
+                'emoji-guess': 'Emoji Tahmin',
+                'love-puzzle': 'Aşk Puzzle'
+            };
+            return names[gameId] || gameId;
+        }
+    </script>
+</body>
+</html> 
