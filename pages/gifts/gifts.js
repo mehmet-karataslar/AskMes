@@ -1,21 +1,27 @@
-// Hediyeler Sayfası JavaScript
+// Hediyeler Sayfası - Modern ve Etkileşimli JavaScript
 
 // Hediye State
 const GiftState = {
-    currentUser: null,
+    currentUser: 'mehmet',
     gifts: [],
-    wishlist: [],
     filteredGifts: [],
+    wishlist: [],
     selectedGift: null,
     editingGift: null,
-    deletingGift: null,
     currentCategory: 'all',
+    searchQuery: '',
     isLoading: false,
-    fabMenuOpen: false
+    fabMenuOpen: false,
+    stats: {
+        totalGifts: 0,
+        givenGifts: 0,
+        receivedGifts: 0,
+        wishlistItems: 0
+    }
 };
 
 // DOM Elements
-let giftItems, giftsGallery, categoryTabs, totalGiftsEl, givenGiftsEl, receivedGiftsEl;
+let giftItems, giftContainer, searchInput, categoryTabs, mainFab, fabMenu;
 
 // Sayfa Yüklendiğinde
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,21 +29,122 @@ document.addEventListener('DOMContentLoaded', function() {
     loadGifts();
     setupEventListeners();
     setupMusicControl();
+    setupScrollAnimations();
+    animatePageLoad();
 });
 
 // Hediyeler Sayfasını Başlat
 function initializeGiftsPage() {
     giftItems = document.getElementById('giftItems');
-    giftsGallery = document.getElementById('giftsGallery');
+    giftContainer = document.getElementById('giftContainer');
+    searchInput = document.getElementById('searchInput');
     categoryTabs = document.querySelectorAll('.category-tab');
-    totalGiftsEl = document.getElementById('totalGifts');
-    givenGiftsEl = document.getElementById('givenGifts');
-    receivedGiftsEl = document.getElementById('receivedGifts');
+    mainFab = document.getElementById('mainFab');
+    fabMenu = document.getElementById('fabMenu');
     
-    // Mevcut kullanıcıyı al
-    GiftState.currentUser = getCurrentUser();
+    // Kullanıcı bilgilerini güncelle
+    GiftState.currentUser = getCurrentUser() || 'mehmet';
+    updateUserDisplay();
     
-    console.log('Hediyeler sayfası başlatıldı');
+    console.log('🎁 Hediyeler sayfası başlatıldı - Modern tasarım aktif!');
+}
+
+// Kullanıcı Bilgilerini Güncelle
+function updateUserDisplay() {
+    const userNameEl = document.getElementById('userName');
+    if (userNameEl) {
+        userNameEl.textContent = GiftState.currentUser === 'mehmet' ? 'Mehmet' : 'Sevgilim';
+    }
+}
+
+// Sayfa Yükleme Animasyonu
+function animatePageLoad() {
+    const elements = [
+        { el: '.page-title', delay: 200 },
+        { el: '.page-header', delay: 300 },
+        { el: '.gifts-categories', delay: 500 },
+        { el: '.fab-group', delay: 700 }
+    ];
+    
+    elements.forEach(({el, delay}) => {
+        const element = document.querySelector(el);
+        if (element) {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                element.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, delay);
+        }
+    });
+}
+
+// Scroll Animasyonları
+function setupScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'slideInUp 0.6s ease-out forwards';
+                entry.target.style.opacity = '1';
+            }
+        });
+    }, observerOptions);
+    
+    // Stiller ekle
+    if (!document.getElementById('giftAnimationStyles')) {
+        const style = document.createElement('style');
+        style.id = 'giftAnimationStyles';
+        style.textContent = `
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes floatIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(50px) scale(0.8);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            
+            .gift-item {
+                opacity: 0;
+            }
+            
+            .gift-item.visible {
+                opacity: 1;
+            }
+            
+            .gift-item:hover {
+                animation: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Gift item'ları gözlemle
+    setTimeout(() => {
+        document.querySelectorAll('.gift-item').forEach(item => {
+            observer.observe(item);
+        });
+    }, 100);
 }
 
 // Hediyeleri Yükle
@@ -45,42 +152,165 @@ async function loadGifts() {
     setLoadingState(true);
     
     try {
-        // Veri tabanından hediyeleri al
-        const giftsData = await Database.getGifts();
-        const wishlistData = await Database.getWishlist();
+        const giftData = await loadSampleGifts();
+        GiftState.gifts = giftData.gifts;
+        GiftState.wishlist = giftData.wishlist;
         
-        GiftState.gifts = giftsData.sort((a, b) => new Date(b.date) - new Date(a.date));
-        GiftState.wishlist = wishlistData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        // İstatistikleri güncelle
+        updateStats();
         
         // Filtrelenmiş hediyeleri güncelle
         applyFilters();
         
         // Hediyeleri görüntüle
-        displayGifts();
-        
-        // İstatistikleri güncelle
-        updateStats();
+        await displayGifts();
         
     } catch (error) {
-        console.error('Hediyeler yüklenirken hata:', error);
-        showError('Hediyeler yüklenirken bir hata oluştu');
+        console.error('❌ Hediyeler yüklenirken hata:', error);
+        showNotification('Hediyeler yüklenirken bir hata oluştu', 'error');
     } finally {
         setLoadingState(false);
     }
 }
 
+// Örnek Hediye Verileri
+async function loadSampleGifts() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({
+                gifts: [
+                    {
+                        id: '1',
+                        name: 'Romantik Akşam Yemeği',
+                        description: 'Şehrin en güzel manzaralı restoranında unutulmaz bir akşam yemeği',
+                        price: 500,
+                        category: 'experience',
+                        occasion: 'Sevgililer Günü',
+                        status: 'given',
+                        giver: 'mehmet',
+                        receiver: 'sevgilim',
+                        date: '2024-02-14',
+                        location: 'Sunset Restaurant',
+                        image: null,
+                        tags: ['romantik', 'yemek', 'özel'],
+                        rating: 5,
+                        createdAt: '2024-02-14T18:00:00Z'
+                    },
+                    {
+                        id: '2',
+                        name: 'Altın Kalp Kolye',
+                        description: 'Özel gravürlü altın kalp kolye - "Sonsuz Aşk" yazısı ile',
+                        price: 1200,
+                        category: 'jewelry',
+                        occasion: 'Yıl Dönümü',
+                        status: 'received',
+                        giver: 'sevgilim',
+                        receiver: 'mehmet',
+                        date: '2024-01-15',
+                        location: 'Mücevherat Dünyası',
+                        image: null,
+                        tags: ['altın', 'kolye', 'özel'],
+                        rating: 5,
+                        createdAt: '2024-01-15T14:30:00Z'
+                    }
+                ],
+                wishlist: [
+                    {
+                        id: 'w1',
+                        name: 'Çiftler İçin Spa Günü',
+                        description: 'Lüks spa merkezi çiftler paketi - masaj, sauna ve özel dinlenme',
+                        estimatedPrice: 800,
+                        category: 'experience',
+                        priority: 'high',
+                        link: 'https://example.com/spa',
+                        notes: 'Özellikle hafta sonu rezervasyonu yapmak istiyoruz',
+                        tags: ['spa', 'relax', 'çiftler'],
+                        addedBy: 'mehmet',
+                        createdAt: '2024-03-01T10:00:00Z'
+                    },
+                    {
+                        id: 'w2',
+                        name: 'Vintage Fotoğraf Makinesi',
+                        description: 'Polaroid instant kamera - anıları anında yazdırmak için',
+                        estimatedPrice: 300,
+                        category: 'electronics',
+                        priority: 'medium',
+                        link: 'https://example.com/camera',
+                        notes: 'Renkli film paketleri ile birlikte',
+                        tags: ['fotoğraf', 'anı', 'vintage'],
+                        addedBy: 'sevgilim',
+                        createdAt: '2024-02-20T16:00:00Z'
+                    }
+                ]
+            });
+        }, 1000);
+    });
+}
+
+// İstatistikleri Güncelle
+function updateStats() {
+    GiftState.stats.totalGifts = GiftState.gifts.length;
+    GiftState.stats.givenGifts = GiftState.gifts.filter(g => g.status === 'given').length;
+    GiftState.stats.receivedGifts = GiftState.gifts.filter(g => g.status === 'received').length;
+    GiftState.stats.wishlistItems = GiftState.wishlist.length;
+    
+    // DOM'u güncelle
+    const statElements = {
+        totalGifts: document.getElementById('totalGifts'),
+        givenGifts: document.getElementById('givenGifts'),
+        receivedGifts: document.getElementById('receivedGifts'),
+        wishlistItems: document.getElementById('wishlistItems')
+    };
+    
+    Object.keys(statElements).forEach(key => {
+        const element = statElements[key];
+        if (element) {
+            // Animasyonlu sayı güncelleme
+            animateNumberUpdate(element, GiftState.stats[key]);
+        }
+    });
+}
+
+// Animasyonlu Sayı Güncelleme
+function animateNumberUpdate(element, targetValue) {
+    const currentValue = parseInt(element.textContent) || 0;
+    const increment = targetValue > currentValue ? 1 : -1;
+    const duration = 1000;
+    const steps = Math.abs(targetValue - currentValue);
+    const stepTime = duration / steps;
+    
+    let current = currentValue;
+    
+    const updateNumber = () => {
+        current += increment;
+        element.textContent = current;
+        
+        if (current !== targetValue) {
+            setTimeout(updateNumber, stepTime);
+        }
+    };
+    
+    if (steps > 0) {
+        updateNumber();
+    }
+}
+
 // Hediyeleri Görüntüle
-function displayGifts() {
+async function displayGifts() {
     if (!giftItems) return;
     
-    const allItems = [...GiftState.filteredGifts, ...GiftState.wishlist];
+    const allItems = [
+        ...GiftState.filteredGifts.map(gift => ({...gift, itemType: 'gift'})),
+        ...(GiftState.currentCategory === 'all' || GiftState.currentCategory === 'wishlist' ? 
+            GiftState.wishlist.map(item => ({...item, itemType: 'wishlist'})) : [])
+    ];
     
     if (allItems.length === 0) {
         giftItems.innerHTML = `
             <div class="empty-gifts">
                 <i class="fas fa-gift"></i>
                 <h3>Henüz hediye yok</h3>
-                <p>İlk hediyenizi ekleyin ve sevdiklerinizle paylaşmaya başlayın!</p>
+                <p>İlk hediyenizi ekleyin ve güzel anılarınızı paylaşmaya başlayın!</p>
                 <button onclick="openNewGiftModal()">
                     <i class="fas fa-plus"></i>
                     İlk Hediyeyi Ekle
@@ -90,644 +320,485 @@ function displayGifts() {
         return;
     }
     
-    const giftsHtml = allItems.map(item => {
-        const isWishlist = item.type === 'wishlist';
-        const isGiven = !isWishlist && item.giver === GiftState.currentUser;
-        const isReceived = !isWishlist && item.receiver === GiftState.currentUser;
-        
-        return `
-            <div class="gift-item ${isWishlist ? 'wishlist' : isGiven ? 'given' : 'received'}" 
-                 data-id="${item.id}" onclick="openGiftDetail('${item.id}')">
-                
-                <div class="gift-image">
-                    ${item.image ? 
-                        `<img src="${item.image}" alt="${item.name}">` : 
-                        `<i class="fas ${isWishlist ? 'fa-star' : 'fa-gift'} placeholder-icon"></i>`
-                    }
-                    
-                    <div class="gift-status ${isWishlist ? 'wishlist' : isGiven ? 'given' : 'received'}">
-                        ${isWishlist ? 'Dilek' : isGiven ? 'Verilen' : 'Alınan'}
-                    </div>
-                    
-                    ${!isWishlist && item.category ? `
-                        <div class="gift-category">
-                            <i class="fas ${getCategoryIcon(item.category)}"></i>
-                            <span>${getCategoryName(item.category)}</span>
-                        </div>
-                    ` : ''}
-                    
-                    ${(isWishlist || isGiven) ? `
-                        <div class="gift-actions">
-                            <button class="gift-action-btn edit" onclick="event.stopPropagation(); editGift('${item.id}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="gift-action-btn delete" onclick="event.stopPropagation(); deleteGift('${item.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    ` : ''}
-                </div>
-                
-                <div class="gift-content">
-                    <div class="gift-header">
-                        <h3 class="gift-name">${item.name}</h3>
-                        <span class="gift-date">${formatDate(isWishlist ? item.createdAt : item.date)}</span>
-                    </div>
-                    
-                    ${item.description ? `
-                        <div class="gift-description">${item.description}</div>
-                    ` : ''}
-                    
-                    ${item.price ? `
-                        <div class="gift-details">
-                            <span class="gift-price">${item.price}₺</span>
-                            ${!isWishlist && item.occasion ? `
-                                <span class="gift-occasion">
-                                    <i class="fas ${getOccasionIcon(item.occasion)}"></i>
-                                    ${getOccasionName(item.occasion)}
-                                </span>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-                    
-                    ${isWishlist && item.priority ? `
-                        <div class="gift-details">
-                            <span class="wish-priority ${item.priority}">
-                                ${getPriorityName(item.priority)}
-                            </span>
-                            ${item.link ? `
-                                <a href="${item.link}" target="_blank" class="wish-link" onclick="event.stopPropagation()">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Link
-                                </a>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-                    
-                    <div class="gift-meta">
-                        ${!isWishlist ? `
-                            <div class="gift-giver ${isGiven ? 'from-me' : 'from-partner'}">
-                                <i class="fas ${isGiven ? 'fa-user' : 'fa-heart'}"></i>
-                                <span>${isGiven ? 'Ben verdim' : 'Aldım'}</span>
-                            </div>
-                        ` : `
-                            <div class="gift-giver from-me">
-                                <i class="fas fa-star"></i>
-                                <span>Dilek listesinde</span>
-                            </div>
-                        `}
-                        
-                        ${item.location ? `
-                            <div class="gift-location">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>${item.location}</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            </div>
-        `;
+    const itemsHtml = allItems.map((item, index) => {
+        if (item.itemType === 'wishlist') {
+            return createWishlistItemHtml(item, index);
+        } else {
+            return createGiftItemHtml(item, index);
+        }
     }).join('');
     
-    giftItems.innerHTML = giftsHtml;
+    giftItems.innerHTML = itemsHtml;
+    
+    // Animasyonları yeniden ayarla
+    setTimeout(() => {
+        setupScrollAnimations();
+        setupGiftItemInteractions();
+    }, 100);
 }
 
-// Hediye Detayını Aç
-function openGiftDetail(itemId) {
-    const item = [...GiftState.gifts, ...GiftState.wishlist].find(g => g.id === itemId);
-    if (!item) return;
+// Hediye Item HTML Oluştur
+function createGiftItemHtml(gift, index) {
+    const mediaHtml = gift.image ? 
+        `<img src="${gift.image}" alt="${gift.name}">` :
+        `<i class="fas fa-gift placeholder-icon"></i>`;
     
-    GiftState.selectedGift = item;
+    const tagsHtml = gift.tags ? gift.tags.map(tag => 
+        `<span class="gift-tag">${tag}</span>`
+    ).join('') : '';
     
-    const modal = document.getElementById('giftDetailModal');
-    const content = document.getElementById('giftDetailContent');
-    const title = document.getElementById('detailTitle');
-    
-    if (modal && content && title) {
-        const isWishlist = item.type === 'wishlist';
-        title.innerHTML = `<i class="fas ${isWishlist ? 'fa-star' : 'fa-gift'}"></i> ${item.name}`;
-        
-        const imageHtml = item.image ? 
-            `<img src="${item.image}" alt="${item.name}" class="detail-image">` : '';
-        
-        content.innerHTML = `
-            ${imageHtml}
-            <div class="detail-info">
-                <h2 class="detail-name">${item.name}</h2>
-                
-                <div class="detail-meta">
-                    <div class="detail-meta-item">
-                        <span class="detail-meta-label">Tarih:</span>
-                        <span class="detail-meta-value">${formatDate(isWishlist ? item.createdAt : item.date)}</span>
-                    </div>
-                    
-                    ${!isWishlist ? `
-                        <div class="detail-meta-item">
-                            <span class="detail-meta-label">Kategori:</span>
-                            <span class="detail-meta-value">${getCategoryName(item.category)}</span>
-                        </div>
-                        
-                        <div class="detail-meta-item">
-                            <span class="detail-meta-label">Durum:</span>
-                            <span class="detail-meta-value">${item.giver === GiftState.currentUser ? 'Verilen' : 'Alınan'}</span>
-                        </div>
-                        
-                        ${item.occasion ? `
-                            <div class="detail-meta-item">
-                                <span class="detail-meta-label">Özel Gün:</span>
-                                <span class="detail-meta-value">${getOccasionName(item.occasion)}</span>
-                            </div>
-                        ` : ''}
-                    ` : `
-                        <div class="detail-meta-item">
-                            <span class="detail-meta-label">Öncelik:</span>
-                            <span class="detail-meta-value">${getPriorityName(item.priority)}</span>
-                        </div>
-                        
-                        ${item.link ? `
-                            <div class="detail-meta-item">
-                                <span class="detail-meta-label">Link:</span>
-                                <a href="${item.link}" target="_blank" class="detail-meta-value">${item.link}</a>
-                            </div>
-                        ` : ''}
-                    `}
-                    
-                    ${item.price ? `
-                        <div class="detail-meta-item">
-                            <span class="detail-meta-label">Fiyat:</span>
-                            <span class="detail-meta-value">${item.price}₺</span>
-                        </div>
-                    ` : ''}
-                    
-                    ${item.location ? `
-                        <div class="detail-meta-item">
-                            <span class="detail-meta-label">Konum:</span>
-                            <span class="detail-meta-value">${item.location}</span>
-                        </div>
-                    ` : ''}
+    return `
+        <div class="gift-item ${gift.status}" 
+             data-id="${gift.id}" 
+             data-type="gift"
+             style="animation-delay: ${index * 0.1}s"
+             onclick="openGiftDetail('${gift.id}')">
+            
+            <div class="gift-image">
+                ${mediaHtml}
+                <div class="gift-status ${gift.status}">
+                    ${gift.status === 'given' ? 'Verilen' : 'Alınan'}
+                </div>
+                <div class="gift-category">
+                    <i class="fas ${getCategoryIcon(gift.category)}"></i>
+                    ${getCategoryName(gift.category)}
                 </div>
                 
-                ${item.description ? `
-                    <div class="detail-description">${item.description.replace(/\n/g, '<br>')}</div>
-                ` : ''}
-                
-                ${(isWishlist || (!isWishlist && item.giver === GiftState.currentUser)) ? `
-                    <div class="detail-actions">
-                        <button class="btn-secondary" onclick="editGift('${item.id}')">
+                ${gift.giver === GiftState.currentUser ? `
+                    <div class="gift-actions">
+                        <button class="gift-action-btn edit" onclick="event.stopPropagation(); editGift('${gift.id}')" title="Düzenle">
                             <i class="fas fa-edit"></i>
-                            Düzenle
                         </button>
-                        <button class="btn-danger" onclick="deleteGift('${item.id}')">
+                        <button class="gift-action-btn delete" onclick="event.stopPropagation(); deleteGift('${gift.id}')" title="Sil">
                             <i class="fas fa-trash"></i>
-                            Sil
                         </button>
                     </div>
                 ` : ''}
             </div>
-        `;
-        
-        modal.classList.add('active');
-    }
-}
-
-// Hediye Detayını Kapat
-function closeGiftDetailModal() {
-    const modal = document.getElementById('giftDetailModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-    GiftState.selectedGift = null;
-}
-
-// Yeni Hediye Modal'ını Aç
-function openNewGiftModal() {
-    const modal = document.getElementById('newGiftModal');
-    if (modal) {
-        modal.classList.add('active');
-        
-        // Formu sıfırla
-        const form = document.getElementById('giftForm');
-        if (form) {
-            form.reset();
             
-            // Bugünün tarihini ayarla
-            const today = new Date().toISOString().split('T')[0];
-            const dateInput = document.getElementById('giftDate');
-            if (dateInput) {
-                dateInput.value = today;
-            }
-        }
-        
-        // Upload preview'ı sıfırla
-        resetUploadPreview('uploadPreview');
-    }
-    
-    // FAB menüsünü kapat
-    closeFabMenu();
+            <div class="gift-content">
+                <div class="gift-header">
+                    <h3 class="gift-name">${gift.name}</h3>
+                    <span class="gift-date">${formatDate(gift.date)}</span>
+                </div>
+                
+                <div class="gift-description">${gift.description}</div>
+                
+                <div class="gift-details">
+                    <div class="gift-price">₺${gift.price.toLocaleString()}</div>
+                    <div class="gift-occasion">
+                        <i class="fas fa-calendar-heart"></i>
+                        ${gift.occasion}
+                    </div>
+                </div>
+                
+                ${tagsHtml ? `
+                    <div class="gift-tags">${tagsHtml}</div>
+                ` : ''}
+                
+                <div class="gift-meta">
+                    <div class="gift-giver ${gift.giver === GiftState.currentUser ? 'from-me' : 'from-partner'}">
+                        <i class="fas ${gift.giver === GiftState.currentUser ? 'fa-user' : 'fa-heart'}"></i>
+                        <span>${gift.giver === GiftState.currentUser ? 'Benden' : 'Sevgilimden'}</span>
+                    </div>
+                    <div class="gift-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${gift.location}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
-// Yeni Hediye Modal'ını Kapat
-function closeNewGiftModal() {
-    const modal = document.getElementById('newGiftModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// Dilek Listesi Modal'ını Aç
-function openWishlistModal() {
-    const modal = document.getElementById('wishlistModal');
-    if (modal) {
-        modal.classList.add('active');
-        
-        // Formu sıfırla
-        const form = document.getElementById('wishlistForm');
-        if (form) {
-            form.reset();
-        }
-    }
+// Dilek Listesi Item HTML Oluştur
+function createWishlistItemHtml(item, index) {
+    const priorityColor = {
+        high: 'var(--warning-gradient)',
+        medium: 'linear-gradient(135deg, #ff9800, #ffb74d)',
+        low: 'var(--success-gradient)'
+    };
     
-    // FAB menüsünü kapat
-    closeFabMenu();
-}
-
-// Dilek Listesi Modal'ını Kapat
-function closeWishlistModal() {
-    const modal = document.getElementById('wishlistModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// Hediye Düzenleme Modal'ını Aç
-function editGift(itemId) {
-    const item = [...GiftState.gifts, ...GiftState.wishlist].find(g => g.id === itemId);
-    if (!item) return;
+    const tagsHtml = item.tags ? item.tags.map(tag => 
+        `<span class="gift-tag">${tag}</span>`
+    ).join('') : '';
     
-    GiftState.editingGift = item;
-    
-    const isWishlist = item.type === 'wishlist';
-    
-    if (isWishlist) {
-        // Dilek listesi öğesini düzenle
-        const modal = document.getElementById('wishlistModal');
-        if (modal) {
-            modal.classList.add('active');
+    return `
+        <div class="gift-item wishlist" 
+             data-id="${item.id}" 
+             data-type="wishlist"
+             style="animation-delay: ${index * 0.1}s"
+             onclick="openWishlistDetail('${item.id}')">
             
-            // Form verilerini doldur
-            document.getElementById('wishItemName').value = item.name;
-            document.getElementById('wishItemDescription').value = item.description || '';
-            document.getElementById('wishItemPriority').value = item.priority || 'medium';
-            document.getElementById('wishItemPrice').value = item.price || '';
-            document.getElementById('wishItemLink').value = item.link || '';
-        }
-    } else {
-        // Normal hediyeyi düzenle
-        const modal = document.getElementById('editGiftModal');
-        if (modal) {
-            modal.classList.add('active');
+            <div class="gift-image">
+                <i class="fas fa-star placeholder-icon"></i>
+                <div class="gift-status wishlist">Dilek</div>
+                <div class="gift-category">
+                    <i class="fas ${getCategoryIcon(item.category)}"></i>
+                    ${getCategoryName(item.category)}
+                </div>
+                
+                ${item.addedBy === GiftState.currentUser ? `
+                    <div class="gift-actions">
+                        <button class="gift-action-btn edit" onclick="event.stopPropagation(); editWishlistItem('${item.id}')" title="Düzenle">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="gift-action-btn delete" onclick="event.stopPropagation(); deleteWishlistItem('${item.id}')" title="Sil">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                ` : ''}
+            </div>
             
-            // Form verilerini doldur
-            document.getElementById('editGiftName').value = item.name;
-            document.getElementById('editGiftCategory').value = item.category;
-            document.getElementById('editGiftDescription').value = item.description || '';
-            document.getElementById('editGiftDate').value = item.date;
-            document.getElementById('editGiftOccasion').value = item.occasion || '';
-            document.getElementById('editGiftPrice').value = item.price || '';
-            document.getElementById('editGiftLocation').value = item.location || '';
-            
-            // Mevcut resmi göster
-            if (item.image) {
-                showImagePreview('editUploadPreview', item.image);
-            } else {
-                resetUploadPreview('editUploadPreview');
-            }
-        }
-    }
-    
-    // Detay modal'ını kapat
-    closeGiftDetailModal();
+            <div class="gift-content">
+                <div class="gift-header">
+                    <h3 class="gift-name">${item.name}</h3>
+                    <span class="wish-priority ${item.priority}" style="background: ${priorityColor[item.priority]}">
+                        ${item.priority === 'high' ? 'Yüksek' : item.priority === 'medium' ? 'Orta' : 'Düşük'}
+                    </span>
+                </div>
+                
+                <div class="gift-description">${item.description}</div>
+                
+                <div class="gift-details">
+                    <div class="gift-price">~₺${item.estimatedPrice.toLocaleString()}</div>
+                </div>
+                
+                ${item.notes ? `
+                    <div class="gift-notes">
+                        <i class="fas fa-sticky-note"></i>
+                        ${item.notes}
+                    </div>
+                ` : ''}
+                
+                ${tagsHtml ? `
+                    <div class="gift-tags">${tagsHtml}</div>
+                ` : ''}
+                
+                <div class="gift-meta">
+                    <div class="gift-giver ${item.addedBy === GiftState.currentUser ? 'from-me' : 'from-partner'}">
+                        <i class="fas ${item.addedBy === GiftState.currentUser ? 'fa-user' : 'fa-heart'}"></i>
+                        <span>${item.addedBy === GiftState.currentUser ? 'Benden' : 'Sevgilimden'}</span>
+                    </div>
+                    ${item.link ? `
+                        <a href="${item.link}" target="_blank" class="wish-link" onclick="event.stopPropagation()">
+                            <i class="fas fa-external-link-alt"></i>
+                            Linki Görüntüle
+                        </a>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    `;
 }
 
-// Hediye Düzenleme Modal'ını Kapat
-function closeEditGiftModal() {
-    const modal = document.getElementById('editGiftModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-    GiftState.editingGift = null;
+// Kategori İkonu Al
+function getCategoryIcon(category) {
+    const icons = {
+        jewelry: 'fa-gem',
+        electronics: 'fa-mobile-alt',
+        clothing: 'fa-tshirt',
+        books: 'fa-book',
+        experience: 'fa-map-marker-alt',
+        flowers: 'fa-seedling',
+        food: 'fa-utensils',
+        travel: 'fa-plane',
+        other: 'fa-gift'
+    };
+    return icons[category] || 'fa-gift';
 }
 
-// Hediye Silme
-function deleteGift(itemId) {
-    const item = [...GiftState.gifts, ...GiftState.wishlist].find(g => g.id === itemId);
-    if (!item) return;
-    
-    GiftState.deletingGift = item;
-    
-    const modal = document.getElementById('deleteGiftModal');
-    if (modal) {
-        modal.classList.add('active');
-    }
-    
-    // Detay modal'ını kapat
-    closeGiftDetailModal();
+// Kategori Adı Al
+function getCategoryName(category) {
+    const names = {
+        jewelry: 'Takı',
+        electronics: 'Elektronik',
+        clothing: 'Giyim',
+        books: 'Kitap',
+        experience: 'Deneyim',
+        flowers: 'Çiçek',
+        food: 'Yiyecek',
+        travel: 'Seyahat',
+        other: 'Diğer'
+    };
+    return names[category] || 'Diğer';
 }
 
-// Silme Modal'ını Kapat
-function closeDeleteGiftModal() {
-    const modal = document.getElementById('deleteGiftModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-    GiftState.deletingGift = null;
-}
-
-// Hediye Silmeyi Onayla
-async function confirmDeleteGift() {
-    if (!GiftState.deletingGift) return;
+// Gift Item Etkileşimleri
+function setupGiftItemInteractions() {
+    const giftItems = document.querySelectorAll('.gift-item');
     
-    try {
-        const isWishlist = GiftState.deletingGift.type === 'wishlist';
+    giftItems.forEach(item => {
+        // Hover efektleri
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+            this.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+        });
         
-        if (isWishlist) {
-            // Dilek listesinden sil
-            await Database.deleteWishlistItem(GiftState.deletingGift.id);
-            GiftState.wishlist = GiftState.wishlist.filter(w => w.id !== GiftState.deletingGift.id);
-        } else {
-            // Hediyeyi sil
-            await Database.deleteGift(GiftState.deletingGift.id);
-            GiftState.gifts = GiftState.gifts.filter(g => g.id !== GiftState.deletingGift.id);
-        }
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+        });
         
-        // Filtreleri uygula ve görüntüyü güncelle
-        applyFilters();
-        displayGifts();
-        updateStats();
+        // Tıklama efekti
+        item.addEventListener('mousedown', function() {
+            this.style.transform = 'translateY(-5px) scale(0.98)';
+        });
         
-        // Modal'ı kapat
-        closeDeleteGiftModal();
-        
-        showSuccess(isWishlist ? 'Dilek listesi öğesi silindi' : 'Hediye başarıyla silindi');
-        
-    } catch (error) {
-        console.error('Silme hatası:', error);
-        showError('Silme işlemi sırasında bir hata oluştu');
-    }
+        item.addEventListener('mouseup', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+    });
 }
 
 // Event Listener'ları Ayarla
 function setupEventListeners() {
-    // Yeni hediye formu
-    const giftForm = document.getElementById('giftForm');
-    if (giftForm) {
-        giftForm.addEventListener('submit', handleNewGift);
-    }
-    
-    // Dilek listesi formu
-    const wishlistForm = document.getElementById('wishlistForm');
-    if (wishlistForm) {
-        wishlistForm.addEventListener('submit', handleWishlistItem);
-    }
-    
-    // Hediye düzenleme formu
-    const editGiftForm = document.getElementById('editGiftForm');
-    if (editGiftForm) {
-        editGiftForm.addEventListener('submit', handleEditGift);
-    }
-    
-    // Kategori sekmeleri
+    // Kategori tabları
     categoryTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             setActiveCategory(this.dataset.category);
         });
     });
     
-    // Dosya yükleme
-    setupFileUpload('giftImage', 'uploadPreview');
-    setupFileUpload('editGiftImage', 'editUploadPreview');
+    // Arama
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                handleSearch(e);
+            }, 300);
+        });
+        
+        // Arama placeholder animasyonu
+        animateSearchPlaceholder();
+    }
     
-    // Modal dışına tıklama
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
+    // FAB menu
+    if (mainFab) {
+        mainFab.addEventListener('click', toggleFabMenu);
+    }
+    
+    // Klavye kısayolları
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeFabMenu();
+            const activeModal = document.querySelector('.modal.active');
+            if (activeModal) {
+                hideModal(activeModal);
+            }
+        }
+        
+        if (e.ctrlKey && e.key === 'n') {
+            e.preventDefault();
+            openNewGiftModal();
+        }
+        
+        if (e.ctrlKey && e.key === 'w') {
+            e.preventDefault();
+            openWishlistModal();
+        }
+    });
+    
+    // Scroll event
+    window.addEventListener('scroll', handleScroll);
+}
+
+// FAB Menu Toggle
+function toggleFabMenu() {
+    GiftState.fabMenuOpen = !GiftState.fabMenuOpen;
+    
+    mainFab.classList.toggle('active', GiftState.fabMenuOpen);
+    fabMenu.classList.toggle('active', GiftState.fabMenuOpen);
+    
+    // Animasyon efekti
+    if (GiftState.fabMenuOpen) {
+        mainFab.style.transform = 'rotate(45deg) scale(1.1)';
+        createSparkles(mainFab);
+    } else {
+        mainFab.style.transform = 'rotate(0deg) scale(1)';
+    }
+}
+
+// FAB Menu Kapat
+function closeFabMenu() {
+    GiftState.fabMenuOpen = false;
+    mainFab.classList.remove('active');
+    fabMenu.classList.remove('active');
+    mainFab.style.transform = 'rotate(0deg) scale(1)';
+}
+
+// Yıldız Efekti
+function createSparkles(element) {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    for (let i = 0; i < 8; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.cssText = `
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--gold-gradient);
+            border-radius: 50%;
+            top: ${centerY}px;
+            left: ${centerX}px;
+            z-index: 10000;
+            pointer-events: none;
+            animation: sparkleOut 0.6s ease-out forwards;
+        `;
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => {
+            if (sparkle.parentNode) {
+                sparkle.parentNode.removeChild(sparkle);
+            }
+        }, 600);
+    }
+    
+    // Sparkle animasyonu
+    if (!document.getElementById('sparkleStyles')) {
+        const style = document.createElement('style');
+        style.id = 'sparkleStyles';
+        style.textContent = `
+            @keyframes sparkleOut {
+                0% {
+                    transform: scale(0) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(1) rotate(360deg) translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Scroll Handling
+function handleScroll() {
+    const scrolled = window.pageYOffset;
+    const header = document.querySelector('.page-header');
+    
+    if (header) {
+        if (scrolled > 100) {
+            header.style.boxShadow = '0 8px 30px rgba(0,0,0,0.15)';
+            header.style.backdropFilter = 'blur(15px)';
+        } else {
+            header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+            header.style.backdropFilter = 'blur(10px)';
+        }
+    }
+}
+
+// Arama Placeholder Animasyonu
+function animateSearchPlaceholder() {
+    if (!searchInput) return;
+    
+    const placeholders = [
+        'Hediyeleri ara...',
+        'Hediye adı arayın...',
+        'Kategori arayın...',
+        'Fiyat aralığı...',
+        'Özel günler...'
+    ];
+    
+    let currentIndex = 0;
+    
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % placeholders.length;
+        searchInput.placeholder = placeholders[currentIndex];
+    }, 3000);
+}
+
+// Müzik Kontrolü
+function setupMusicControl() {
+    const musicToggle = document.getElementById('musicToggle');
+    const musicInfo = document.getElementById('musicInfo');
+    
+    if (musicToggle) {
+        musicToggle.addEventListener('click', function() {
+            const isPlaying = this.classList.contains('playing');
+            
+            if (isPlaying) {
+                this.classList.remove('playing');
+                this.innerHTML = '<i class="fas fa-music"></i>';
+                if (musicInfo) musicInfo.textContent = 'Müzik Çal';
+                showNotification('Müzik durduruldu 🎵', 'info');
+            } else {
+                this.classList.add('playing');
+                this.innerHTML = '<i class="fas fa-pause"></i>';
+                if (musicInfo) musicInfo.textContent = 'Aşk Şarkıları Çalıyor';
+                showNotification('Romantik müzik çalıyor 💕', 'success');
             }
         });
-    });
-}
-
-// Yeni Hediye Ekle
-async function handleNewGift(e) {
-    e.preventDefault();
-    
-    if (GiftState.isLoading) return;
-    
-    const name = document.getElementById('giftName').value.trim();
-    const category = document.getElementById('giftCategory').value;
-    const description = document.getElementById('giftDescription').value.trim();
-    const date = document.getElementById('giftDate').value;
-    const occasion = document.getElementById('giftOccasion').value;
-    const price = document.getElementById('giftPrice').value;
-    const location = document.getElementById('giftLocation').value.trim();
-    const imageFile = document.getElementById('giftImage').files[0];
-    
-    if (!name || !category || !date) {
-        showError('Lütfen gerekli alanları doldurun');
-        return;
-    }
-    
-    setLoadingState(true);
-    
-    try {
-        // Resmi işle
-        let imageData = null;
-        if (imageFile) {
-            imageData = await processImageFile(imageFile);
-        }
-        
-        // Yeni hediye oluştur
-        const newGift = {
-            id: generateId(),
-            name,
-            category,
-            description,
-            date,
-            occasion,
-            price: price ? parseFloat(price) : null,
-            location,
-            image: imageData,
-            giver: GiftState.currentUser,
-            receiver: GiftState.currentUser === 'mehmet' ? 'sevgilim' : 'mehmet',
-            createdAt: new Date().toISOString()
-        };
-        
-        // Veri tabanına kaydet
-        await Database.saveGift(newGift);
-        
-        // Local state'i güncelle
-        GiftState.gifts.unshift(newGift);
-        
-        // Filtreleri uygula ve görüntüyü güncelle
-        applyFilters();
-        displayGifts();
-        updateStats();
-        
-        // Modal'ı kapat
-        closeNewGiftModal();
-        
-        showSuccess('Hediye başarıyla eklendi! 🎁');
-        
-    } catch (error) {
-        console.error('Hediye eklenirken hata:', error);
-        showError('Hediye eklenirken bir hata oluştu');
-    } finally {
-        setLoadingState(false);
     }
 }
 
-// Dilek Listesi Öğesi Ekle/Düzenle
-async function handleWishlistItem(e) {
-    e.preventDefault();
-    
-    if (GiftState.isLoading) return;
-    
-    const name = document.getElementById('wishItemName').value.trim();
-    const description = document.getElementById('wishItemDescription').value.trim();
-    const priority = document.getElementById('wishItemPriority').value;
-    const price = document.getElementById('wishItemPrice').value;
-    const link = document.getElementById('wishItemLink').value.trim();
-    
-    if (!name) {
-        showError('Lütfen istek adını girin');
-        return;
+// Modal İşlemleri
+function openNewGiftModal() {
+    const modal = document.getElementById('newGiftModal');
+    if (modal) {
+        resetGiftForm();
+        showModal(modal);
     }
-    
-    setLoadingState(true);
-    
-    try {
-        if (GiftState.editingGift && GiftState.editingGift.type === 'wishlist') {
-            // Düzenleme
-            const updatedItem = {
-                ...GiftState.editingGift,
-                name,
-                description,
-                priority,
-                price: price ? parseFloat(price) : null,
-                link,
-                updatedAt: new Date().toISOString()
-            };
-            
-            await Database.updateWishlistItem(updatedItem);
-            
-            const index = GiftState.wishlist.findIndex(w => w.id === updatedItem.id);
-            if (index !== -1) {
-                GiftState.wishlist[index] = updatedItem;
+    closeFabMenu();
+}
+
+function openWishlistModal() {
+    const modal = document.getElementById('wishlistModal');
+    if (modal) {
+        resetWishlistForm();
+        showModal(modal);
+    }
+    closeFabMenu();
+}
+
+function showModal(modal) {
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Modal backdrop click to close
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideModal(modal);
             }
-            
-            showSuccess('Dilek listesi öğesi güncellendi! ✨');
-        } else {
-            // Yeni ekleme
-            const newItem = {
-                id: generateId(),
-                name,
-                description,
-                priority,
-                price: price ? parseFloat(price) : null,
-                link,
-                type: 'wishlist',
-                owner: GiftState.currentUser,
-                createdAt: new Date().toISOString()
-            };
-            
-            await Database.saveWishlistItem(newItem);
-            GiftState.wishlist.unshift(newItem);
-            
-            showSuccess('Dilek listesine eklendi! ⭐');
-        }
-        
-        // Görüntüyü güncelle
-        displayGifts();
-        updateStats();
-        
-        // Modal'ı kapat
-        closeWishlistModal();
-        
-    } catch (error) {
-        console.error('Dilek listesi hatası:', error);
-        showError('İşlem sırasında bir hata oluştu');
-    } finally {
-        setLoadingState(false);
+        });
     }
 }
 
-// Hediye Düzenle
-async function handleEditGift(e) {
-    e.preventDefault();
-    
-    if (GiftState.isLoading || !GiftState.editingGift) return;
-    
-    const name = document.getElementById('editGiftName').value.trim();
-    const category = document.getElementById('editGiftCategory').value;
-    const description = document.getElementById('editGiftDescription').value.trim();
-    const date = document.getElementById('editGiftDate').value;
-    const occasion = document.getElementById('editGiftOccasion').value;
-    const imageFile = document.getElementById('editGiftImage').files[0];
-    
-    if (!name || !category || !date) {
-        showError('Lütfen gerekli alanları doldurun');
-        return;
-    }
-    
-    setLoadingState(true);
-    
-    try {
-        // Resmi işle
-        let imageData = GiftState.editingGift.image;
-        if (imageFile) {
-            imageData = await processImageFile(imageFile);
-        }
-        
-        // Hediyeyi güncelle
-        const updatedGift = {
-            ...GiftState.editingGift,
-            name,
-            category,
-            description,
-            date,
-            occasion,
-            image: imageData,
-            updatedAt: new Date().toISOString()
-        };
-        
-        // Veri tabanını güncelle
-        await Database.updateGift(updatedGift);
-        
-        // Local state'i güncelle
-        const index = GiftState.gifts.findIndex(g => g.id === updatedGift.id);
-        if (index !== -1) {
-            GiftState.gifts[index] = updatedGift;
-        }
-        
-        // Filtreleri uygula ve görüntüyü güncelle
-        applyFilters();
-        displayGifts();
-        updateStats();
-        
-        // Modal'ı kapat
-        closeEditGiftModal();
-        
-        showSuccess('Hediye başarıyla güncellendi! ✨');
-        
-    } catch (error) {
-        console.error('Hediye güncellenirken hata:', error);
-        showError('Hediye güncellenirken bir hata oluştu');
-    } finally {
-        setLoadingState(false);
+function hideModal(modal) {
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
     }
 }
 
-// Aktif Kategoriyi Ayarla
+// Form Reset İşlemleri
+function resetGiftForm() {
+    const form = document.getElementById('giftForm');
+    if (form) {
+        form.reset();
+        const dateInput = document.getElementById('giftDate');
+        if (dateInput) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+    }
+}
+
+function resetWishlistForm() {
+    const form = document.getElementById('wishlistForm');
+    if (form) {
+        form.reset();
+    }
+}
+
+// Filtreleme İşlemleri
 function setActiveCategory(category) {
     GiftState.currentCategory = category;
     
@@ -743,153 +814,37 @@ function setActiveCategory(category) {
     displayGifts();
 }
 
-// Filtreleri Uygula
+function handleSearch(e) {
+    GiftState.searchQuery = e.target.value.toLowerCase();
+    applyFilters();
+    displayGifts();
+}
+
 function applyFilters() {
     let filtered = [...GiftState.gifts];
     
-    if (GiftState.currentCategory === 'given') {
-        filtered = filtered.filter(g => g.giver === GiftState.currentUser);
-    } else if (GiftState.currentCategory === 'received') {
-        filtered = filtered.filter(g => g.receiver === GiftState.currentUser);
-    } else if (GiftState.currentCategory === 'wishlist') {
-        filtered = [];
+    // Kategori filtresi
+    if (GiftState.currentCategory !== 'all') {
+        if (GiftState.currentCategory === 'given') {
+            filtered = filtered.filter(g => g.status === 'given');
+        } else if (GiftState.currentCategory === 'received') {
+            filtered = filtered.filter(g => g.status === 'received');
+        } else if (GiftState.currentCategory !== 'wishlist') {
+            filtered = filtered.filter(g => g.category === GiftState.currentCategory);
+        }
+    }
+    
+    // Arama filtresi
+    if (GiftState.searchQuery) {
+        filtered = filtered.filter(gift =>
+            gift.name.toLowerCase().includes(GiftState.searchQuery) ||
+            gift.description.toLowerCase().includes(GiftState.searchQuery) ||
+            gift.category.toLowerCase().includes(GiftState.searchQuery) ||
+            gift.occasion.toLowerCase().includes(GiftState.searchQuery)
+        );
     }
     
     GiftState.filteredGifts = filtered;
-    
-    // Dilek listesini de filtrele
-    if (GiftState.currentCategory === 'all' || GiftState.currentCategory === 'wishlist') {
-        // Dilek listesi öğeleri görüntülenecek
-    } else {
-        // Dilek listesi öğeleri gizlenecek
-        GiftState.wishlist = GiftState.currentCategory === 'wishlist' ? GiftState.wishlist : [];
-    }
-}
-
-// İstatistikleri Güncelle
-function updateStats() {
-    const totalGifts = GiftState.gifts.length;
-    const givenGifts = GiftState.gifts.filter(g => g.giver === GiftState.currentUser).length;
-    const receivedGifts = GiftState.gifts.filter(g => g.receiver === GiftState.currentUser).length;
-    
-    if (totalGiftsEl) totalGiftsEl.textContent = totalGifts;
-    if (givenGiftsEl) givenGiftsEl.textContent = givenGifts;
-    if (receivedGiftsEl) receivedGiftsEl.textContent = receivedGifts;
-}
-
-// FAB Menü Kontrolü
-function toggleFabMenu() {
-    const fabMenu = document.getElementById('fabMenu');
-    const mainFab = document.querySelector('.main-fab');
-    
-    GiftState.fabMenuOpen = !GiftState.fabMenuOpen;
-    
-    if (fabMenu && mainFab) {
-        fabMenu.classList.toggle('active', GiftState.fabMenuOpen);
-        mainFab.classList.toggle('active', GiftState.fabMenuOpen);
-    }
-}
-
-function closeFabMenu() {
-    const fabMenu = document.getElementById('fabMenu');
-    const mainFab = document.querySelector('.main-fab');
-    
-    GiftState.fabMenuOpen = false;
-    
-    if (fabMenu && mainFab) {
-        fabMenu.classList.remove('active');
-        mainFab.classList.remove('active');
-    }
-}
-
-// Dosya Yükleme Ayarla
-function setupFileUpload(inputId, previewId) {
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
-    
-    if (!input || !preview) return;
-    
-    input.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                showImagePreview(previewId, e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    
-    // Drag & Drop
-    preview.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
-    });
-    
-    preview.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.style.backgroundColor = '';
-    });
-    
-    preview.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.style.backgroundColor = '';
-        
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            input.files = e.dataTransfer.files;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                showImagePreview(previewId, e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-}
-
-// Resim Önizlemesi Göster
-function showImagePreview(previewId, imageSrc) {
-    const preview = document.getElementById(previewId);
-    if (!preview) return;
-    
-    preview.classList.add('has-image');
-    preview.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <p>Resim seçildi</p>
-        <img src="${imageSrc}" alt="Önizleme" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 10px;">
-    `;
-}
-
-// Upload Önizlemesini Sıfırla
-function resetUploadPreview(previewId) {
-    const preview = document.getElementById(previewId);
-    if (!preview) return;
-    
-    preview.classList.remove('has-image');
-    preview.innerHTML = `
-        <i class="fas fa-camera"></i>
-        <p>Hediye fotoğrafı ekleyin</p>
-        <span class="upload-hint">Maksimum 5MB</span>
-    `;
-}
-
-// Resim Dosyasını İşle
-function processImageFile(file) {
-    return new Promise((resolve, reject) => {
-        // Dosya boyutu kontrolü (5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            reject(new Error('Dosya boyutu 5MB\'dan büyük olamaz'));
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            resolve(e.target.result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
 }
 
 // Loading State
@@ -900,112 +855,54 @@ function setLoadingState(isLoading) {
     if (loadingElement) {
         loadingElement.style.display = isLoading ? 'flex' : 'none';
     }
-    
-    const buttons = document.querySelectorAll('button[type="submit"]');
-    buttons.forEach(btn => {
-        btn.disabled = isLoading;
-        if (isLoading) {
-            btn.classList.add('loading');
-        } else {
-            btn.classList.remove('loading');
-        }
-    });
 }
 
-// Müzik Kontrolü
-function setupMusicControl() {
-    const musicToggle = document.getElementById('music-toggle');
-    const musicPlayer = document.getElementById('background-music');
+// Bildirim Göster
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+        <span>${message}</span>
+    `;
     
-    if (musicToggle && musicPlayer) {
-        musicToggle.addEventListener('click', function() {
-            if (musicPlayer.paused) {
-                musicPlayer.play().catch(e => {
-                    console.log('Müzik çalınamadı:', e);
-                });
-                this.innerHTML = '<i class="fas fa-pause"></i>';
-            } else {
-                musicPlayer.pause();
-                this.innerHTML = '<i class="fas fa-music"></i>';
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        background: ${type === 'success' ? 'var(--success-gradient)' : type === 'error' ? 'var(--warning-gradient)' : 'var(--accent-gradient)'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        transform: translateX(100%);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
             }
-        });
-    }
+        }, 400);
+    }, 4000);
 }
 
 // Yardımcı Fonksiyonlar
-function getCategoryIcon(category) {
-    const icons = {
-        romantic: 'fa-heart',
-        surprise: 'fa-surprise',
-        'special-day': 'fa-calendar-star',
-        handmade: 'fa-hand-holding-heart',
-        experience: 'fa-map-marked-alt',
-        jewelry: 'fa-gem',
-        clothing: 'fa-tshirt',
-        technology: 'fa-laptop',
-        books: 'fa-book',
-        other: 'fa-gift'
-    };
-    return icons[category] || 'fa-gift';
-}
-
-function getCategoryName(category) {
-    const names = {
-        romantic: 'Romantik',
-        surprise: 'Sürpriz',
-        'special-day': 'Özel Gün',
-        handmade: 'El Yapımı',
-        experience: 'Deneyim',
-        jewelry: 'Mücevher',
-        clothing: 'Giyim',
-        technology: 'Teknoloji',
-        books: 'Kitap',
-        other: 'Diğer'
-    };
-    return names[category] || 'Diğer';
-}
-
-function getOccasionIcon(occasion) {
-    const icons = {
-        birthday: 'fa-birthday-cake',
-        anniversary: 'fa-heart',
-        valentines: 'fa-heart',
-        'new-year': 'fa-calendar',
-        graduation: 'fa-graduation-cap',
-        promotion: 'fa-trophy',
-        apology: 'fa-hand-holding-heart',
-        surprise: 'fa-surprise',
-        other: 'fa-gift'
-    };
-    return icons[occasion] || 'fa-gift';
-}
-
-function getOccasionName(occasion) {
-    const names = {
-        birthday: 'Doğum Günü',
-        anniversary: 'Yıldönümü',
-        valentines: 'Sevgililer Günü',
-        'new-year': 'Yeni Yıl',
-        graduation: 'Mezuniyet',
-        promotion: 'Terfi',
-        apology: 'Özür',
-        surprise: 'Sürpriz',
-        other: 'Diğer'
-    };
-    return names[occasion] || 'Diğer';
-}
-
-function getPriorityName(priority) {
-    const names = {
-        high: 'Yüksek',
-        medium: 'Orta',
-        low: 'Düşük'
-    };
-    return names[priority] || 'Orta';
-}
-
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+function getCurrentUser() {
+    return localStorage.getItem('currentUser') || 'mehmet';
 }
 
 function formatDate(dateString) {
@@ -1017,12 +914,38 @@ function formatDate(dateString) {
     });
 }
 
-function showError(message) {
-    alert('Hata: ' + message);
+// Placeholder fonksiyonlar (gelecekte implement edilecek)
+function openGiftDetail(id) {
+    showNotification('Hediye detayı yakında eklenecek! 🎁', 'info');
 }
 
-function showSuccess(message) {
-    alert('Başarılı: ' + message);
+function openWishlistDetail(id) {
+    showNotification('Dilek detayı yakında eklenecek! ⭐', 'info');
 }
 
-console.log('Hediyeler sayfası yüklendi! 🎁'); 
+function editGift(id) {
+    showNotification('Hediye düzenleme yakında eklenecek! ✏️', 'info');
+}
+
+function deleteGift(id) {
+    showNotification('Hediye silme yakında eklenecek! 🗑️', 'info');
+}
+
+function editWishlistItem(id) {
+    showNotification('Dilek düzenleme yakında eklenecek! ✏️', 'info');
+}
+
+function deleteWishlistItem(id) {
+    showNotification('Dilek silme yakında eklenecek! 🗑️', 'info');
+}
+
+function logout() {
+    if (confirm('Çıkmak istediğinizden emin misiniz?')) {
+        showNotification('Çıkış yapılıyor... 👋', 'info');
+        setTimeout(() => {
+            window.location.href = '../../index.html';
+        }, 1500);
+    }
+}
+
+console.log('🎁 Hediyeler sayfası hazır - Güzel hediyeler paylaşın! 💝'); 

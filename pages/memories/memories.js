@@ -1,8 +1,8 @@
-// Anılar Sayfası JavaScript
+// Anılar Sayfası - Modern ve Canlı JavaScript
 
 // Anı State
 const MemoryState = {
-    currentUser: null,
+    currentUser: 'mehmet', // Default user
     memories: [],
     filteredMemories: [],
     selectedMemory: null,
@@ -11,7 +11,8 @@ const MemoryState = {
     currentFilter: 'all',
     currentView: 'grid',
     searchQuery: '',
-    isLoading: false
+    isLoading: false,
+    isAnimating: false
 };
 
 // DOM Elements
@@ -23,6 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMemories();
     setupEventListeners();
     setupMusicControl();
+    setupScrollAnimations();
+    
+    // Sayfa başlığını animasyonlu olarak göster
+    animatePageLoad();
 });
 
 // Anılar Sayfasını Başlat
@@ -33,10 +38,103 @@ function initializeMemoriesPage() {
     filterButtons = document.querySelectorAll('.filter-btn');
     viewButtons = document.querySelectorAll('.view-btn');
     
-    // Mevcut kullanıcıyı al
-    MemoryState.currentUser = getCurrentUser();
+    // Mevcut kullanıcıyı ayarla
+    MemoryState.currentUser = getCurrentUser() || 'mehmet';
+    updateUserDisplay();
     
-    console.log('Anılar sayfası başlatıldı');
+    console.log('✨ Anılar sayfası başlatıldı - Modern tasarım aktif!');
+}
+
+// Kullanıcı Görüntüsünü Güncelle
+function updateUserDisplay() {
+    const userNameEl = document.getElementById('userName');
+    if (userNameEl) {
+        userNameEl.textContent = MemoryState.currentUser === 'mehmet' ? 'Mehmet' : 'Sevgilim';
+    }
+}
+
+// Sayfa Yükleme Animasyonu
+function animatePageLoad() {
+    const title = document.querySelector('.page-title');
+    const header = document.querySelector('.page-header');
+    const filters = document.querySelector('.memories-filters');
+    
+    if (title) {
+        title.style.opacity = '0';
+        title.style.transform = 'translateY(-30px)';
+        
+        setTimeout(() => {
+            title.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            title.style.opacity = '1';
+            title.style.transform = 'translateY(0)';
+        }, 200);
+    }
+    
+    if (header) {
+        header.style.transform = 'translateY(-100%)';
+        setTimeout(() => {
+            header.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            header.style.transform = 'translateY(0)';
+        }, 300);
+    }
+    
+    if (filters) {
+        filters.style.opacity = '0';
+        filters.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            filters.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            filters.style.opacity = '1';
+            filters.style.transform = 'translateY(0)';
+        }, 500);
+    }
+}
+
+// Scroll Animasyonları
+function setupScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'slideInUp 0.6s ease-out forwards';
+                entry.target.style.opacity = '1';
+            }
+        });
+    }, observerOptions);
+    
+    // CSS için slide animasyonu ekle
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .memory-item {
+            opacity: 0;
+        }
+        
+        .memory-item.visible {
+            opacity: 1;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Memory item'ları gözlemle
+    setTimeout(() => {
+        document.querySelectorAll('.memory-item').forEach(item => {
+            observer.observe(item);
+        });
+    }, 100);
 }
 
 // Anıları Yükle
@@ -44,26 +142,72 @@ async function loadMemories() {
     setLoadingState(true);
     
     try {
-        // Veri tabanından anıları al
-        const memoriesData = await Database.getMemories();
+        // Simulated data - gerçek veri tabanı entegrasyonu için değiştir
+        const memoriesData = await loadSampleMemories();
         MemoryState.memories = memoriesData.sort((a, b) => new Date(b.date) - new Date(a.date));
         
         // Filtrelenmiş anıları güncelle
         applyFilters();
         
         // Anıları görüntüle
-        displayMemories();
+        await displayMemories();
         
     } catch (error) {
-        console.error('Anılar yüklenirken hata:', error);
-        showError('Anılar yüklenirken bir hata oluştu');
+        console.error('❌ Anılar yüklenirken hata:', error);
+        showNotification('Anılar yüklenirken bir hata oluştu', 'error');
     } finally {
         setLoadingState(false);
     }
 }
 
+// Sample Memory Data
+async function loadSampleMemories() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve([
+                {
+                    id: '1',
+                    title: 'İlk Buluşmamız',
+                    date: '2024-01-15',
+                    description: 'Kahve dükkanında geçirdiğimiz muhteşem ilk randevu. Saatlerce konuştuk ve zamanın nasıl geçtiğini anlamadık.',
+                    location: 'Starbucks Kadıköy',
+                    tags: ['ilk', 'romantik', 'kahve'],
+                    type: 'photo',
+                    media: null,
+                    author: 'mehmet',
+                    createdAt: '2024-01-15T18:30:00Z'
+                },
+                {
+                    id: '2',
+                    title: 'Sevgililer Günü Sürprizi',
+                    date: '2024-02-14',
+                    description: 'Benim için hazırladığın o muhteşem sürpriz yemek. Her detayı mükemmeldi, özellikle de o tatlı gülümsemen.',
+                    location: 'Evimiz',
+                    tags: ['sevgililer', 'sürpriz', 'yemek'],
+                    type: 'note',
+                    media: null,
+                    author: 'mehmet',
+                    createdAt: '2024-02-14T20:00:00Z'
+                },
+                {
+                    id: '3',
+                    title: 'Sahilde Gün Batımı',
+                    date: '2024-03-10',
+                    description: 'Sahilde el ele tutarak izlediğimiz en güzel gün batımı. O anı sonsuza kadar aklımda saklayacağım.',
+                    location: 'Caddebostan Sahili',
+                    tags: ['gün batımı', 'sahil', 'romantik'],
+                    type: 'photo',
+                    media: null,
+                    author: 'sevgilim',
+                    createdAt: '2024-03-10T19:45:00Z'
+                }
+            ]);
+        }, 1000);
+    });
+}
+
 // Anıları Görüntüle
-function displayMemories() {
+async function displayMemories() {
     if (!memoryItems) return;
     
     if (MemoryState.filteredMemories.length === 0) {
@@ -84,7 +228,7 @@ function displayMemories() {
     // Grid/List view class'ı ayarla
     memoryItems.className = `memory-items ${MemoryState.currentView}-view`;
     
-    const memoriesHtml = MemoryState.filteredMemories.map(memory => {
+    const memoriesHtml = MemoryState.filteredMemories.map((memory, index) => {
         const mediaHtml = getMediaHtml(memory);
         const tagsHtml = memory.tags ? memory.tags.map(tag => 
             `<span class="memory-tag">${tag}</span>`
@@ -92,14 +236,16 @@ function displayMemories() {
         
         return `
             <div class="memory-item ${memory.type === 'note' ? 'note-type' : ''}" 
-                 data-id="${memory.id}" onclick="openMemoryDetail('${memory.id}')">
+                 data-id="${memory.id}" 
+                 style="animation-delay: ${index * 0.1}s"
+                 onclick="openMemoryDetail('${memory.id}')">
                 
                 ${memory.author === MemoryState.currentUser ? `
                     <div class="memory-actions">
-                        <button class="memory-action-btn edit" onclick="event.stopPropagation(); editMemory('${memory.id}')">
+                        <button class="memory-action-btn edit" onclick="event.stopPropagation(); editMemory('${memory.id}')" title="Düzenle">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="memory-action-btn delete" onclick="event.stopPropagation(); deleteMemory('${memory.id}')">
+                        <button class="memory-action-btn delete" onclick="event.stopPropagation(); deleteMemory('${memory.id}')" title="Sil">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -111,7 +257,7 @@ function displayMemories() {
                         <i class="fas ${getTypeIcon(memory.type)}"></i>
                     </div>
                     <div class="media-overlay">
-                        <span style="color: white; font-weight: 500;">Detayları Gör</span>
+                        <span>💖 Detayları Gör</span>
                     </div>
                 </div>
                 
@@ -148,6 +294,11 @@ function displayMemories() {
     }).join('');
     
     memoryItems.innerHTML = memoriesHtml;
+    
+    // Scroll animasyonlarını yeniden ayarla
+    setTimeout(() => {
+        setupScrollAnimations();
+    }, 100);
 }
 
 // Medya HTML'i Oluştur
@@ -155,11 +306,15 @@ function getMediaHtml(memory) {
     if (memory.type === 'note') {
         return `<i class="fas fa-sticky-note"></i>`;
     } else if (memory.type === 'video') {
-        return `<video src="${memory.media}" controls></video>`;
-    } else if (memory.type === 'photo' && memory.media) {
-        return `<img src="${memory.media}" alt="${memory.title}">`;
+        return memory.media ? 
+            `<video src="${memory.media}" controls></video>` :
+            `<i class="fas fa-video"></i>`;
+    } else if (memory.type === 'photo') {
+        return memory.media ? 
+            `<img src="${memory.media}" alt="${memory.title}">` :
+            `<i class="fas fa-image"></i>`;
     } else {
-        return `<i class="fas fa-image"></i>`;
+        return `<i class="fas fa-heart"></i>`;
     }
 }
 
@@ -190,7 +345,9 @@ function openMemoryDetail(memoryId) {
         const mediaHtml = memory.type === 'note' ? '' : 
             memory.type === 'video' ? 
                 `<video src="${memory.media}" controls class="detail-media"></video>` :
-                `<img src="${memory.media}" alt="${memory.title}" class="detail-media">`;
+                memory.media ? 
+                    `<img src="${memory.media}" alt="${memory.title}" class="detail-media">` :
+                    '';
         
         const tagsHtml = memory.tags ? memory.tags.map(tag => 
             `<span class="detail-tag">${tag}</span>`
@@ -239,16 +396,37 @@ function openMemoryDetail(memoryId) {
             </div>
         `;
         
+        showModal(modal);
+    }
+}
+
+// Modal Göster
+function showModal(modal) {
+    if (modal) {
         modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Modal backdrop click to close
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideModal(modal);
+            }
+        });
+    }
+}
+
+// Modal Gizle
+function hideModal(modal) {
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
     }
 }
 
 // Anı Detayını Kapat
 function closeMemoryDetailModal() {
     const modal = document.getElementById('memoryDetailModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
+    hideModal(modal);
     MemoryState.selectedMemory = null;
 }
 
@@ -256,8 +434,6 @@ function closeMemoryDetailModal() {
 function openNewMemoryModal() {
     const modal = document.getElementById('newMemoryModal');
     if (modal) {
-        modal.classList.add('active');
-        
         // Formu sıfırla
         const form = document.getElementById('memoryForm');
         if (form) {
@@ -276,105 +452,15 @@ function openNewMemoryModal() {
         
         // Medya türü değişikliğini dinle
         updateMediaUploadVisibility();
+        
+        showModal(modal);
     }
 }
 
 // Yeni Anı Modal'ını Kapat
 function closeNewMemoryModal() {
     const modal = document.getElementById('newMemoryModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// Anı Düzenleme Modal'ını Aç
-function editMemory(memoryId) {
-    const memory = MemoryState.memories.find(m => m.id === memoryId);
-    if (!memory) return;
-    
-    MemoryState.editingMemory = memory;
-    
-    const modal = document.getElementById('editMemoryModal');
-    if (modal) {
-        modal.classList.add('active');
-        
-        // Form verilerini doldur
-        document.getElementById('editMemoryTitle').value = memory.title;
-        document.getElementById('editMemoryDate').value = memory.date;
-        document.getElementById('editMemoryDescription').value = memory.description || '';
-        document.getElementById('editMemoryLocation').value = memory.location || '';
-        document.getElementById('editMemoryTags').value = memory.tags ? memory.tags.join(', ') : '';
-        
-        // Mevcut medyayı göster
-        if (memory.media && memory.type !== 'note') {
-            showMediaPreview('editUploadPreview', memory.media, memory.type);
-        } else {
-            resetUploadPreview('editUploadPreview');
-        }
-    }
-    
-    // Detay modal'ını kapat
-    closeMemoryDetailModal();
-}
-
-// Anı Düzenleme Modal'ını Kapat
-function closeEditMemoryModal() {
-    const modal = document.getElementById('editMemoryModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-    MemoryState.editingMemory = null;
-}
-
-// Anı Silme
-function deleteMemory(memoryId) {
-    const memory = MemoryState.memories.find(m => m.id === memoryId);
-    if (!memory) return;
-    
-    MemoryState.deletingMemory = memory;
-    
-    const modal = document.getElementById('deleteMemoryModal');
-    if (modal) {
-        modal.classList.add('active');
-    }
-    
-    // Detay modal'ını kapat
-    closeMemoryDetailModal();
-}
-
-// Silme Modal'ını Kapat
-function closeDeleteMemoryModal() {
-    const modal = document.getElementById('deleteMemoryModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-    MemoryState.deletingMemory = null;
-}
-
-// Anı Silmeyi Onayla
-async function confirmDeleteMemory() {
-    if (!MemoryState.deletingMemory) return;
-    
-    try {
-        // Veri tabanından sil
-        await Database.deleteMemory(MemoryState.deletingMemory.id);
-        
-        // Local state'i güncelle
-        MemoryState.memories = MemoryState.memories.filter(m => m.id !== MemoryState.deletingMemory.id);
-        
-        // Filtreleri uygula ve görüntüyü güncelle
-        applyFilters();
-        displayMemories();
-        
-        // Modal'ı kapat
-        closeDeleteMemoryModal();
-        
-        showSuccess('Anı başarıyla silindi');
-        
-    } catch (error) {
-        console.error('Anı silinirken hata:', error);
-        showError('Anı silinirken bir hata oluştu');
-    }
+    hideModal(modal);
 }
 
 // Event Listener'ları Ayarla
@@ -385,15 +471,18 @@ function setupEventListeners() {
         memoryForm.addEventListener('submit', handleNewMemory);
     }
     
-    // Anı düzenleme formu
-    const editMemoryForm = document.getElementById('editMemoryForm');
-    if (editMemoryForm) {
-        editMemoryForm.addEventListener('submit', handleEditMemory);
-    }
-    
     // Arama
     if (searchInput) {
-        searchInput.addEventListener('input', handleSearch);
+        let searchTimeout;
+        searchInput.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                handleSearch(e);
+            }, 300); // Debounce search
+        });
+        
+        // Arama placeholder animasyonu
+        animateSearchPlaceholder();
     }
     
     // Filtreler
@@ -410,26 +499,45 @@ function setupEventListeners() {
         });
     });
     
-    // Medya türü değişikliği
-    document.querySelectorAll('input[name="mediaType"]').forEach(input => {
-        input.addEventListener('change', updateMediaUploadVisibility);
-    });
-    
-    // Dosya yükleme
-    setupFileUpload('memoryMedia', 'uploadPreview');
-    setupFileUpload('editMemoryMedia', 'editUploadPreview');
-    
-    // Modal dışına tıklama
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // ESC to close modals
+        if (e.key === 'Escape') {
+            const activeModal = document.querySelector('.modal.active');
+            if (activeModal) {
+                hideModal(activeModal);
             }
-        });
+        }
+        
+        // Ctrl+N for new memory
+        if (e.ctrlKey && e.key === 'n') {
+            e.preventDefault();
+            openNewMemoryModal();
+        }
     });
 }
 
-// Yeni Anı Gönder
+// Arama Placeholder Animasyonu
+function animateSearchPlaceholder() {
+    if (!searchInput) return;
+    
+    const placeholders = [
+        'Anıları ara...',
+        'Bir tarih arayın...',
+        'Konum arayın...',
+        'Etiket arayın...',
+        'Anıları keşfedin...'
+    ];
+    
+    let currentIndex = 0;
+    
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % placeholders.length;
+        searchInput.placeholder = placeholders[currentIndex];
+    }, 3000);
+}
+
+// Yeni Anı Ekle
 async function handleNewMemory(e) {
     e.preventDefault();
     
@@ -440,16 +548,16 @@ async function handleNewMemory(e) {
     const description = document.getElementById('memoryDescription').value.trim();
     const location = document.getElementById('memoryLocation').value.trim();
     const tags = document.getElementById('memoryTags').value.trim();
-    const mediaType = document.querySelector('input[name="mediaType"]:checked').value;
+    const mediaType = document.querySelector('input[name="mediaType"]:checked')?.value || 'note';
     const mediaFile = document.getElementById('memoryMedia').files[0];
     
     if (!title || !date) {
-        showError('Lütfen başlık ve tarih alanlarını doldurun');
+        showNotification('Lütfen başlık ve tarih alanlarını doldurun', 'error');
         return;
     }
     
     if (mediaType !== 'note' && !mediaFile) {
-        showError('Lütfen bir medya dosyası seçin');
+        showNotification('Lütfen bir medya dosyası seçin', 'error');
         return;
     }
     
@@ -476,89 +584,24 @@ async function handleNewMemory(e) {
             createdAt: new Date().toISOString()
         };
         
-        // Veri tabanına kaydet
-        await Database.saveMemory(newMemory);
-        
         // Local state'i güncelle
         MemoryState.memories.unshift(newMemory);
         
         // Filtreleri uygula ve görüntüyü güncelle
         applyFilters();
-        displayMemories();
+        await displayMemories();
         
         // Modal'ı kapat
         closeNewMemoryModal();
         
-        showSuccess('Anı başarıyla eklendi! ❤️');
+        showNotification('Anı başarıyla eklendi! ❤️', 'success');
+        
+        // Confetti efekti
+        createConfetti();
         
     } catch (error) {
-        console.error('Anı eklenirken hata:', error);
-        showError('Anı eklenirken bir hata oluştu');
-    } finally {
-        setLoadingState(false);
-    }
-}
-
-// Anı Düzenle
-async function handleEditMemory(e) {
-    e.preventDefault();
-    
-    if (MemoryState.isLoading || !MemoryState.editingMemory) return;
-    
-    const title = document.getElementById('editMemoryTitle').value.trim();
-    const date = document.getElementById('editMemoryDate').value;
-    const description = document.getElementById('editMemoryDescription').value.trim();
-    const location = document.getElementById('editMemoryLocation').value.trim();
-    const tags = document.getElementById('editMemoryTags').value.trim();
-    const mediaFile = document.getElementById('editMemoryMedia').files[0];
-    
-    if (!title || !date) {
-        showError('Lütfen başlık ve tarih alanlarını doldurun');
-        return;
-    }
-    
-    setLoadingState(true);
-    
-    try {
-        // Medyayı işle
-        let mediaData = MemoryState.editingMemory.media;
-        if (mediaFile) {
-            mediaData = await processMediaFile(mediaFile);
-        }
-        
-        // Anıyı güncelle
-        const updatedMemory = {
-            ...MemoryState.editingMemory,
-            title,
-            date,
-            description,
-            location,
-            tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
-            media: mediaData,
-            updatedAt: new Date().toISOString()
-        };
-        
-        // Veri tabanını güncelle
-        await Database.updateMemory(updatedMemory);
-        
-        // Local state'i güncelle
-        const index = MemoryState.memories.findIndex(m => m.id === updatedMemory.id);
-        if (index !== -1) {
-            MemoryState.memories[index] = updatedMemory;
-        }
-        
-        // Filtreleri uygula ve görüntüyü güncelle
-        applyFilters();
-        displayMemories();
-        
-        // Modal'ı kapat
-        closeEditMemoryModal();
-        
-        showSuccess('Anı başarıyla güncellendi! ✨');
-        
-    } catch (error) {
-        console.error('Anı güncellenirken hata:', error);
-        showError('Anı güncellenirken bir hata oluştu');
+        console.error('❌ Anı eklenirken hata:', error);
+        showNotification('Anı eklenirken bir hata oluştu', 'error');
     } finally {
         setLoadingState(false);
     }
@@ -569,6 +612,14 @@ function handleSearch(e) {
     MemoryState.searchQuery = e.target.value.toLowerCase();
     applyFilters();
     displayMemories();
+    
+    // Arama sonuçları animasyonu
+    if (MemoryState.searchQuery) {
+        searchInput.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+            searchInput.style.transform = 'scale(1)';
+        }, 200);
+    }
 }
 
 // Aktif Filtreyi Ayarla
@@ -580,6 +631,12 @@ function setActiveFilter(filter) {
         btn.classList.remove('active');
         if (btn.dataset.filter === filter) {
             btn.classList.add('active');
+            
+            // Aktif buton animasyonu
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1)';
+            }, 150);
         }
     });
     
@@ -630,113 +687,6 @@ function applyFilters() {
     MemoryState.filteredMemories = filtered;
 }
 
-// Medya Yükleme Görünürlüğünü Güncelle
-function updateMediaUploadVisibility() {
-    const mediaType = document.querySelector('input[name="mediaType"]:checked')?.value;
-    const uploadGroup = document.getElementById('mediaUploadGroup');
-    
-    if (uploadGroup) {
-        uploadGroup.style.display = mediaType === 'note' ? 'none' : 'block';
-    }
-}
-
-// Dosya Yükleme Ayarla
-function setupFileUpload(inputId, previewId) {
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
-    
-    if (!input || !preview) return;
-    
-    input.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const fileType = file.type.startsWith('video/') ? 'video' : 'photo';
-                showMediaPreview(previewId, e.target.result, fileType);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    
-    // Drag & Drop
-    preview.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
-    });
-    
-    preview.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.style.backgroundColor = '';
-    });
-    
-    preview.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.style.backgroundColor = '';
-        
-        const file = e.dataTransfer.files[0];
-        if (file && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
-            input.files = e.dataTransfer.files;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const fileType = file.type.startsWith('video/') ? 'video' : 'photo';
-                showMediaPreview(previewId, e.target.result, fileType);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-}
-
-// Medya Önizlemesi Göster
-function showMediaPreview(previewId, mediaSrc, mediaType) {
-    const preview = document.getElementById(previewId);
-    if (!preview) return;
-    
-    preview.classList.add('has-media');
-    
-    const mediaElement = mediaType === 'video' ? 
-        `<video src="${mediaSrc}" controls class="preview-media"></video>` :
-        `<img src="${mediaSrc}" alt="Önizleme" class="preview-media">`;
-    
-    preview.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <p>Medya seçildi</p>
-        ${mediaElement}
-    `;
-}
-
-// Upload Önizlemesini Sıfırla
-function resetUploadPreview(previewId) {
-    const preview = document.getElementById(previewId);
-    if (!preview) return;
-    
-    preview.classList.remove('has-media');
-    preview.innerHTML = `
-        <i class="fas fa-cloud-upload-alt"></i>
-        <p>Dosya seçin veya sürükleyin</p>
-        <span class="upload-hint">Maksimum 10MB</span>
-    `;
-}
-
-// Medya Dosyasını İşle
-function processMediaFile(file) {
-    return new Promise((resolve, reject) => {
-        // Dosya boyutu kontrolü (10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            reject(new Error('Dosya boyutu 10MB\'dan büyük olamaz'));
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            resolve(e.target.result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
 // Loading State
 function setLoadingState(isLoading) {
     MemoryState.isLoading = isLoading;
@@ -751,33 +701,134 @@ function setLoadingState(isLoading) {
         btn.disabled = isLoading;
         if (isLoading) {
             btn.classList.add('loading');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
         } else {
             btn.classList.remove('loading');
+            btn.innerHTML = '<i class="fas fa-save"></i> Anıyı Kaydet';
         }
     });
 }
 
 // Müzik Kontrolü
 function setupMusicControl() {
-    const musicToggle = document.getElementById('music-toggle');
-    const musicPlayer = document.getElementById('background-music');
+    const musicToggle = document.getElementById('musicToggle');
     
-    if (musicToggle && musicPlayer) {
+    if (musicToggle) {
         musicToggle.addEventListener('click', function() {
-            if (musicPlayer.paused) {
-                musicPlayer.play().catch(e => {
-                    console.log('Müzik çalınamadı:', e);
-                });
-                this.innerHTML = '<i class="fas fa-pause"></i>';
-            } else {
-                musicPlayer.pause();
+            // Müzik çalma simülasyonu
+            const isPlaying = this.classList.contains('playing');
+            
+            if (isPlaying) {
+                this.classList.remove('playing');
                 this.innerHTML = '<i class="fas fa-music"></i>';
+                showNotification('Müzik durduruldu 🎵', 'info');
+            } else {
+                this.classList.add('playing');
+                this.innerHTML = '<i class="fas fa-pause"></i>';
+                showNotification('Müzik çalıyor 🎵', 'info');
             }
+            
+            // Butona animasyon efekti
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
         });
     }
 }
 
+// Bildirim Göster
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    // Notification CSS
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        background: ${type === 'success' ? 'var(--success-gradient)' : type === 'error' ? 'var(--warning-gradient)' : 'var(--accent-gradient)'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animasyon
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Otomatik kaldır
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Confetti Efekti
+function createConfetti() {
+    const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#43e97b', '#38f9d7'];
+    
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            top: -10px;
+            left: ${Math.random() * window.innerWidth}px;
+            z-index: 10000;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: confettiFall ${Math.random() * 2 + 2}s linear forwards;
+        `;
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+            if (confetti.parentNode) {
+                confetti.parentNode.removeChild(confetti);
+            }
+        }, 4000);
+    }
+    
+    // Confetti animasyonu
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes confettiFall {
+            to {
+                transform: translateY(${window.innerHeight + 20}px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // Yardımcı Fonksiyonlar
+function getCurrentUser() {
+    return localStorage.getItem('currentUser') || 'mehmet';
+}
+
 function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
@@ -791,12 +842,60 @@ function formatDate(dateString) {
     });
 }
 
-function showError(message) {
-    alert('Hata: ' + message);
+function updateMediaUploadVisibility() {
+    const mediaType = document.querySelector('input[name="mediaType"]:checked')?.value;
+    const uploadGroup = document.getElementById('mediaUploadGroup');
+    
+    if (uploadGroup) {
+        uploadGroup.style.display = mediaType === 'note' ? 'none' : 'block';
+    }
 }
 
-function showSuccess(message) {
-    alert('Başarılı: ' + message);
+function resetUploadPreview(previewId) {
+    const preview = document.getElementById(previewId);
+    if (!preview) return;
+    
+    preview.classList.remove('has-media');
+    preview.innerHTML = `
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Dosya seçin veya sürükleyin</p>
+        <span class="upload-hint">Maksimum 10MB</span>
+    `;
 }
 
-console.log('Anılar sayfası yüklendi! 📸'); 
+function processMediaFile(file) {
+    return new Promise((resolve, reject) => {
+        if (file.size > 10 * 1024 * 1024) {
+            reject(new Error('Dosya boyutu 10MB\'dan büyük olamaz'));
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            resolve(e.target.result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// Silme ve düzenleme işlemleri (basitleştirilmiş)
+function editMemory(memoryId) {
+    showNotification('Düzenleme özelliği yakında eklenecek! ✨', 'info');
+}
+
+function deleteMemory(memoryId) {
+    showNotification('Silme özelliği yakında eklenecek! ✨', 'info');
+}
+
+// Logout işlemi
+function logout() {
+    if (confirm('Çıkmak istediğinizden emin misiniz?')) {
+        showNotification('Çıkış yapılıyor... 👋', 'info');
+        setTimeout(() => {
+            window.location.href = '../../index.html';
+        }, 1000);
+    }
+}
+
+console.log('💕 Anılar sayfası hazır - Güzel anılar biriktirin! 📸'); 
